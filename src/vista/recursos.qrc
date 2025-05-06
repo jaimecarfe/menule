@@ -1,0 +1,6 @@
+<RCC>
+  <qresource>
+    <file>logo/logo.png</file>
+    <file>imagenes/descarga.jpeg</file>
+  </qresource>
+</RCC>
