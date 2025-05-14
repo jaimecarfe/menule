@@ -1,6 +1,5 @@
 <RCC>
-  <qresource>
-    <file>logo/logo.png</file>
-    <file>imagenes/descarga.jpeg</file>
+  <qresource prefix="prefijoNuevo">
+    <file>imagenes/fondo.jpeg</file>
   </qresource>
 </RCC>

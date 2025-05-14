@@ -15,7 +15,7 @@ class Login(QMainWindow, Form):
 
     def on_button_click(self):
         print("Botón presionado")
-        texto_area = self.lineEdit_usuario.text() #Obtenet el texto del campo nombre
+        texto_area = self.lineEdit_usuario.text()
         print("El texto es: ")
         print(texto_area)
         self._controlador.login(texto_area)
