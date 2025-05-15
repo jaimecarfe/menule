@@ -14,8 +14,9 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../recursos.qrc">
-    <normaloff>:/logo/logo.png</normaloff>:/logo/logo.png</iconset>
+    <iconset>
+      <normaloff>:/logo/logo.png</normaloff>
+    </iconset>
   </property>
   <property name="windowOpacity">
    <double>0.000000000000000</double>
@@ -34,7 +35,7 @@
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::StyledPanel</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
@@ -51,13 +52,15 @@
      <property name="font">
       <font>
        <pointsize>20</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
        <underline>true</underline>
       </font>
      </property>
      <property name="text">
       <string>Iniciar Sesión</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_usuario">
@@ -83,7 +86,7 @@ border-bottom: 3px solid rgb(11, 11, 11);</string>
       <string/>
      </property>
      <property name="placeholderText">
-      <string>nombre usuario</string>
+      <string>Username</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_contrasena">
@@ -98,7 +101,6 @@ border-bottom: 3px solid rgb(11, 11, 11);</string>
      <property name="font">
       <font>
        <pointsize>12</pointsize>
-       <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
@@ -114,14 +116,14 @@ border-bottom: 3px solid rgb(11, 11, 11);</string>
       <enum>QLineEdit::Password</enum>
      </property>
      <property name="placeholderText">
-      <string>contraseña</string>
+      <string>Password</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_aceptar">
      <property name="geometry">
       <rect>
        <x>130</x>
-       <y>320</y>
+       <y>310</y>
        <width>121</width>
        <height>31</height>
       </rect>
@@ -129,7 +131,6 @@ border-bottom: 3px solid rgb(11, 11, 11);</string>
      <property name="font">
       <font>
        <pointsize>12</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -147,7 +148,7 @@ border-bottom: 3px solid rgb(11, 11, 11);</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image:url(:/imagenes/descarga.jpeg)</string>
+      <string notr="true">border-image:url(:/imagenes/fondo.jpeg)</string>
      </property>
      <property name="text">
       <string/>
@@ -158,12 +159,12 @@ border-bottom: 3px solid rgb(11, 11, 11);</string>
       <rect>
        <x>60</x>
        <y>60</y>
-       <width>271</width>
+       <width>281</width>
        <height>331</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(217, 217, 217, 200)</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>

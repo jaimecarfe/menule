@@ -5,6 +5,7 @@ from src.vista.Registro import Registro
 from src.modelo.BussinessObject import BussinessObject
 from src.controlador.ControladorPrincipal import ControladorPrincipal
 
+
 if __name__ == "__main__":
     app = QApplication([])
     ventana = Login()

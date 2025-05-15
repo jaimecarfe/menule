@@ -1,7 +1,7 @@
 import jaydebeapi
 
 class Conexion:
-    def __init__(self, host='localhost', database='floristeria', user='root', password='pruebaISD2024'):
+    def __init__(self, host='localhost', database='menule', user='root', password='Liverpool.840'):
         self._host = host
         self._database = database
         self._user = user
@@ -11,7 +11,7 @@ class Conexion:
     def createConnection(self):
         try:
             jdbc_driver = "com.mysql.cj.jdbc.Driver"
-            jar_file = "lib/mysql-connector-j-8.3.0.jar"
+            jar_file = "lib/mysql-connector-j-9.2.0.jar"
             self.conexion = jaydebeapi.connect(
                 jdbc_driver,
                 f"jdbc:mysql://{self._host}/{self._database}",
@@ -38,3 +38,13 @@ class Conexion:
         except Exception as e:
             print("Error cerrando conexión:", e)
 
+if __name__ == "__main__":
+    conexion = Conexion()
+    cursor = conexion.getCursor()
+    
+    if cursor:
+        cursor.execute("SELECT DATABASE();")
+        print("🔍 Base de datos seleccionada:", cursor.fetchone()[0])
+        conexion.closeConnection()
+    else:
+        print("❌ No se pudo obtener el cursor.")

@@ -11,6 +11,9 @@ class Login(QMainWindow, Form):
         self._controlador = None
         # Conectar el botón a la función
         self.pushButton_aceptar.clicked.connect(self.on_button_click)
+        self.setWindowOpacity(1.0)
+        self.setWindowTitle("MenULE - Iniciar Sesión")
+        self.resize(432, 505)
 
 
     def on_button_click(self):
