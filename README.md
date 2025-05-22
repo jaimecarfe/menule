@@ -2,13 +2,13 @@
 
 **MenULE** es una aplicación de escritorio desarrollada como proyecto final de la asignatura Ingeniería del Software. Está diseñada para gestionar un sistema completo de reservas, menús y pagos en un comedor universitario.
 
-## 🎯 Objetivos del proyecto
+## Objetivos del proyecto
 - Permitir la gestión de usuarios según roles: estudiante, profesor, visitante, personal de comedor, administrador.
 - Facilitar la reserva de menús y pedidos diarios.
 - Supervisar pagos, incidencias y estadísticas del servicio.
 - Proveer interfaces diferenciadas por tipo de usuario.
 
-## 🧱 Estructura del proyecto
+## Estructura del proyecto
 ```
 src/
 ├── vista/              # Interfaces de usuario (.py y .ui)
@@ -20,7 +20,7 @@ src/
 └── main.py             # Punto de entrada principal
 ```
 
-## 🧑‍💻 Roles y funcionalidades
+## Roles y funcionalidades
 | Rol               | Funcionalidades clave                          |
 |------------------|-----------------------------------------------|
 | Estudiante        | Reservar comida, historial, reportar errores |
@@ -29,13 +29,13 @@ src/
 | Personal Comedor  | Procesar pedidos, gestionar stock           |
 | Administrador     | Gestión de usuarios, menús, estadísticas    |
 
-## 🛠 Tecnologías utilizadas
+## Tecnologías utilizadas
 - Python 3.x
 - PyQt5
 - SQLite (MySQL compatible)
 - MVC + DAO + VO como patrón de arquitectura
 
-## 🚀 Cómo ejecutar
+## Cómo ejecutar
 1. Clona el repositorio:
 ```bash
 git clone https://github.com/tuusuario/menule.git
@@ -49,5 +49,5 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## 📌 Créditos
+## Créditos
 Proyecto desarrollado por el equipo de Ingeniería del Software - Curso 2024/2025.
