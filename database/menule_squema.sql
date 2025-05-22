@@ -1,3 +1,4 @@
+-- Active: 1747325415285@@127.0.0.1@3306@menule
 -- -----------------------------------------------------
 -- MENULE: Estructura de base de datos
 -- Compatible con MySQL 8.0+

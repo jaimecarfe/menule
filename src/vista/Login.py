@@ -1,33 +1,44 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5 import uic
 
-# Cargar la interfaz generada desde el archivo .ui
 Form, Window = uic.loadUiType("./src/vista/ui/VistaLogging.ui")
 
 class Login(QMainWindow, Form):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)  # Inicializa los widgets
+        self.setupUi(self)
         self._controlador = None
-        # Conectar el botón a la función
-        self.pushButton_aceptar.clicked.connect(self.on_button_click)
-        self.setWindowOpacity(1.0)
+
         self.setWindowTitle("MenULE - Iniciar Sesión")
         self.resize(432, 505)
 
+        self.pushButton_aceptar.clicked.connect(self.on_button_click)
+
+        # Conectar a registro si lo tienes
+        try:
+            self.pushButton_registro.clicked.connect(self.abrir_registro)
+        except AttributeError:
+            pass
 
     def on_button_click(self):
-        print("Botón presionado")
-        texto_area = self.lineEdit_usuario.text()
-        print("El texto es: ")
-        print(texto_area)
-        self._controlador.login(texto_area)
+        correo = self.lineEdit_email.text()
+        contraseña = self.lineEdit_password.text()
+
+        if not correo or not contraseña:
+            QMessageBox.warning(self, "Error", "Completa todos los campos.")
+            return
+
+        if not self._controlador.login(correo, contraseña):
+            QMessageBox.critical(self, "Error", "Correo o contraseña incorrectos.")
+
+    def abrir_registro(self):
+        if self.abrir_registro:
+            self.abrir_registro()
 
     @property
     def controlador(self):
         return self._controlador
+
     @controlador.setter
     def controlador(self, controlador):
         self._controlador = controlador
-
-#pyrcc6 recursos.qrc -o recursos_rc.py
