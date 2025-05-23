@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
+from src.vista.VentanaBase import VentanaBase
 from PyQt5 import uic
 
 Form, Window = uic.loadUiType("./src/vista/ui/VistaLogging.ui")
 
-class Login(QMainWindow, Form):
+class Login(VentanaBase, Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)

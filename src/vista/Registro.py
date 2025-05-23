@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5 import uic
+from src.vista.VentanaBase import VentanaBase
 from src.modelo.vo.UserVo import UserVo
 from datetime import date
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
-class Registro(QMainWindow, Form):
+class Registro(VentanaBase, Form):
     def __init__(self, volver_a=None):
         super().__init__()
         self.setupUi(self)
