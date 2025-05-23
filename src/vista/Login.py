@@ -14,15 +14,15 @@ class Login(QMainWindow, Form):
 
         self.pushButton_aceptar.clicked.connect(self.on_button_click)
 
-        # Conectar a registro si lo tienes
+        # Conectar botón de registro si está definido
         try:
             self.pushButton_registro.clicked.connect(self.abrir_registro)
         except AttributeError:
             pass
 
     def on_button_click(self):
-        correo = self.lineEdit_email.text()
-        contraseña = self.lineEdit_password.text()
+        correo = self.lineEdit_usuario.text()
+        contraseña = self.lineEdit_contrasena.text()
 
         if not correo or not contraseña:
             QMessageBox.warning(self, "Error", "Completa todos los campos.")
@@ -32,7 +32,7 @@ class Login(QMainWindow, Form):
             QMessageBox.critical(self, "Error", "Correo o contraseña incorrectos.")
 
     def abrir_registro(self):
-        if self.abrir_registro:
+        if hasattr(self, "abrir_registro"):
             self.abrir_registro()
 
     @property

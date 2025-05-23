@@ -1,4 +1,8 @@
 from src.modelo.dao.UserDao import UserDao
+from src.modelo.dao.EstudianteDao import EstudianteDao
+from src.modelo.dao.ProfesorDao import ProfesorDao
+from src.modelo.dao.PersonalComedorDao import PersonalComedorDao
+"""
 from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.MenuDao import MenuDao
 from src.modelo.dao.PlatoDao import PlatoDao
@@ -7,15 +11,21 @@ from src.modelo.dao.PagoDao import PagoDao
 from src.modelo.dao.IncidenciaDao import IncidenciaDao
 from src.modelo.dao.IngredienteDao import IngredienteDao
 from src.modelo.dao.EstadisticaDao import EstadisticaDao
-
+"""
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
+from src.modelo.vo.EstudianteVo import EstudianteVo
+from src.modelo.vo.ProfesorVo import ProfesorVo
+from src.modelo.vo.PersonalComedorVo import PersonalComedorVo
+"""
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
 from src.modelo.vo.TicketVo import TicketVo
 from src.modelo.vo.PagoVo import PagoVo
+"""
 
 import bcrypt
+from datetime import date
 
 class BussinessObject:
     # --- Usuarios ---
@@ -30,14 +40,32 @@ class BussinessObject:
         user_dao = UserDao()
         hashed_pw = bcrypt.hashpw(user.contrasena.encode(), bcrypt.gensalt())
         user.contrasena = hashed_pw.decode()
-        return user_dao.insert(user)
+        user.fecha_alta = date.today()
+        id_user = user_dao.insert(user)
+
+        if id_user:
+            user.idUser = id_user
+            if user.rol == "estudiante":
+                estudiante_dao = EstudianteDao()
+                estudiante_vo = EstudianteVo(id_usuario=id_user, grado_academico=user.grado_academico, tui_numero=user.tui, saldo=user.saldo)
+                estudiante_dao.insert(estudiante_vo)
+            elif user.rol == "profesor":
+                profesor_dao = ProfesorDao()
+                profesor_vo = ProfesorVo(id_usuario=id_user, grado_academico=user.grado_academico, saldo=user.saldo)
+                profesor_dao.insert(profesor_vo)
+            elif user.rol == "personal_comedor":
+                comedor_dao = PersonalComedorDao()
+                comedor_vo = PersonalComedorVo(id_usuario=id_user, fecha_contratacion=user.fecha_alta, especialidad=user.especialidad)
+                comedor_dao.insert(comedor_vo)
+            return id_user
+        return None
 
     def actualizarSaldo(self, idUser: int, nuevo_saldo: float) -> bool:
         return UserDao().update_saldo(idUser, nuevo_saldo)
 
     def obtenerUsuarioPorCorreo(self, correo: str) -> UserVo | None:
         return UserDao().find_by_correo(correo)
-
+"""
     # --- Reservas ---
     def crearReserva(self, reservaVO: ReservaVo) -> int | None:
         return ReservaDao().insert(reservaVO)
@@ -87,3 +115,4 @@ class BussinessObject:
     # --- Estadísticas ---
     def obtenerEstadisticasDiarias(self):
         return EstadisticaDao().obtener_diarias()
+"""

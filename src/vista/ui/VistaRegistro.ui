@@ -2,41 +2,31 @@
  <class>VistaRegistro</class>
  <widget class="QMainWindow" name="VistaRegistro">
   <property name="geometry">
-   <rect><x>0</x><y>0</y><width>500</width><height>600</height></rect>
+   <rect><x>0</x><y>0</y><width>500</width><height>750</height></rect>
   </property>
   <property name="windowTitle">
    <string>MenULE - Registro</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="lineEdit_nombre">
-    <property name="geometry"><rect><x>150</x><y>60</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText">
-     <string>Nombre</string>
-    </property>
+    <property name="geometry"><rect><x>150</x><y>40</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>Nombre</string></property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_apellido">
-    <property name="geometry"><rect><x>150</x><y>100</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText">
-     <string>Apellido</string>
-    </property>
+    <property name="geometry"><rect><x>150</x><y>80</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>Apellido</string></property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_correo">
-    <property name="geometry"><rect><x>150</x><y>140</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText">
-     <string>Correo</string>
-    </property>
+    <property name="geometry"><rect><x>150</x><y>120</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>Correo</string></property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_password">
-    <property name="geometry"><rect><x>150</x><y>180</y><width>200</width><height>30</height></rect></property>
-    <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
-    </property>
-    <property name="placeholderText">
-     <string>Contraseña</string>
-    </property>
+    <property name="geometry"><rect><x>150</x><y>160</y><width>200</width><height>30</height></rect></property>
+    <property name="echoMode"><enum>QLineEdit::Password</enum></property>
+    <property name="placeholderText"><string>Contraseña</string></property>
    </widget>
    <widget class="QComboBox" name="comboBox_rol">
-    <property name="geometry"><rect><x>150</x><y>220</y><width>200</width><height>30</height></rect></property>
+    <property name="geometry"><rect><x>150</x><y>200</y><width>200</width><height>30</height></rect></property>
     <item><property name="text"><string>estudiante</string></property></item>
     <item><property name="text"><string>profesor</string></property></item>
     <item><property name="text"><string>personal_comedor</string></property></item>
@@ -44,16 +34,32 @@
     <item><property name="text"><string>administrador</string></property></item>
    </widget>
    <widget class="QLineEdit" name="lineEdit_tui">
-    <property name="geometry"><rect><x>150</x><y>260</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText">
-     <string>TUI (solo estudiantes)</string>
-    </property>
+    <property name="geometry"><rect><x>150</x><y>240</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>TUI (solo estudiantes)</string></property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_grado">
+    <property name="geometry"><rect><x>150</x><y>280</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>Grado académico</string></property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_especialidad">
+    <property name="geometry"><rect><x>150</x><y>320</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>Especialidad (comedor)</string></property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_dni">
+    <property name="geometry"><rect><x>150</x><y>360</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>DNI</string></property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_telefono">
+    <property name="geometry"><rect><x>150</x><y>400</y><width>200</width><height>30</height></rect></property>
+    <property name="placeholderText"><string>Teléfono</string></property>
    </widget>
    <widget class="QPushButton" name="pushButton_registrar">
-    <property name="geometry"><rect><x>180</x><y>310</y><width>120</width><height>30</height></rect></property>
-    <property name="text">
-     <string>Registrar</string>
-    </property>
+    <property name="geometry"><rect><x>180</x><y>460</y><width>120</width><height>30</height></rect></property>
+    <property name="text"><string>Registrar</string></property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_volver">
+    <property name="geometry"><rect><x>180</x><y>510</y><width>120</width><height>30</height></rect></property>
+    <property name="text"><string>Volver</string></property>
    </widget>
   </widget>
  </widget>
