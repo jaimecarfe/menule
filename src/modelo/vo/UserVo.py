@@ -1,3 +1,5 @@
+from datetime import date
+
 class UserVo:
     def __init__(self, idUser, nombre, apellido, correo, contrasena, rol, saldo=0.0,
                  tui=None, dni=None, telefono=None, fecha_alta=None, activo=True,
@@ -12,7 +14,7 @@ class UserVo:
         self.tui = tui
         self.dni = dni
         self.telefono = telefono
-        self.fecha_alta = fecha_alta
+        self.fecha_alta = fecha_alta or date.today()
         self.activo = activo
         self.grado_academico = grado_academico
         self.especialidad = especialidad

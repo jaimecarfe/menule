@@ -9,16 +9,44 @@ from src.vista.visitante.MenuVisitante import MenuVisitante
 
 from src.modelo.BussinessObject import BussinessObject
 from src.controlador.ControladorPrincipal import ControladorPrincipal
+from src.modelo.dao.UserDao import UserDao
+from src.modelo.vo.UserVo import UserVo
+import bcrypt
+from datetime import date
 
 class App:
     def __init__(self):
         self.app = QApplication([])
         self.modelo = BussinessObject()
+        self.crear_admin_por_defecto()
         self.login_window = Login()
         self.controlador = ControladorPrincipal(self.login_window, self.modelo)
         self.login_window.controlador = self.controlador
         self.login_window.abrir_registro = self.abrir_registro
         self.controlador.on_login_exitoso = self.mostrar_menu_por_rol
+
+    def crear_admin_por_defecto(self):
+        admin_email = "admin@menule.com"
+        admin_contra = "admin123"
+
+        user_dao = UserDao()
+        if not user_dao.find_by_correo(admin_email):
+            hash_pw = bcrypt.hashpw(admin_contra.encode(), bcrypt.gensalt()).decode()
+            admin = UserVo(
+                idUser=None,
+                nombre="Admin",
+                apellido="MenULE",
+                correo=admin_email,
+                contrasena=hash_pw,
+                rol="administrador",
+                saldo=0.0,
+                tui=None,
+                dni="00000000A",
+                telefono="000000000",
+                fecha_alta=date.today(),
+                activo=True
+            )
+            user_dao.insert(admin)
 
     def abrir_registro(self):
         self.login_window.hide()
@@ -39,7 +67,7 @@ class App:
         elif usuario.rol == "administrador":
             ventana = AdminPanel(usuario)
         else:
-            print(f"⚠️ Rol no soportado: {usuario.rol}")
+            print(f"Rol no soportado: {usuario.rol}")
             return
         ventana.show()
 

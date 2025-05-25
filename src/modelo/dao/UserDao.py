@@ -5,7 +5,7 @@ from src.modelo.vo.UserVo import UserVo
 class UserDao(Conexion):
     SQL_INSERT = """
         INSERT INTO Usuarios(dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo)
-        VALUES (?, ?, ?, ?, ?, ?, DATE('now'), ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
     SQL_SELECT = "SELECT * FROM Usuarios"
     SQL_FIND_BY_CORREO = "SELECT * FROM Usuarios WHERE email = ?"
@@ -21,33 +21,63 @@ class UserDao(Conexion):
                 user.correo,
                 user.contrasena,
                 user.telefono,
+                user.fecha_alta.strftime('%Y-%m-%d'),
                 user.activo,
                 user.rol
             ))
-            self.conexion.commit()
-            return cursor.lastrowid
+            return True
         except Exception as e:
             print("Error insertando usuario:", e)
-            return None
+            return False
 
     def find_by_correo(self, correo):
         cursor = self.getCursor()
         cursor.execute(self.SQL_FIND_BY_CORREO, (correo,))
         row = cursor.fetchone()
         if row:
-            return UserVo(*row)
+            # orden real de columnas según el SELECT
+            idUser, dni, nombre, correo, contrasena_hash, telefono, fecha_alta, activo, tipo, apellido = row
+            return UserVo(
+                idUser=idUser,
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                contrasena=contrasena_hash,
+                rol=tipo,
+                tui=None,
+                dni=dni,
+                telefono=telefono,
+                fecha_alta=fecha_alta,
+                activo=activo
+            )
         return None
 
     def select(self):
         cursor = self.getCursor()
         cursor.execute(self.SQL_SELECT)
-        return [UserVo(*row) for row in cursor.fetchall()]
+        usuarios = []
+        for row in cursor.fetchall():
+            idUser, dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, activo, tipo = row
+            usuario = UserVo(
+                idUser=idUser,
+                nombre=nombre,
+                apellido=apellido,
+                correo=email,
+                contrasena=contrasena_hash,
+                rol=tipo,
+                tui=None,
+                dni=dni,
+                telefono=telefono,
+                fecha_alta=fecha_alta,
+                activo=activo
+            )
+            usuarios.append(usuario)
+        return usuarios
 
     def update_saldo(self, id_usuario, nuevo_saldo):
         cursor = self.getCursor()
         try:
             cursor.execute(self.SQL_UPDATE_SALDO, (nuevo_saldo, id_usuario))
-            self.conexion.commit()
             return True
         except Exception as e:
             print("Error actualizando saldo:", e)

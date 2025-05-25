@@ -1,8 +1,9 @@
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
+from src.modelo.BussinessObject import BussinessObject
 
 class ControladorPrincipal:
-    def __init__(self, vista, modelo):
+    def __init__(self, vista, modelo: BussinessObject):
         self._vista = vista
         self._modelo = modelo  # instancia de BussinessObject
         self._usuario_actual = None
