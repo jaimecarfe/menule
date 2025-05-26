@@ -57,23 +57,32 @@ class App:
     def mostrar_menu_por_rol(self, usuario):
         self.login_window.close()
         if usuario.rol == "estudiante":
-            ventana = MenuEstudiante(usuario)
+            self.ventana_actual = MenuEstudiante(usuario)
         elif usuario.rol == "profesor":
-            ventana = MenuProfesor(usuario)
+            self.ventana_actual = MenuProfesor(usuario)
         elif usuario.rol == "personal_comedor":
-            ventana = MenuComedor(usuario)
+            self.ventana_actual = MenuComedor(usuario)
         elif usuario.rol == "visitante":
-            ventana = MenuVisitante(usuario)
+            self.ventana_actual = MenuVisitante(usuario)
         elif usuario.rol == "administrador":
-            ventana = AdminPanel(usuario)
+            self.ventana_actual = AdminPanel(usuario)
+            self.ventana_actual.callback_cerrar_sesion = self.abrir_login
         else:
-            print(f"Rol no soportado: {usuario.rol}")
+            print(f"⚠️ Rol no soportado: {usuario.rol}")
             return
-        ventana.show()
+        self.ventana_actual.show()
 
     def run(self):
         self.login_window.show()
         self.app.exec()
+
+    def abrir_login(self):
+        self.login_window = Login()
+        self.controlador = ControladorPrincipal(self.login_window, self.modelo)
+        self.login_window.controlador = self.controlador
+        self.login_window.abrir_registro = self.abrir_registro
+        self.controlador.on_login_exitoso = self.mostrar_menu_por_rol
+        self.login_window.show()
 
 if __name__ == "__main__":
     app_instance = App()

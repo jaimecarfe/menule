@@ -9,10 +9,14 @@ class EstudianteDao(Conexion):
 
     def insert(self, estudiante: EstudianteVo):
         cursor = self.getCursor()
-        cursor.execute(self.SQL_INSERT, (
-            estudiante.id_usuario,
-            estudiante.grado_academico,
-            estudiante.tui_numero,
-            estudiante.saldo
-        ))
-        self.conexion.commit()
+        try:
+            cursor.execute(self.SQL_INSERT, (
+                estudiante.id_usuario,
+                estudiante.grado_academico,
+                estudiante.tui_numero,
+                estudiante.saldo
+            ))
+            return True
+        except Exception as e:
+            print("Error insertando estudiante:", e)
+            return False

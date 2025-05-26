@@ -5,9 +5,9 @@ from src.modelo.BussinessObject import BussinessObject
 class ControladorPrincipal:
     def __init__(self, vista, modelo: BussinessObject):
         self._vista = vista
-        self._modelo = modelo  # instancia de BussinessObject
+        self._modelo = modelo
         self._usuario_actual = None
-        self.on_login_exitoso = None  # Callback para redirigir según rol
+        self.on_login_exitoso = None
 
     def login(self, correo, contrasena):
         loginVO = LoginVO(correo, contrasena)

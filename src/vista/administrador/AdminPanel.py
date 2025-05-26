@@ -1,12 +1,36 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMessageBox
+from src.vista.VentanaBase import VentanaBase
+from src.controlador.ControladorAdmin import ControladorAdmin
+from PyQt5 import uic
 
-class AdminPanel(QMainWindow):
+Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
+
+class AdminPanel(VentanaBase, Form):
     def __init__(self, usuario):
         super().__init__()
-        self.setWindowTitle("Panel de Administración")
+        self.setupUi(self)
         self.usuario = usuario
-        self.init_ui()
+        self._controlador = ControladorAdmin(self)
+        self._callback_cerrar_sesion = None
+        self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
 
-    def init_ui(self):
-        # Aquí puedes agregar los elementos de la interfaz gráfica
-        pass
+    @property
+    def callback_cerrar_sesion(self):
+        return self._callback_cerrar_sesion
+
+    @callback_cerrar_sesion.setter
+    def callback_cerrar_sesion(self, callback):
+        self._callback_cerrar_sesion = callback
+
+    def confirmar_cerrar_sesion(self):
+        respuesta = QMessageBox.question(
+            self,
+            "Cerrar Sesión",
+            "¿Estás seguro de que deseas cerrar sesión?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+
+        if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
+            self.close()
+            self._callback_cerrar_sesion()

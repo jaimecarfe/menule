@@ -14,4 +14,3 @@ class ProfesorDao(Conexion):
             profesor.grado_academico,
             profesor.saldo
         ))
-        self.conexion.commit()

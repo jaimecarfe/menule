@@ -65,6 +65,10 @@ class BussinessObject:
 
     def obtenerUsuarioPorCorreo(self, correo: str) -> UserVo | None:
         return UserDao().find_by_correo(correo)
+    
+    def listarUsuarios(self) -> list[UserVo]:
+        return UserDao().select()
+
 """
     # --- Reservas ---
     def crearReserva(self, reservaVO: ReservaVo) -> int | None:

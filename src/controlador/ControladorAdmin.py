@@ -1,38 +1,23 @@
 from src.modelo.BussinessObject import BussinessObject
-from src.modelo.vo.MenuVo import MenuVo
-from src.modelo.vo.UserVo import UseroVo
-from src.modelo.vo.IncidenciaVo import IncidenciaVo
-from src.modelo.vo.ReservaVo import ReservaVo
-from src.modelo.vo.PlatoVo import PlatoVo
-from src.modelo.vo.IncidenciaVo import IncidenciaVo
-
-
+from PyQt5.QtWidgets import QTableWidgetItem
 
 class ControladorAdmin:
-    def __init__(self, usuario_actual):
-        self._usuario = usuario_actual
+    def __init__(self, vista):
+        self._vista = vista
         self._modelo = BussinessObject()
+        self.cargar_usuarios_en_tabla()
 
-    def crear_usuario(self, userVO):
-        pass
+    def cargar_usuarios_en_tabla(self):
+        usuarios = self._modelo.listarUsuarios()
+        tabla = self._vista.tablaUsuarios
 
-    def listar_usuarios(self):
-        pass
+        tabla.setRowCount(len(usuarios))
+        tabla.setColumnCount(5)
+        tabla.setHorizontalHeaderLabels(["ID", "Nombre", "Correo", "Rol", "Activo"])
 
-    def eliminar_usuario(self, id_usuario):
-        pass
-
-    def crear_menu(self, menuVO):
-        pass
-
-    def modificar_plato(self, platoVO):
-        pass
-
-    def ver_estadisticas(self):
-        pass
-
-    def ver_incidencias(self):
-        pass
-
-    def resolver_incidencia(self, id_incidencia, solucion):
-        pass
+        for fila, usuario in enumerate(usuarios):
+            tabla.setItem(fila, 0, QTableWidgetItem(str(usuario.idUser)))
+            tabla.setItem(fila, 1, QTableWidgetItem(f"{usuario.nombre} {usuario.apellido}"))
+            tabla.setItem(fila, 2, QTableWidgetItem(usuario.correo))
+            tabla.setItem(fila, 3, QTableWidgetItem(usuario.rol))
+            tabla.setItem(fila, 4, QTableWidgetItem("Sí" if usuario.activo else "No"))

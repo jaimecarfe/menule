@@ -25,17 +25,17 @@ class UserDao(Conexion):
                 user.activo,
                 user.rol
             ))
-            return True
+            cursor.execute("SELECT LAST_INSERT_ID()")  # Para MySQL
+            return cursor.fetchone()[0]
         except Exception as e:
             print("Error insertando usuario:", e)
-            return False
+            return None
 
     def find_by_correo(self, correo):
         cursor = self.getCursor()
         cursor.execute(self.SQL_FIND_BY_CORREO, (correo,))
         row = cursor.fetchone()
         if row:
-            # orden real de columnas según el SELECT
             idUser, dni, nombre, correo, contrasena_hash, telefono, fecha_alta, activo, tipo, apellido = row
             return UserVo(
                 idUser=idUser,
@@ -57,12 +57,12 @@ class UserDao(Conexion):
         cursor.execute(self.SQL_SELECT)
         usuarios = []
         for row in cursor.fetchall():
-            idUser, dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, activo, tipo = row
+            idUser, dni, nombre, correo, contrasena_hash, telefono, fecha_alta, activo, tipo, apellido = row
             usuario = UserVo(
                 idUser=idUser,
                 nombre=nombre,
                 apellido=apellido,
-                correo=email,
+                correo=correo,
                 contrasena=contrasena_hash,
                 rol=tipo,
                 tui=None,

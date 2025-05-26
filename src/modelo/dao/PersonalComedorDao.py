@@ -14,4 +14,3 @@ class PersonalComedorDao(Conexion):
             personal.fecha_contratacion,
             personal.especialidad
         ))
-        self.conexion.commit()

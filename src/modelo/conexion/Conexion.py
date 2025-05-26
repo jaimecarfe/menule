@@ -44,7 +44,7 @@ if __name__ == "__main__":
     
     if cursor:
         cursor.execute("SELECT DATABASE();")
-        print("🔍 Base de datos seleccionada:", cursor.fetchone()[0])
+        print("Base de datos seleccionada:", cursor.fetchone()[0])
         conexion.closeConnection()
     else:
-        print("❌ No se pudo obtener el cursor.")
+        print("No se pudo obtener el cursor.")
