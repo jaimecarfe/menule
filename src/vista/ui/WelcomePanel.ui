@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WelcomePanel</class>
+ <widget class="QMainWindow" name="WelcomePanel">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>600</width><height>400</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>Bienvenido a MenULE</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                          stop:0 #2e7d32, stop:1 #a5d6a7);
+    }
+    QLabel {
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    QPushButton {
+        background-color: #ffffff;
+        color: #2e7d32;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    QPushButton:hover {
+        background-color: #c8e6c9;
+    }
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout" >
+    <item>
+     <widget class="QLabel" name="labelBienvenida">
+      <property name="text">
+       <string>¡Bienvenido a MenULE!</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelDescripcion">
+      <property name="text">
+       <string>Gestión de comedores universitarios de forma fácil y eficiente.</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnContinuar">
+      <property name="text">
+       <string>Continuar</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

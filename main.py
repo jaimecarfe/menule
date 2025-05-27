@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication
+from src.vista.WelcomePanel import WelcomePanel
 from src.vista.Login import Login
 from src.vista.Registro import Registro
 from src.vista.estudiante.MenuEstudiante import MenuEstudiante
@@ -19,11 +20,11 @@ class App:
         self.app = QApplication([])
         self.modelo = BussinessObject()
         self.crear_admin_por_defecto()
-        self.login_window = Login()
-        self.controlador = ControladorPrincipal(self.login_window, self.modelo)
-        self.login_window.controlador = self.controlador
-        self.login_window.abrir_registro = self.abrir_registro
-        self.controlador.on_login_exitoso = self.mostrar_menu_por_rol
+
+        # Mostrar WelcomePanel como pantalla inicial
+        self.welcome_window = WelcomePanel()
+        self.welcome_window.btnContinuar.clicked.connect(self.abrir_login)
+        self.welcome_window.show()
 
     def crear_admin_por_defecto(self):
         admin_email = "admin@menule.com"
@@ -48,6 +49,15 @@ class App:
             )
             user_dao.insert(admin)
 
+    def abrir_login(self):
+        self.welcome_window.close()
+        self.login_window = Login()
+        self.controlador = ControladorPrincipal(self.login_window, self.modelo)
+        self.login_window.controlador = self.controlador
+        self.login_window.abrir_registro = self.abrir_registro
+        self.controlador.on_login_exitoso = self.mostrar_menu_por_rol
+        self.login_window.show()
+
     def abrir_registro(self):
         self.login_window.hide()
         self.registro_window = Registro(volver_a=self.login_window)
@@ -68,21 +78,12 @@ class App:
             self.ventana_actual = AdminPanel(usuario)
             self.ventana_actual.callback_cerrar_sesion = self.abrir_login
         else:
-            print(f"⚠️ Rol no soportado: {usuario.rol}")
+            print(f"Rol no soportado: {usuario.rol}")
             return
         self.ventana_actual.show()
 
     def run(self):
-        self.login_window.show()
         self.app.exec()
-
-    def abrir_login(self):
-        self.login_window = Login()
-        self.controlador = ControladorPrincipal(self.login_window, self.modelo)
-        self.login_window.controlador = self.controlador
-        self.login_window.abrir_registro = self.abrir_registro
-        self.controlador.on_login_exitoso = self.mostrar_menu_por_rol
-        self.login_window.show()
 
 if __name__ == "__main__":
     app_instance = App()
