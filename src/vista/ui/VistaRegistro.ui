@@ -1,69 +1,123 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-<class>VistaRegistro</class>
-<widget class="QMainWindow" name="VistaRegistro">
-<property name="geometry">
-<rect><x>0</x><y>0</y><width>500</width><height>750</height></rect>
-</property>
-<property name="windowTitle">
-<string>MenULE - Registro</string>
-</property>
-<widget class="QWidget" name="centralwidget">
-<widget class="QLineEdit" name="lineEdit_nombre">
-<property name="geometry"><rect><x>150</x><y>40</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>Nombre</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_apellido">
-<property name="geometry"><rect><x>150</x><y>80</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>Apellido</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_correo">
-<property name="geometry"><rect><x>150</x><y>120</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>Correo</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_password">
-<property name="geometry"><rect><x>150</x><y>160</y><width>200</width><height>30</height></rect></property>
-<property name="echoMode"><enum>QLineEdit::Password</enum></property>
-<property name="placeholderText"><string>Contraseña</string></property>
-</widget>
-<widget class="QComboBox" name="comboBox_rol">
-<property name="geometry"><rect><x>150</x><y>200</y><width>200</width><height>30</height></rect></property>
-<item><property name="text"><string>estudiante</string></property></item>
-<item><property name="text"><string>profesor</string></property></item>
-<item><property name="text"><string>personal_comedor</string></property></item>
-<item><property name="text"><string>visitante</string></property></item>
-<item><property name="text"><string>administrador</string></property></item>
-</widget>
-<widget class="QLineEdit" name="lineEdit_tui">
-<property name="geometry"><rect><x>150</x><y>240</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>TUI (solo estudiantes)</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_grado">
-<property name="geometry"><rect><x>150</x><y>280</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>Grado académico</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_especialidad">
-<property name="geometry"><rect><x>150</x><y>320</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>Especialidad (comedor)</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_dni">
-<property name="geometry"><rect><x>150</x><y>360</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>DNI</string></property>
-</widget>
-<widget class="QLineEdit" name="lineEdit_telefono">
-<property name="geometry"><rect><x>150</x><y>400</y><width>200</width><height>30</height></rect></property>
-<property name="placeholderText"><string>Teléfono</string></property>
-</widget>
-<widget class="QPushButton" name="pushButton_registrar">
-<property name="geometry"><rect><x>180</x><y>460</y><width>120</width><height>30</height></rect></property>
-<property name="text"><string>Registrar</string></property>
-</widget>
-<widget class="QPushButton" name="pushButton_volver">
-<property name="geometry"><rect><x>180</x><y>510</y><width>120</width><height>30</height></rect></property>
-<property name="text"><string>Volver</string></property>
-</widget>
-</widget>
-<property name="styleSheet"><string>
+ <class>VistaRegistro</class>
+ <widget class="QMainWindow" name="VistaRegistro">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>750</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MenULE - Registro</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainVerticalLayout">
+    <item>
+     <spacer name="verticalSpacerTop">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacerLeft">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayoutFrame">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <property name="leftMargin">
+          <number>20</number>
+         </property>
+         <property name="topMargin">
+          <number>20</number>
+         </property>
+         <property name="rightMargin">
+          <number>20</number>
+         </property>
+         <property name="bottomMargin">
+          <number>20</number>
+         </property>
+
+         <item><widget class="QLineEdit" name="lineEdit_nombre"><property name="placeholderText"><string>Nombre</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_apellido"><property name="placeholderText"><string>Apellido</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_correo"><property name="placeholderText"><string>Correo</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_password"><property name="echoMode"><enum>QLineEdit::Password</enum></property><property name="placeholderText"><string>Contraseña</string></property></widget></item>
+         <item><widget class="QComboBox" name="comboBox_rol">
+           <item><property name="text"><string>estudiante</string></property></item>
+           <item><property name="text"><string>profesor</string></property></item>
+           <item><property name="text"><string>personal_comedor</string></property></item>
+           <item><property name="text"><string>visitante</string></property></item>
+           <item><property name="text"><string>administrador</string></property></item>
+         </widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_tui"><property name="placeholderText"><string>TUI (solo estudiantes)</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_grado"><property name="placeholderText"><string>Grado académico</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_especialidad"><property name="placeholderText"><string>Especialidad (comedor)</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_dni"><property name="placeholderText"><string>DNI</string></property></widget></item>
+         <item><widget class="QLineEdit" name="lineEdit_telefono"><property name="placeholderText"><string>Teléfono</string></property></widget></item>
+         <item><widget class="QPushButton" name="pushButton_registrar"><property name="text"><string>Registrar</string></property></widget></item>
+         <item><widget class="QPushButton" name="pushButton_volver"><property name="text"><string>Volver</string></property></widget></item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacerRight">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer name="verticalSpacerBottom">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <property name="styleSheet">
+   <string notr="true">
 QMainWindow {
     background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
                                       stop:0 #3a1c71, stop:1 #d76d77);
@@ -88,7 +142,9 @@ QPushButton#pushButton_volver {
     background-color: #e57373;
     color: white;
 }
-</string></property></widget>
-<resources/>
-<connections/>
+   </string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
 </ui>
