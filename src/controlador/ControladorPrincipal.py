@@ -23,11 +23,20 @@ class ControladorPrincipal:
             return False
 
     def insertar_usuario(self, userVO: UserVo):
-        if not self._modelo.obtenerUsuarioPorCorreo(userVO.correo):
-            return self._modelo.registrarUsuario(userVO)
-        else:
+        if self._modelo.obtenerUsuarioPorCorreo(userVO.correo):
             print("Correo ya registrado")
-            return None
+            return False
+
+        id_nuevo = self._modelo.registrarUsuario(userVO)
+        if id_nuevo:
+            print(f"Usuario registrado con ID: {id_nuevo}")
+            return True
+        else:
+            print("Error al registrar el usuario")
+            return False
 
     def get_usuario_actual(self):
         return self._usuario_actual
+    
+    def find_user_by_email(self, correo: str) -> UserVo | None:
+        return self._modelo.obtenerUsuarioPorCorreo(correo)

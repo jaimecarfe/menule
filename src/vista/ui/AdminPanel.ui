@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>AdminPanel</class>
  <widget class="QMainWindow" name="AdminPanel">
@@ -6,6 +7,14 @@
   </property>
   <property name="windowTitle">
    <string>Panel de Administración - MenULE</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                          stop:0 #3a1c71, stop:1 #d76d77);
+    }
+   </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="mainLayout">
@@ -66,6 +75,8 @@
     </item>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
