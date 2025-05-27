@@ -68,6 +68,9 @@ class BussinessObject:
     
     def listarUsuarios(self) -> list[UserVo]:
         return UserDao().select()
+    
+    def eliminarUsuario(self, id_usuario: int) -> bool:
+        return UserDao().delete(id_usuario)    
 
 """
     # --- Reservas ---

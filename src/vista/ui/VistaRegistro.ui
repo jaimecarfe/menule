@@ -1,68 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ui version="4.0">
- <class>VistaRegistro</class>
- <widget class="QMainWindow" name="VistaRegistro">
-  <property name="geometry">
-   <rect><x>0</x><y>0</y><width>500</width><height>750</height></rect>
-  </property>
-  <property name="windowTitle">
-   <string>MenULE - Registro</string>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="lineEdit_nombre">
-    <property name="geometry"><rect><x>150</x><y>40</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Nombre</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_apellido">
-    <property name="geometry"><rect><x>150</x><y>80</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Apellido</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_correo">
-    <property name="geometry"><rect><x>150</x><y>120</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Correo</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_password">
-    <property name="geometry"><rect><x>150</x><y>160</y><width>200</width><height>30</height></rect></property>
-    <property name="echoMode"><enum>QLineEdit::Password</enum></property>
-    <property name="placeholderText"><string>Contraseña</string></property>
-   </widget>
-   <widget class="QComboBox" name="comboBox_rol">
-    <property name="geometry"><rect><x>150</x><y>200</y><width>200</width><height>30</height></rect></property>
-    <item><property name="text"><string>estudiante</string></property></item>
-    <item><property name="text"><string>profesor</string></property></item>
-    <item><property name="text"><string>personal_comedor</string></property></item>
-    <item><property name="text"><string>visitante</string></property></item>
-    <item><property name="text"><string>administrador</string></property></item>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_tui">
-    <property name="geometry"><rect><x>150</x><y>240</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>TUI (solo estudiantes)</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_grado">
-    <property name="geometry"><rect><x>150</x><y>280</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Grado académico</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_especialidad">
-    <property name="geometry"><rect><x>150</x><y>320</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Especialidad (comedor)</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_dni">
-    <property name="geometry"><rect><x>150</x><y>360</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>DNI</string></property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_telefono">
-    <property name="geometry"><rect><x>150</x><y>400</y><width>200</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Teléfono</string></property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_registrar">
-    <property name="geometry"><rect><x>180</x><y>460</y><width>120</width><height>30</height></rect></property>
-    <property name="text"><string>Registrar</string></property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_volver">
-    <property name="geometry"><rect><x>180</x><y>510</y><width>120</width><height>30</height></rect></property>
-    <property name="text"><string>Volver</string></property>
-   </widget>
-  </widget>
- </widget>
- <resources/>
- <connections/>
+<class>VistaRegistro</class>
+<widget class="QMainWindow" name="VistaRegistro">
+<property name="geometry">
+<rect><x>0</x><y>0</y><width>500</width><height>750</height></rect>
+</property>
+<property name="windowTitle">
+<string>MenULE - Registro</string>
+</property>
+<widget class="QWidget" name="centralwidget">
+<widget class="QLineEdit" name="lineEdit_nombre">
+<property name="geometry"><rect><x>150</x><y>40</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>Nombre</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_apellido">
+<property name="geometry"><rect><x>150</x><y>80</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>Apellido</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_correo">
+<property name="geometry"><rect><x>150</x><y>120</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>Correo</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_password">
+<property name="geometry"><rect><x>150</x><y>160</y><width>200</width><height>30</height></rect></property>
+<property name="echoMode"><enum>QLineEdit::Password</enum></property>
+<property name="placeholderText"><string>Contraseña</string></property>
+</widget>
+<widget class="QComboBox" name="comboBox_rol">
+<property name="geometry"><rect><x>150</x><y>200</y><width>200</width><height>30</height></rect></property>
+<item><property name="text"><string>estudiante</string></property></item>
+<item><property name="text"><string>profesor</string></property></item>
+<item><property name="text"><string>personal_comedor</string></property></item>
+<item><property name="text"><string>visitante</string></property></item>
+<item><property name="text"><string>administrador</string></property></item>
+</widget>
+<widget class="QLineEdit" name="lineEdit_tui">
+<property name="geometry"><rect><x>150</x><y>240</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>TUI (solo estudiantes)</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_grado">
+<property name="geometry"><rect><x>150</x><y>280</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>Grado académico</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_especialidad">
+<property name="geometry"><rect><x>150</x><y>320</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>Especialidad (comedor)</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_dni">
+<property name="geometry"><rect><x>150</x><y>360</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>DNI</string></property>
+</widget>
+<widget class="QLineEdit" name="lineEdit_telefono">
+<property name="geometry"><rect><x>150</x><y>400</y><width>200</width><height>30</height></rect></property>
+<property name="placeholderText"><string>Teléfono</string></property>
+</widget>
+<widget class="QPushButton" name="pushButton_registrar">
+<property name="geometry"><rect><x>180</x><y>460</y><width>120</width><height>30</height></rect></property>
+<property name="text"><string>Registrar</string></property>
+</widget>
+<widget class="QPushButton" name="pushButton_volver">
+<property name="geometry"><rect><x>180</x><y>510</y><width>120</width><height>30</height></rect></property>
+<property name="text"><string>Volver</string></property>
+</widget>
+</widget>
+<property name="styleSheet"><string>
+QMainWindow {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                      stop:0 #3a1c71, stop:1 #d76d77);
+}
+QLineEdit, QComboBox {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+QPushButton {
+    border-radius: 10px;
+    font-weight: bold;
+    padding: 5px;
+}
+QPushButton#pushButton_registrar {
+    background-color: #337ab7;
+    color: white;
+}
+QPushButton#pushButton_volver {
+    background-color: #e57373;
+    color: white;
+}
+</string></property></widget>
+<resources/>
+<connections/>
 </ui>

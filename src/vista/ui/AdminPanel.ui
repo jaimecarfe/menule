@@ -12,13 +12,14 @@
     <item>
      <widget class="QTabWidget" name="tabPanel">
       <property name="tabPosition">
-       <enum>QTabWidget::West</enum>
+       <enum>QTabWidget::North</enum>
       </property>
 
       <widget class="QWidget" name="tabUsuarios">
        <attribute name="title"><string>Usuarios</string></attribute>
        <layout class="QVBoxLayout" name="layoutUsuarios">
         <item><widget class="QPushButton" name="btnAgregarUsuario"><property name="text"><string>Agregar Usuario</string></property></widget></item>
+        <item><widget class="QPushButton" name="btnEliminarUsuario"><property name="text"><string>Eliminar Usuario</string></property></widget></item>
         <item><widget class="QTableWidget" name="tablaUsuarios"/></item>
        </layout>
       </widget>

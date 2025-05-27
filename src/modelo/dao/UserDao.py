@@ -36,7 +36,7 @@ class UserDao(Conexion):
         cursor.execute(self.SQL_FIND_BY_CORREO, (correo,))
         row = cursor.fetchone()
         if row:
-            idUser, dni, nombre, correo, contrasena_hash, telefono, fecha_alta, activo, tipo, apellido = row
+            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
             return UserVo(
                 idUser=idUser,
                 nombre=nombre,
@@ -57,7 +57,7 @@ class UserDao(Conexion):
         cursor.execute(self.SQL_SELECT)
         usuarios = []
         for row in cursor.fetchall():
-            idUser, dni, nombre, correo, contrasena_hash, telefono, fecha_alta, activo, tipo, apellido = row
+            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
             usuario = UserVo(
                 idUser=idUser,
                 nombre=nombre,
@@ -81,4 +81,4 @@ class UserDao(Conexion):
             return True
         except Exception as e:
             print("Error actualizando saldo:", e)
-            return False
+            return False        
