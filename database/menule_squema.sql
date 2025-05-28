@@ -203,7 +203,7 @@ CREATE TABLE Estadisticas (
 
 -- Configuraciones
 CREATE TABLE configuraciones (
-    clave TEXT PRIMARY KEY,
+    clave VARCHAR(100) PRIMARY KEY,
     valor TEXT
 );
 
