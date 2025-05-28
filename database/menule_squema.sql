@@ -191,6 +191,13 @@ CREATE TABLE Estadisticas (
     FOREIGN KEY (plato_mas_popular) REFERENCES Platos(id_plato)
 );
 
+-- Configuraciones
+CREATE TABLE configuraciones (
+    clave TEXT PRIMARY KEY,
+    valor TEXT
+);
+
+
 -- Índices recomendados
 CREATE INDEX idx_usuario_email ON Usuarios(email);
 CREATE INDEX idx_usuario_tipo ON Usuarios(tipo);
