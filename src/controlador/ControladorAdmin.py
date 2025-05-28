@@ -4,10 +4,9 @@ from src.modelo.dao.UserDao import UserDao
 from src.modelo.dao.ConfiguracionDao import ConfiguracionDao
 
 class ControladorAdmin:
-    def __init__(self, vista):
+    def __init__(self, vista=None):
         self._vista = vista
         self._modelo = BussinessObject()
-        self.cargar_usuarios_en_tabla()
     
     def obtener_usuarios(self):
         return self._modelo.listarUsuarios()

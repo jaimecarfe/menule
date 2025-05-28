@@ -23,6 +23,16 @@ CREATE TABLE Usuarios (
 );
 
 -- Estudiantes
+/*
+ALTER TABLE Estudiantes
+DROP FOREIGN KEY estudiantes_ibfk_1;
+
+ALTER TABLE Estudiantes
+ADD CONSTRAINT estudiantes_ibfk_1
+FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+ON DELETE CASCADE;
+*/
+
 CREATE TABLE Estudiantes (
     id_usuario INT PRIMARY KEY,
     precio DECIMAL(10,2),

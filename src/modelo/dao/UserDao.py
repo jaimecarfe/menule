@@ -31,27 +31,6 @@ class UserDao(Conexion):
             print("Error insertando usuario:", e)
             return None
 
-    def find_by_correo(self, correo):
-        cursor = self.getCursor()
-        cursor.execute(self.SQL_FIND_BY_CORREO, (correo,))
-        row = cursor.fetchone()
-        if row:
-            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
-            return UserVo(
-                idUser=idUser,
-                nombre=nombre,
-                apellido=apellido,
-                correo=correo,
-                contrasena=contrasena_hash,
-                rol=tipo,
-                tui=None,
-                dni=dni,
-                telefono=telefono,
-                fecha_alta=fecha_alta,
-                activo=activo
-            )
-        return None
-
     def select(self):
         cursor = self.getCursor()
         cursor.execute(self.SQL_SELECT)
@@ -93,6 +72,55 @@ class UserDao(Conexion):
             conexion = Conexion()
             cursor = conexion.getCursor()
             cursor.execute("UPDATE usuarios SET credencial_activa = FALSE WHERE id_usuario = ?", (user_id,))
+            return True
+        except Exception as e:
+            print(f"Error al eliminar usuario: {e}")
+            return False
+        
+    def find_by_correo(self, correo):
+        """
+        Devuelve un usuario activo por correo. Solo si credencial_activa = 1.
+        """
+        cursor = self.getCursor()
+        cursor.execute("SELECT * FROM Usuarios WHERE email = ? AND credencial_activa = 1", (correo,))
+        row = cursor.fetchone()
+        if row:
+            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
+            return UserVo(
+                idUser=idUser,
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                contrasena=contrasena_hash,
+                rol=tipo,
+                tui=None,
+                dni=dni,
+                telefono=telefono,
+                fecha_alta=fecha_alta,
+                activo=activo
+            )
+        return None
+
+
+    def eliminar_usuario_logico(self, user_id):
+        """
+        Elimina completamente al usuario de la base de datos, excepto si es administrador.
+        """
+        try:
+            cursor = self.getCursor()
+            cursor.execute("SELECT tipo FROM Usuarios WHERE id_usuario = ?", (user_id,))
+            row = cursor.fetchone()
+            if not row:
+                print("Usuario no encontrado.")
+                return False
+
+            rol = row[0]
+            if rol == "administrador":
+                print("No se puede eliminar un administrador.")
+                return False
+
+            cursor.execute("DELETE FROM Estudiantes WHERE id_usuario = ?", (user_id,))
+            cursor.execute("DELETE FROM Usuarios WHERE id_usuario = ?", (user_id,))
             return True
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")

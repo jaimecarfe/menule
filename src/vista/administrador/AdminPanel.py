@@ -11,6 +11,7 @@ class AdminPanel(VentanaBase, Form):
         self.setupUi(self)
         self.usuario = usuario
         self._controlador = ControladorAdmin(self)
+        self.controlador.cargar_usuarios_en_tabla()
         self._callback_cerrar_sesion = None
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
         self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)

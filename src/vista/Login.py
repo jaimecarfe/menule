@@ -1,6 +1,9 @@
 from PyQt5.QtWidgets import QMessageBox
 from src.vista.VentanaBase import VentanaBase
 from PyQt5 import uic
+from src.vista.administrador.AdminPanel import AdminPanel
+from src.vista.PanelGeneral import PanelGeneral  # el nuevo que creamos
+
 
 Form, Window = uic.loadUiType("./src/vista/ui/VistaLogging.ui")
 
@@ -26,11 +29,27 @@ class Login(VentanaBase, Form):
         contraseña = self.lineEdit_contrasena.text()
 
         if not correo or not contraseña:
-            QMessageBox.warning(self, "Error", "Completa todos los campos.")
+            QMessageBox.warning(self, "Campos requeridos", "Completa todos los campos.")
             return
 
-        if not self._controlador.login(correo, contraseña):
-            QMessageBox.critical(self, "Error", "Correo o contraseña incorrectos.")
+        if not self._controlador:
+            QMessageBox.critical(self, "Error interno", "Controlador no definido.")
+            return
+
+        usuario = self._controlador.login_usuario(correo, contraseña)
+
+        if usuario:
+
+            if usuario.rol == "administrador":
+                self.ventana = AdminPanel(usuario)
+            else:
+                self.ventana = PanelGeneral(usuario)
+
+            self.ventana.show()
+            self.close()
+
+        else:
+            QMessageBox.critical(self, "Error", "Correo, contraseña inválidos o usuario desactivado.")
 
     def abrir_registro(self):
         if hasattr(self, "abrir_registro"):

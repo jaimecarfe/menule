@@ -1,6 +1,7 @@
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
 from src.modelo.BussinessObject import BussinessObject
+import bcrypt
 
 class ControladorPrincipal:
     def __init__(self, vista, modelo: BussinessObject):
@@ -21,6 +22,18 @@ class ControladorPrincipal:
         else:
             print("Credenciales incorrectas")
             return False
+        
+    def login_usuario(self, correo, contrasena):
+        """
+        Devuelve el usuario si las credenciales son correctas y está activo.
+        """
+        loginVO = LoginVO(correo, contrasena)
+        usuario = self._modelo.comprobarLogin(loginVO)
+
+        if usuario and bcrypt.checkpw(contrasena.encode(), usuario.contrasena.encode()):
+            return usuario
+        return None
+
 
     def insertar_usuario(self, userVO: UserVo):
         if self._modelo.obtenerUsuarioPorCorreo(userVO.correo):
