@@ -2,6 +2,7 @@ from src.modelo.dao.UserDao import UserDao
 from src.modelo.dao.EstudianteDao import EstudianteDao
 from src.modelo.dao.ProfesorDao import ProfesorDao
 from src.modelo.dao.PersonalComedorDao import PersonalComedorDao
+from src.modelo.dao.EstadisticaDao import EstadisticaDao
 """
 from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.MenuDao import MenuDao
@@ -10,13 +11,13 @@ from src.modelo.dao.TicketDao import TicketDao
 from src.modelo.dao.PagoDao import PagoDao
 from src.modelo.dao.IncidenciaDao import IncidenciaDao
 from src.modelo.dao.IngredienteDao import IngredienteDao
-from src.modelo.dao.EstadisticaDao import EstadisticaDao
 """
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
 from src.modelo.vo.EstudianteVo import EstudianteVo
 from src.modelo.vo.ProfesorVo import ProfesorVo
 from src.modelo.vo.PersonalComedorVo import PersonalComedorVo
+from src.modelo.vo.EstadisticaVo import EstadisticaVo
 """
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
@@ -72,6 +73,21 @@ class BussinessObject:
     def eliminarUsuario(self, id_usuario: int) -> bool:
         return UserDao().delete(id_usuario)    
 
+    # --- Estadísticas ---
+    def obtenerEstadisticas(self, tipo):
+        dao = EstadisticaDao()
+        if tipo == 'Pagos':
+            datos = dao.obtener_pagos()
+        elif tipo == 'Incidencias':
+            datos = dao.obtener_incidencias()
+        elif tipo == 'Menús':
+            datos = dao.obtener_menus()
+        elif tipo == 'Reservas':
+            datos = dao.obtener_reservas()
+        else:
+            datos = []
+        
+        return EstadisticaVo(tipo, datos)
 """
     # --- Reservas ---
     def crearReserva(self, reservaVO: ReservaVo) -> int | None:
@@ -119,7 +135,4 @@ class BussinessObject:
     def consultarStockIngredientes(self):
         return IngredienteDao().listar()
 
-    # --- Estadísticas ---
-    def obtenerEstadisticasDiarias(self):
-        return EstadisticaDao().obtener_diarias()
 """

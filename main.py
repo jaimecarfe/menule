@@ -19,35 +19,11 @@ class App:
     def __init__(self):
         self.app = QApplication([])
         self.modelo = BussinessObject()
-        self.crear_admin_por_defecto()
 
         # Mostrar WelcomePanel como pantalla inicial
         self.welcome_window = WelcomePanel()
         self.welcome_window.btnContinuar.clicked.connect(self.abrir_login)
         self.welcome_window.show()
-
-    def crear_admin_por_defecto(self):
-        admin_email = "admin@menule.com"
-        admin_contra = "admin123"
-
-        user_dao = UserDao()
-        if not user_dao.find_by_correo(admin_email):
-            hash_pw = bcrypt.hashpw(admin_contra.encode(), bcrypt.gensalt()).decode()
-            admin = UserVo(
-                idUser=None,
-                nombre="Admin",
-                apellido="MenULE",
-                correo=admin_email,
-                contrasena=hash_pw,
-                rol="administrador",
-                saldo=0.0,
-                tui=None,
-                dni="00000000A",
-                telefono="000000000",
-                fecha_alta=date.today(),
-                activo=True
-            )
-            user_dao.insert(admin)
 
     def abrir_login(self):
         self.welcome_window.close()
