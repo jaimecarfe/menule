@@ -41,9 +41,7 @@ class AdminPanel(VentanaBase, Form):
         )
         if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
             self.close()
-<<<<<<< HEAD
             self._callback_cerrar_sesion()
-=======
             self._callback_cerrar_sesion()
 
     def cargar_usuarios(self):
@@ -71,4 +69,3 @@ class AdminPanel(VentanaBase, Form):
                     self.cargar_usuarios()
                 else:
                     QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
->>>>>>> dbd9bbde71dcff13cb9156159a9643fb839386b6
