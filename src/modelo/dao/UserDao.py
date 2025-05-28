@@ -125,3 +125,10 @@ class UserDao(Conexion):
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
             return False
+    
+    def listarUsuarios(self):
+        query = "SELECT * FROM usuarios"
+        cursor = self.getCursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return [UserVo(*row) for row in rows]
