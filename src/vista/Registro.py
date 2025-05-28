@@ -101,8 +101,6 @@ class Registro(VentanaBase, Form):
             self.close()
             if self._ventana_anterior:
                 self._ventana_anterior.show()
-        else:
-            QMessageBox.critical(self, "Error", "El correo ya existe o hubo un error al registrar.")
 
     def volver(self):
         self.close()

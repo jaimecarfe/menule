@@ -1,9 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout
-from src.vista.administrador.ConfiguracionSistema import ConfiguracionSistema
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from src.vista.estudiante.MenuEstudiante import MenuEstudiante
-from src.controlador.ControladorAdmin import ControladorAdmin
-from src.vista.administrador.AdminPanel import AdminPanel
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
+from src.controlador.ControladorAdmin import ControladorAdmin
 
 
 class PanelEstudiante(QWidget):
@@ -32,8 +31,19 @@ class PanelEstudiante(QWidget):
         self.menu_window.show()
 
     def abrir_configuracion(self):
-        self.config_window = ConfiguracionUsuario(self.usuario, self.cerrar_sesion)
+        self.config_window = ConfiguracionUsuario(self.usuario, self.confirmar_cerrar_sesion)
         self.config_window.show()
+
+    def confirmar_cerrar_sesion(self):
+        respuesta = QMessageBox.question(
+            self,
+            "Cerrar Sesión",
+            "¿Estás seguro de que deseas cerrar sesión?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        if respuesta == QMessageBox.Yes:
+            self.cerrar_sesion()
 
     def cerrar_sesion(self):
         from src.vista.Login import Login  # <--- se importa solo cuando se necesita
@@ -43,6 +53,3 @@ class PanelEstudiante(QWidget):
         self.login_window = Login()
         self.login_window.controlador = ControladorPrincipal(self.login_window, self.login_window)
         self.login_window.show()
-
-
-

@@ -2,7 +2,9 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5 import uic
 from src.vista.VentanaBase import VentanaBase
 from src.vista.administrador.AdminPanel import AdminPanel
-from src.vista.estudiante.PanelEstudiante import PanelEstudiante  # NUEVO panel para estudiantes
+from src.vista.estudiante.PanelEstudiante import PanelEstudiante
+from src.controlador.ControladorPrincipal import ControladorPrincipal
+from src.modelo.BussinessObject import BussinessObject
 
 Form, Window = uic.loadUiType("./src/vista/ui/VistaLogging.ui")
 
@@ -10,7 +12,9 @@ class Login(VentanaBase, Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self._controlador = None
+
+        self._modelo = BussinessObject()
+        self._controlador = ControladorPrincipal(self, self._modelo)
 
         self.setWindowTitle("MenULE - Iniciar Sesión")
         self.resize(432, 505)
@@ -30,10 +34,6 @@ class Login(VentanaBase, Form):
             QMessageBox.warning(self, "Campos requeridos", "Completa todos los campos.")
             return
 
-        if not self._controlador:
-            QMessageBox.critical(self, "Error interno", "Controlador no definido.")
-            return
-
         usuario = self._controlador.login_usuario(correo, contraseña)
 
         if usuario:
@@ -42,6 +42,7 @@ class Login(VentanaBase, Form):
                 self.ventana.callback_cerrar_sesion = self.volver_al_login
             elif usuario.rol == "estudiante":
                 self.ventana = PanelEstudiante(usuario)
+                self.ventana.callback_cerrar_sesion = self.volver_al_login
             else:
                 QMessageBox.warning(self, "Acceso denegado", f"Rol no autorizado: {usuario.rol}")
                 return
@@ -55,19 +56,6 @@ class Login(VentanaBase, Form):
         if hasattr(self, "abrir_registro"):
             self.abrir_registro()
 
-    @property
-    def controlador(self):
-        return self._controlador
-
-    @controlador.setter
-    def controlador(self, controlador):
-        self._controlador = controlador
-
     def volver_al_login(self):
-        from src.vista.Login import Login
-        from src.controlador.ControladorPrincipal import ControladorPrincipal
-
         self.login = Login()
-        self.login.controlador = ControladorPrincipal(self.login, self.login)
         self.login.show()
-
