@@ -46,7 +46,7 @@ class PanelEstudiante(QWidget):
             self.cerrar_sesion()
 
     def cerrar_sesion(self):
-        from src.vista.Login import Login  # <--- se importa solo cuando se necesita
+        from src.vista.Login import Login
         from src.controlador.ControladorPrincipal import ControladorPrincipal
 
         self.close()
