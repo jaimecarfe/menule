@@ -8,6 +8,9 @@ class ControladorAdmin:
         self._vista = vista
         self._modelo = BussinessObject()
         self.cargar_usuarios_en_tabla()
+    
+    def obtener_usuarios(self):
+        return self._modelo.listarUsuarios()
 
     def cargar_usuarios_en_tabla(self):
         usuarios = self._modelo.listarUsuarios()

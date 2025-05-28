@@ -13,7 +13,7 @@ class AdminPanel(VentanaBase, Form):
         self._controlador = ControladorAdmin(self)
         self._callback_cerrar_sesion = None
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
-        self.botonEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
+        self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
         self.cargar_usuarios()
 
     @property
@@ -32,23 +32,22 @@ class AdminPanel(VentanaBase, Form):
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No
         )
-
         if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
             self.close()
             self._callback_cerrar_sesion()
 
     def cargar_usuarios(self):
-        """
-        Obtiene todos los usuarios y los muestra en la tabla.
-        """
+        """Obtiene todos los usuarios y los muestra en la tabla."""
         self.tablaUsuarios.setRowCount(0)
-        usuarios = self.controlador.obtener_usuarios()
+        usuarios = self._controlador._modelo.listarUsuarios()
         for fila_idx, usuario in enumerate(usuarios):
             self.tablaUsuarios.insertRow(fila_idx)
-            self.tablaUsuarios.setItem(fila_idx, 0, QTableWidgetItem(str(usuario["id"])))
-            self.tablaUsuarios.setItem(fila_idx, 1, QTableWidgetItem(usuario["nombre"]))
-            self.tablaUsuarios.setItem(fila_idx, 2, QTableWidgetItem(usuario["email"]))
-            self.tablaUsuarios.setItem(fila_idx, 3, QTableWidgetItem(usuario["rol"]))
+            self.tablaUsuarios.setItem(fila_idx, 0, QTableWidgetItem(str(usuario.idUser)))
+            self.tablaUsuarios.setItem(fila_idx, 1, QTableWidgetItem(usuario.nombre))
+            self.tablaUsuarios.setItem(fila_idx, 2, QTableWidgetItem(usuario.apellido))
+            self.tablaUsuarios.setItem(fila_idx, 3, QTableWidgetItem(usuario.correo))
+            self.tablaUsuarios.setItem(fila_idx, 4, QTableWidgetItem(usuario.rol))
+            self.tablaUsuarios.setItem(fila_idx, 5, QTableWidgetItem("Sí" if usuario.activo else "No"))
 
     def eliminar_usuario_seleccionado(self):
         fila = self.tablaUsuarios.currentRow()
@@ -56,7 +55,7 @@ class AdminPanel(VentanaBase, Form):
             user_id = self.tablaUsuarios.item(fila, 0).text()
             confirmacion = QMessageBox.question(self, "Confirmar", "¿Deseas eliminar este usuario?")
             if confirmacion == QMessageBox.Yes:
-                exito = self.controlador.eliminar_usuario(user_id)
+                exito = self._controlador.eliminar_usuario(user_id)
                 if exito:
                     QMessageBox.information(self, "Éxito", "Usuario eliminado.")
                     self.cargar_usuarios()
