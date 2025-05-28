@@ -7,7 +7,7 @@ class UserDao(Conexion):
         INSERT INTO Usuarios(dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
-    SQL_SELECT = "SELECT * FROM Usuarios"
+    SQL_SELECT = "SELECT * FROM Usuarios WHERE credencial_activa = TRUE"
     SQL_FIND_BY_CORREO = "SELECT * FROM Usuarios WHERE email = ?"
     SQL_UPDATE_SALDO = "UPDATE Usuarios SET saldo = ? WHERE id_usuario = ?"
 
@@ -91,9 +91,8 @@ class UserDao(Conexion):
         """
         try:
             conexion = Conexion()
-            cursor = conexion.conectar().cursor()
-            cursor.execute("UPDATE usuarios SET activo = 0 WHERE id = ?", (user_id,))
-            conexion.conectar().commit()
+            cursor = conexion.getCursor()
+            cursor.execute("UPDATE usuarios SET credencial_activa = FALSE WHERE id_usuario = ?", (user_id,))
             return True
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
