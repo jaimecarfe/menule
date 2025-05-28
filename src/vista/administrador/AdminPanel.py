@@ -3,8 +3,12 @@ from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorAdmin import ControladorAdmin
 from PyQt5 import uic
 from src.vista.administrador.Estadisticas import VentanaEstadisticas
+<<<<<<< HEAD
+from src.vista.administrador.VentanaRegistrarAdmin import VentanaRegistrarAdmin
+=======
 from src.vista.comun.CambiarContrasena import CambiarContrasena
 
+>>>>>>> 6ceb5188d1ab7424bec71e4ef4dee30c58d2b0dd
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
@@ -18,7 +22,11 @@ class AdminPanel(VentanaBase, Form):
         self._callback_cerrar_sesion = None
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
         self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
+<<<<<<< HEAD
+        self.btnAgregarUsuario.clicked.connect(self.abrir_ventana_registrar_admin)
+=======
         self.btnCambiarContrasena.clicked.connect(self.abrir_cambio_contrasena)
+>>>>>>> 6ceb5188d1ab7424bec71e4ef4dee30c58d2b0dd
         self.cargar_usuarios()
 
         # --- Integración de la pestaña de estadísticas ---
@@ -73,7 +81,18 @@ class AdminPanel(VentanaBase, Form):
                 else:
                     QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
 
+<<<<<<< HEAD
+    def abrir_ventana_registrar_admin(self):
+        self.ventana_registro = VentanaRegistrarAdmin(callback_volver=self.show)
+        self.hide()
+        self.ventana_registro.show()
+    
+    def showEvent(self, event):
+        super().showEvent(event)
+        self._controlador.cargar_usuarios_en_tabla()
+=======
     def abrir_cambio_contrasena(self):
         self.ventana_cambio = CambiarContrasena(self.usuario)
         self.ventana_cambio.show()
 
+>>>>>>> 6ceb5188d1ab7424bec71e4ef4dee30c58d2b0dd

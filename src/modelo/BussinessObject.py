@@ -29,6 +29,8 @@ import bcrypt
 from datetime import date
 
 class BussinessObject:
+    def __init__(self):
+        self.user_dao = UserDao()
     # --- Usuarios ---
     def comprobarLogin(self, loginVO: LoginVO) -> UserVo | None:
         user_dao = UserDao()
@@ -88,6 +90,9 @@ class BussinessObject:
             datos = []
         
         return EstadisticaVo(tipo, datos)
+    
+    def listarUsuarios(self):
+        return self.user_dao.listarUsuarios()
 """
     # --- Reservas ---
     def crearReserva(self, reservaVO: ReservaVo) -> int | None:

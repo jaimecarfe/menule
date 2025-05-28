@@ -126,6 +126,14 @@ class UserDao(Conexion):
             print(f"Error al eliminar usuario: {e}")
             return False
     
+<<<<<<< HEAD
+    def listarUsuarios(self):
+        query = "SELECT * FROM usuarios"
+        cursor = self.getCursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return [UserVo(*row) for row in rows]
+=======
     def actualizar_contrasena(self, id_usuario, nueva_contrasena_hash):
         cursor = self.getCursor()
         try:
@@ -135,3 +143,4 @@ class UserDao(Conexion):
             print("Error al actualizar contraseña:", e)
             return False
 
+>>>>>>> 6ceb5188d1ab7424bec71e4ef4dee30c58d2b0dd
