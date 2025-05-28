@@ -32,7 +32,7 @@ src/
 ## Tecnologías utilizadas
 - Python 3.x
 - PyQt5
-- SQLite (MySQL compatible)
+- MySQL
 - MVC + DAO + VO como patrón de arquitectura
 
 ## Cómo ejecutar

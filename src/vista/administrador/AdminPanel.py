@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorAdmin import ControladorAdmin
 from PyQt5 import uic
+from src.vista.administrador.Estadisticas import VentanaEstadisticas
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
@@ -16,6 +17,12 @@ class AdminPanel(VentanaBase, Form):
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
         self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
         self.cargar_usuarios()
+
+        # --- Integración de la pestaña de estadísticas ---
+        # Si ya tienes un tab de estadísticas en el UI, reemplaza el widget por VentanaEstadisticas
+        # Si no lo tienes, añade uno nuevo
+        self.tabEstadisticas = VentanaEstadisticas(self)
+        self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")    
 
     @property
     def callback_cerrar_sesion(self):
@@ -35,6 +42,7 @@ class AdminPanel(VentanaBase, Form):
         )
         if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
             self.close()
+            self._callback_cerrar_sesion()
             self._callback_cerrar_sesion()
 
     def cargar_usuarios(self):
