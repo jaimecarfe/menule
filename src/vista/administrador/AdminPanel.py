@@ -43,7 +43,6 @@ class AdminPanel(VentanaBase, Form):
         if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
             self.close()
             self._callback_cerrar_sesion()
-            self._callback_cerrar_sesion()
 
     def cargar_usuarios(self):
         """Obtiene todos los usuarios y los muestra en la tabla."""

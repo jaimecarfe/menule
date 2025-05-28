@@ -125,3 +125,13 @@ class UserDao(Conexion):
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
             return False
+    
+    def actualizar_contrasena(self, id_usuario, nueva_contrasena_hash):
+        cursor = self.getCursor()
+        try:
+            cursor.execute("UPDATE Usuarios SET contrasena_hash = ? WHERE id_usuario = ?", (nueva_contrasena_hash, id_usuario))
+            return True
+        except Exception as e:
+            print("Error al actualizar contraseña:", e)
+            return False
+
