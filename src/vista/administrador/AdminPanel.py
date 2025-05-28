@@ -3,6 +3,8 @@ from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorAdmin import ControladorAdmin
 from PyQt5 import uic
 from src.vista.administrador.Estadisticas import VentanaEstadisticas
+from src.vista.comun.CambiarContrasena import CambiarContrasena
+
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
@@ -16,6 +18,7 @@ class AdminPanel(VentanaBase, Form):
         self._callback_cerrar_sesion = None
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
         self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
+        self.btnCambiarContrasena.clicked.connect(self.abrir_cambio_contrasena)
         self.cargar_usuarios()
 
         # --- Integración de la pestaña de estadísticas ---
@@ -69,3 +72,8 @@ class AdminPanel(VentanaBase, Form):
                     self.cargar_usuarios()
                 else:
                     QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
+
+    def abrir_cambio_contrasena(self):
+        self.ventana_cambio = CambiarContrasena(self.usuario)
+        self.ventana_cambio.show()
+
