@@ -82,3 +82,19 @@ class UserDao(Conexion):
         except Exception as e:
             print("Error actualizando saldo:", e)
             return False        
+
+    def eliminar_usuario_logico(self, user_id):
+        """
+        Marca un usuario como inactivo (eliminación lógica).
+        :param user_id: ID del usuario a desactivar
+        :return: True si se realizó la operación, False si falló
+        """
+        try:
+            conexion = Conexion()
+            cursor = conexion.conectar().cursor()
+            cursor.execute("UPDATE usuarios SET activo = 0 WHERE id = ?", (user_id,))
+            conexion.conectar().commit()
+            return True
+        except Exception as e:
+            print(f"Error al eliminar usuario: {e}")
+            return False

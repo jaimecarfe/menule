@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorAdmin import ControladorAdmin
 from PyQt5 import uic
@@ -13,6 +13,8 @@ class AdminPanel(VentanaBase, Form):
         self._controlador = ControladorAdmin(self)
         self._callback_cerrar_sesion = None
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
+        self.botonEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
+        self.cargar_usuarios()
 
     @property
     def callback_cerrar_sesion(self):
@@ -34,3 +36,29 @@ class AdminPanel(VentanaBase, Form):
         if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
             self.close()
             self._callback_cerrar_sesion()
+
+    def cargar_usuarios(self):
+        """
+        Obtiene todos los usuarios y los muestra en la tabla.
+        """
+        self.tablaUsuarios.setRowCount(0)
+        usuarios = self.controlador.obtener_usuarios()
+        for fila_idx, usuario in enumerate(usuarios):
+            self.tablaUsuarios.insertRow(fila_idx)
+            self.tablaUsuarios.setItem(fila_idx, 0, QTableWidgetItem(str(usuario["id"])))
+            self.tablaUsuarios.setItem(fila_idx, 1, QTableWidgetItem(usuario["nombre"]))
+            self.tablaUsuarios.setItem(fila_idx, 2, QTableWidgetItem(usuario["email"]))
+            self.tablaUsuarios.setItem(fila_idx, 3, QTableWidgetItem(usuario["rol"]))
+
+    def eliminar_usuario_seleccionado(self):
+        fila = self.tablaUsuarios.currentRow()
+        if fila >= 0:
+            user_id = self.tablaUsuarios.item(fila, 0).text()
+            confirmacion = QMessageBox.question(self, "Confirmar", "¿Deseas eliminar este usuario?")
+            if confirmacion == QMessageBox.Yes:
+                exito = self.controlador.eliminar_usuario(user_id)
+                if exito:
+                    QMessageBox.information(self, "Éxito", "Usuario eliminado.")
+                    self.cargar_usuarios()
+                else:
+                    QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
