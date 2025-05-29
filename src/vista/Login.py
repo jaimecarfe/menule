@@ -53,8 +53,9 @@ class Login(VentanaBase, Form):
             QMessageBox.critical(self, "Error", "Correo, contraseña inválidos o usuario desactivado.")
 
     def abrir_registro(self):
-        if hasattr(self, "abrir_registro"):
-            self.abrir_registro()
+        from src.vista.Registro import Registro
+        self.ventana_registro = Registro()
+        self.ventana_registro.show()
 
     def volver_al_login(self):
         self.login = Login()

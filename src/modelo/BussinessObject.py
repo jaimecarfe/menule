@@ -75,6 +75,8 @@ class BussinessObject:
     def eliminarUsuario(self, id_usuario: int) -> bool:
         return UserDao().delete(id_usuario)    
 
+    def listarUsuarios(self):
+        return self.user_dao.listarUsuarios()
     # --- Estadísticas ---
     def obtenerEstadisticas(self, tipo):
         dao = EstadisticaDao()
@@ -91,8 +93,6 @@ class BussinessObject:
         
         return EstadisticaVo(tipo, datos)
     
-    def listarUsuarios(self):
-        return self.user_dao.listarUsuarios()
 """
     # --- Reservas ---
     def crearReserva(self, reservaVO: ReservaVo) -> int | None:

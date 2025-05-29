@@ -23,9 +23,6 @@ class AdminPanel(VentanaBase, Form):
         self.btnCambiarContrasena.clicked.connect(self.abrir_cambio_contrasena)
         self.cargar_usuarios()
 
-        # --- Integración de la pestaña de estadísticas ---
-        # Si ya tienes un tab de estadísticas en el UI, reemplaza el widget por VentanaEstadisticas
-        # Si no lo tienes, añade uno nuevo
         self.tabEstadisticas = VentanaEstadisticas(self)
         self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")    
 
@@ -76,13 +73,15 @@ class AdminPanel(VentanaBase, Form):
                     QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
 
     def abrir_ventana_registrar_admin(self):
-        self.ventana_registro = VentanaRegistrarAdmin(callback_volver=self.show)
+        from src.vista.Registro import Registro
+        self.ventana_registro = Registro(volver_a=self)
         self.hide()
-        self.ventana_registro.show()
-    
+        self.ventana_registro.show() 
+   
     def showEvent(self, event):
         super().showEvent(event)
         self._controlador.cargar_usuarios_en_tabla()
+
     def abrir_cambio_contrasena(self):
         self.ventana_cambio = CambiarContrasena(self.usuario)
         self.ventana_cambio.show()
