@@ -73,11 +73,13 @@ class AdminPanel(VentanaBase, Form):
                     QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
 
     def abrir_ventana_registrar_admin(self):
-        from src.vista.Registro import Registro
-        self.ventana_registro = Registro(volver_a=self)
+        def volver_y_recargar():
+            self.show()
+            self.cargar_usuarios()
+        self.ventana_registro = VentanaRegistrarAdmin(callback_volver=volver_y_recargar)
         self.hide()
         self.ventana_registro.show() 
-   
+          
     def showEvent(self, event):
         super().showEvent(event)
         self._controlador.cargar_usuarios_en_tabla()

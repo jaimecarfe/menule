@@ -9,7 +9,6 @@ class VentanaRegistrarAdmin(QMainWindow, Form):
     def __init__(self, callback_volver=None):
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle("Registrar nuevo usuario")
         self.callback_volver = callback_volver
 
         self.pushButton_registrar.clicked.connect(self.registrar_usuario)
