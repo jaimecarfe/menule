@@ -153,3 +153,22 @@ class UserDao(Conexion):
         except Exception as e:
             print("Error al actualizar contraseña:", e)
             return False
+    
+    def actualizar_campo_usuario(self, id_usuario, campo, valor):
+        campos_permitidos = ["dni","nombre", "apellido", "email", "tipo", "credencial_activa"]
+        if campo not in campos_permitidos:
+            raise ValueError(f"Campo no permitido: {campo}")
+        if isinstance(valor, str):
+            valor_sql = f"'{valor}'"
+        elif isinstance(valor, bool):
+            valor_sql = "1" if valor else "0"
+        else:
+            valor_sql = str(valor)
+        sql = f"UPDATE Usuarios SET {campo} = {valor_sql} WHERE id_usuario = {id_usuario}"
+        conexion = Conexion()
+        cursor = conexion.getCursor()
+        cursor.execute(sql)
+        cursor.close()
+        conexion.closeConnection()
+
+

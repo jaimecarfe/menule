@@ -43,3 +43,7 @@ class ControladorAdmin:
     def guardar_configuracion(self, clave, valor):
         dao = ConfiguracionDao()
         return dao.guardar_configuracion(clave, valor)
+
+    def actualizar_usuario(self, id_usuario, campo, nuevo_valor):
+        dao = UserDao()
+        dao.actualizar_campo_usuario(id_usuario, campo, nuevo_valor)

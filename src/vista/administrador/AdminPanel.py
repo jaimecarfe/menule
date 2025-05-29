@@ -22,7 +22,7 @@ class AdminPanel(VentanaBase, Form):
         self.btnAgregarUsuario.clicked.connect(self.abrir_ventana_registrar_admin)
         self.btnCambiarContrasena.clicked.connect(self.abrir_cambio_contrasena)
         self.cargar_usuarios()
-
+        self.tablaUsuarios.cellChanged.connect(self.actualizar_usuario_en_bd)
         self.tabEstadisticas = VentanaEstadisticas(self)
         self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")    
 
@@ -87,4 +87,20 @@ class AdminPanel(VentanaBase, Form):
     def abrir_cambio_contrasena(self):
         self.ventana_cambio = CambiarContrasena(self.usuario)
         self.ventana_cambio.show()
+
+    def actualizar_usuario_en_bd(self, fila, columna):
+        if columna == 0:
+            return  
+        tabla = self.tablaUsuarios
+        id_usuario = int(tabla.item(fila, 0).text())
+        nuevo_valor = tabla.item(fila, columna).text()
+        campos = ["dni","nombre", "apellido", "email", "tipo", "credencial_activa"]
+        campo_bd = campos[columna]
+        if campo_bd == "credencial_activa":
+            nuevo_valor = nuevo_valor.strip().lower()
+            if nuevo_valor in ["sí", "si", "true", "1"]:
+                nuevo_valor = True
+            else:
+                nuevo_valor = False
+        self._controlador.actualizar_usuario(id_usuario, campo_bd, nuevo_valor)
 
