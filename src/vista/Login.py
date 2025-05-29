@@ -54,8 +54,10 @@ class Login(VentanaBase, Form):
 
     def abrir_registro(self):
         from src.vista.Registro import Registro
-        self.ventana_registro = Registro()
+        self.ventana_registro = Registro(volver_a=self)
+        self.ventana_registro.controlador = self._controlador
         self.ventana_registro.show()
+
 
     def volver_al_login(self):
         self.login = Login()
