@@ -7,9 +7,8 @@ class UserDao(Conexion):
         INSERT INTO Usuarios(dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
-    SQL_SELECT = "SELECT * FROM Usuarios WHERE credencial_activa = TRUE"
-    SQL_FIND_BY_CORREO = "SELECT * FROM Usuarios WHERE email = ?"
-    SQL_UPDATE_SALDO = "UPDATE Usuarios SET saldo = ? WHERE id_usuario = ?"
+    SQL_SELECT = "SELECT id_usuario, dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo FROM Usuarios WHERE credencial_activa = TRUE"
+    SQL_FIND_BY_CORREO = "SELECT id_usuario, dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo FROM Usuarios WHERE email = ? AND credencial_activa = 1"
 
     def insert(self, user: UserVo):
         cursor = self.getCursor()
@@ -44,19 +43,42 @@ class UserDao(Conexion):
                 correo=correo,
                 contrasena=contrasena_hash,
                 rol=tipo,
+                saldo=0.0,
                 tui=None,
                 dni=dni,
                 telefono=telefono,
                 fecha_alta=fecha_alta,
-                activo=activo
+                activo=bool(activo)
             )
             usuarios.append(usuario)
         return usuarios
 
+    def find_by_correo(self, correo):
+        cursor = self.getCursor()
+        cursor.execute(self.SQL_FIND_BY_CORREO, (correo,))
+        row = cursor.fetchone()
+        if row:
+            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
+            return UserVo(
+                idUser=idUser,
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                contrasena=contrasena_hash,
+                rol=tipo,
+                saldo=0.0,
+                tui=None,
+                dni=dni,
+                telefono=telefono,
+                fecha_alta=fecha_alta,
+                activo=bool(activo)
+            )
+        return None
+
     def update_saldo(self, id_usuario, nuevo_saldo):
         cursor = self.getCursor()
         try:
-            cursor.execute(self.SQL_UPDATE_SALDO, (nuevo_saldo, id_usuario))
+            cursor.execute("UPDATE Usuarios SET saldo = ? WHERE id_usuario = ?", (nuevo_saldo, id_usuario))
             return True
         except Exception as e:
             print("Error actualizando saldo:", e)
@@ -69,40 +91,14 @@ class UserDao(Conexion):
         :return: True si se realizó la operación, False si falló
         """
         try:
-            conexion = Conexion()
-            cursor = conexion.getCursor()
-            cursor.execute("UPDATE usuarios SET credencial_activa = FALSE WHERE id_usuario = ?", (user_id,))
+            cursor = self.getCursor()
+            cursor.execute("UPDATE Usuarios SET credencial_activa = 0 WHERE id_usuario = ?", (user_id,))
             return True
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
             return False
-        
-    def find_by_correo(self, correo):
-        """
-        Devuelve un usuario activo por correo. Solo si credencial_activa = 1.
-        """
-        cursor = self.getCursor()
-        cursor.execute("SELECT * FROM Usuarios WHERE email = ? AND credencial_activa = 1", (correo,))
-        row = cursor.fetchone()
-        if row:
-            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
-            return UserVo(
-                idUser=idUser,
-                nombre=nombre,
-                apellido=apellido,
-                correo=correo,
-                contrasena=contrasena_hash,
-                rol=tipo,
-                tui=None,
-                dni=dni,
-                telefono=telefono,
-                fecha_alta=fecha_alta,
-                activo=activo
-            )
-        return None
 
-
-    def eliminar_usuario_logico(self, user_id):
+    def eliminar_usuario_fisico(self, user_id):
         """
         Elimina completamente al usuario de la base de datos, excepto si es administrador.
         """
@@ -125,13 +121,29 @@ class UserDao(Conexion):
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
             return False
-    
+
     def listarUsuarios(self):
-        query = "SELECT * FROM usuarios"
         cursor = self.getCursor()
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return [UserVo(*row) for row in rows]
+        cursor.execute("SELECT id_usuario, dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo FROM Usuarios")
+        usuarios = []
+        for row in cursor.fetchall():
+            idUser, dni, nombre, apellido, correo, contrasena_hash, telefono, fecha_alta, activo, tipo = row
+            usuario = UserVo(
+                idUser=idUser,
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                contrasena=contrasena_hash,
+                rol=tipo,
+                saldo=0.0,
+                tui=None,
+                dni=dni,
+                telefono=telefono,
+                fecha_alta=fecha_alta,
+                activo=bool(activo)
+            )
+            usuarios.append(usuario)
+        return usuarios
 
     def actualizar_contrasena(self, id_usuario, nueva_contrasena_hash):
         cursor = self.getCursor()
@@ -141,4 +153,3 @@ class UserDao(Conexion):
         except Exception as e:
             print("Error al actualizar contraseña:", e)
             return False
-
