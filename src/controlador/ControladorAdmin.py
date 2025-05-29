@@ -34,7 +34,7 @@ class ControladorAdmin:
         :return: True si éxito, False si error
         """
         dao = UserDao()
-        return dao.eliminar_usuario_logico(user_id)
+        return dao.eliminar_usuario_fisico(user_id)
     
     def obtener_configuraciones(self):
         dao = ConfiguracionDao()
