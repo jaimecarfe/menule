@@ -8,7 +8,7 @@ class ConfiguracionUsuario(QWidget):
         self.callback_cerrar_sesion = callback_cerrar_sesion
 
         self.setWindowTitle("Configuración de cuenta")
-        self.setGeometry(200, 200, 300, 200)
+        self.setGeometry(200, 200, 400, 250)
 
         layout = QVBoxLayout()
 
@@ -26,10 +26,27 @@ class ConfiguracionUsuario(QWidget):
 
         self.setLayout(layout)
 
+        # Estilo visual consistente
+        self.setStyleSheet("""
+            QWidget {
+                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                                  stop:0 #1565c0, stop:1 #90caf9);
+            }
+            QPushButton {
+                background-color: #1976d2;
+                color: white;
+                font-weight: bold;
+                border-radius: 8px;
+                padding: 8px;
+            }
+            QPushButton:hover {
+                background-color: #1565c0;
+            }
+        """)
+
     def cambiar_contrasena(self):
         self.ventana_cambio = CambiarContrasena(self.usuario)
         self.ventana_cambio.show()
-
 
     def restaurar_configuracion(self):
         QMessageBox.information(self, "Restaurar configuración", "Configuración restaurada por defecto.")
@@ -38,4 +55,3 @@ class ConfiguracionUsuario(QWidget):
         if self.callback_cerrar_sesion:
             self.callback_cerrar_sesion()
         self.close()
-
