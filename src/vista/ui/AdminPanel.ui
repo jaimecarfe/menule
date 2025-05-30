@@ -10,10 +10,24 @@
   </property>
   <property name="styleSheet">
    <string notr="true">
-    QMainWindow {
-        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                                        stop:0 #2e7d32, stop:1 #a5d6a7);
-    }
+QMainWindow {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                      stop:0 #2e7d32, stop:1 #a5d6a7);
+}
+QPushButton {
+    background-color: #388e3c;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 8px;
+    max-width: 200px;
+    min-width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+}
+QPushButton:hover {
+    background-color: #2e7d32;
+}
    </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -27,47 +41,81 @@
       <widget class="QWidget" name="tabUsuarios">
        <attribute name="title"><string>Usuarios</string></attribute>
        <layout class="QVBoxLayout" name="layoutUsuarios">
-        <item><widget class="QPushButton" name="btnAgregarUsuario"><property name="text"><string>Agregar Usuario</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnEliminarUsuario"><property name="text"><string>Eliminar Usuario</string></property></widget></item>
-        <item><widget class="QTableWidget" name="tablaUsuarios"/></item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnAgregarUsuario">
+          <property name="text"><string>Agregar Usuario</string></property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnEliminarUsuario">
+          <property name="text"><string>Eliminar Usuario</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tablaUsuarios"/>
+        </item>
        </layout>
       </widget>
 
       <widget class="QWidget" name="tabMenus">
        <attribute name="title"><string>Menús</string></attribute>
        <layout class="QVBoxLayout" name="layoutMenus">
-        <item><widget class="QPushButton" name="btnNuevoMenu"><property name="text"><string>Nuevo Menú</string></property></widget></item>
-        <item><widget class="QTableWidget" name="tablaMenus"/></item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnNuevoMenu">
+          <property name="text"><string>Nuevo Menú</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tablaMenus"/>
+        </item>
        </layout>
       </widget>
 
       <widget class="QWidget" name="tabReservas">
        <attribute name="title"><string>Reservas</string></attribute>
        <layout class="QVBoxLayout" name="layoutReservas">
-        <item><widget class="QTableWidget" name="tablaReservas"/></item>
+        <item>
+         <widget class="QTableWidget" name="tablaReservas"/>
+        </item>
        </layout>
       </widget>
 
       <widget class="QWidget" name="tabPagos">
        <attribute name="title"><string>Pagos</string></attribute>
        <layout class="QVBoxLayout" name="layoutPagos">
-        <item><widget class="QTableWidget" name="tablaPagos"/></item>
+        <item>
+         <widget class="QTableWidget" name="tablaPagos"/>
+        </item>
        </layout>
       </widget>
 
       <widget class="QWidget" name="tabIncidencias">
        <attribute name="title"><string>Incidencias</string></attribute>
        <layout class="QVBoxLayout" name="layoutIncidencias">
-        <item><widget class="QTableWidget" name="tablaIncidencias"/></item>
+        <item>
+         <widget class="QTableWidget" name="tablaIncidencias"/>
+        </item>
        </layout>
       </widget>
 
       <widget class="QWidget" name="tabConfiguracion">
        <attribute name="title"><string>Configuración</string></attribute>
        <layout class="QVBoxLayout" name="layoutConfiguracion">
-        <item><widget class="QPushButton" name="btnCambiarContrasena"><property name="text"><string>Cambiar Contraseña</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnRestaurarValores"><property name="text"><string>Restaurar Configuración</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnCerrarSesion"><property name="text"><string>Cerrar Sesión</string></property></widget></item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnCambiarContrasena">
+          <property name="text"><string>Cambiar Contraseña</string></property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnRestaurarValores">
+          <property name="text"><string>Restaurar Configuración</string></property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnCerrarSesion">
+          <property name="text"><string>Cerrar Sesión</string></property>
+         </widget>
+        </item>
        </layout>
       </widget>
 
