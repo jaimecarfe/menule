@@ -3,6 +3,7 @@ from PyQt5 import uic
 from src.vista.VentanaBase import VentanaBase
 from src.modelo.vo.UserVo import UserVo
 from datetime import date
+from src.modelo.BussinessObject import BussinessObject
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
@@ -10,7 +11,7 @@ class Registro(VentanaBase, Form):
     def __init__(self, volver_a=None):
         super().__init__()
         self.setupUi(self)
-        self._controlador = None
+        self._controlador = BussinessObject()
         self._ventana_anterior = volver_a
 
         self.setWindowTitle("MenULE - Registro")
@@ -96,7 +97,7 @@ class Registro(VentanaBase, Form):
             especialidad=especialidad
         )
 
-        if self._controlador.insertar_usuario(user):
+        if self._controlador.registrarUsuario(user):
             QMessageBox.information(self, "Registro exitoso", "Usuario registrado correctamente.")
             self.close()
             if self._ventana_anterior:
@@ -106,11 +107,3 @@ class Registro(VentanaBase, Form):
         self.close()
         if self._ventana_anterior:
             self._ventana_anterior.show()
-
-    @property
-    def controlador(self):
-        return self._controlador
-
-    @controlador.setter
-    def controlador(self, controlador):
-        self._controlador = controlador

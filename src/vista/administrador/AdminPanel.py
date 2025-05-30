@@ -20,6 +20,7 @@ class AdminPanel(VentanaBase, Form):
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
         self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
         self.btnAgregarUsuario.clicked.connect(self.abrir_ventana_registrar_admin)
+        self.btnDarDeBaja.clicked.connect(self.dar_de_baja_usuario_seleccionado)
         self.btnCambiarContrasena.clicked.connect(self.abrir_cambio_contrasena)
         self.cargar_usuarios()
         self.tablaUsuarios.cellChanged.connect(self.actualizar_usuario_en_bd)
@@ -49,7 +50,7 @@ class AdminPanel(VentanaBase, Form):
     def cargar_usuarios(self):
         """Obtiene todos los usuarios y los muestra en la tabla."""
         self.tablaUsuarios.setRowCount(0)
-        usuarios = self._controlador._modelo.listarUsuarios()
+        usuarios = self._controlador.obtener_usuarios()
         for fila_idx, usuario in enumerate(usuarios):
             self.tablaUsuarios.insertRow(fila_idx)
             self.tablaUsuarios.setItem(fila_idx, 0, QTableWidgetItem(str(usuario.idUser)))
@@ -65,10 +66,12 @@ class AdminPanel(VentanaBase, Form):
             user_id = self.tablaUsuarios.item(fila, 0).text()
             confirmacion = QMessageBox.question(self, "Confirmar", "¿Deseas eliminar este usuario?")
             if confirmacion == QMessageBox.Yes:
-                exito = self._controlador.eliminar_usuario(user_id)
-                if exito:
+                resultado = self._controlador.eliminar_usuario(user_id)
+                if resultado is True:
                     QMessageBox.information(self, "Éxito", "Usuario eliminado.")
                     self.cargar_usuarios()
+                elif resultado == "admin":
+                    QMessageBox.warning(self, "No permitido", "No se puede eliminar un usuario administrador.")
                 else:
                     QMessageBox.critical(self, "Error", "No se pudo eliminar el usuario.")
 
@@ -103,4 +106,22 @@ class AdminPanel(VentanaBase, Form):
             else:
                 nuevo_valor = False
         self._controlador.actualizar_usuario(id_usuario, campo_bd, nuevo_valor)
+
+    def dar_de_baja_usuario_seleccionado(self):
+        fila = self.tablaUsuarios.currentRow()
+        if fila >= 0:
+            user_id = self.tablaUsuarios.item(fila, 0).text()
+            confirmacion = QMessageBox.question(
+                self, "Confirmar", "¿Deseas dar de baja este usuario?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if confirmacion == QMessageBox.Yes:
+                resultado = self._controlador.dar_de_baja_usuario(user_id)
+                if resultado is True:
+                    QMessageBox.information(self, "Éxito", "Usuario dado de baja correctamente.")
+                    self.cargar_usuarios()
+                elif resultado == "admin":
+                    QMessageBox.warning(self, "No permitido", "No se puede dar de baja un administrador.")
+                else:
+                    QMessageBox.critical(self, "Error", "No se pudo dar de baja al usuario.")
 

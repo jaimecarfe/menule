@@ -14,11 +14,10 @@ class PanelEstudiante(VentanaBase, Form):
         self.usuario = usuario
         self.controlador = ControladorEstudiante(self.usuario)
 
-        self.setupUi(self)  # Carga el diseño desde el .ui
+        self.setupUi(self)
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
         self.labelTitulo.setText(f"Bienvenido/a, {usuario.nombre}")
 
-        # Conectar botones definidos en el .ui
         self.btnVerMenu.clicked.connect(self.abrir_menu)
         self.btnConfiguracion.clicked.connect(self.abrir_configuracion)
         self.btnHistorialReservas.clicked.connect(self.ver_historial)

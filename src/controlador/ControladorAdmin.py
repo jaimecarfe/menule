@@ -1,7 +1,5 @@
 from src.modelo.BussinessObject import BussinessObject
 from PyQt5.QtWidgets import QTableWidgetItem
-from src.modelo.dao.UserDao import UserDao
-from src.modelo.dao.ConfiguracionDao import ConfiguracionDao
 
 class ControladorAdmin:
     def __init__(self, vista=None):
@@ -28,22 +26,16 @@ class ControladorAdmin:
             tabla.setItem(fila, 5, QTableWidgetItem("Sí" if usuario.activo else "No"))  # Activo
             
     def eliminar_usuario(self, user_id):
-        """
-        Llama al DAO para eliminar lógicamente un usuario.
-        :param user_id: ID del usuario a eliminar
-        :return: True si éxito, False si error
-        """
-        dao = UserDao()
-        return dao.eliminar_usuario_fisico(user_id)
+        return self._modelo.eliminarUsuario(user_id)
     
-    def obtener_configuraciones(self):
-        dao = ConfiguracionDao()
-        return dao.obtener_configuraciones()
-
-    def guardar_configuracion(self, clave, valor):
-        dao = ConfiguracionDao()
-        return dao.guardar_configuracion(clave, valor)
+    def dar_de_baja_usuario(self, user_id):
+        return self._modelo.darDeBajaUsuario(user_id)
 
     def actualizar_usuario(self, id_usuario, campo, nuevo_valor):
-        dao = UserDao()
-        dao.actualizar_campo_usuario(id_usuario, campo, nuevo_valor)
+        return self._modelo.actualizarUsuario(id_usuario, campo, nuevo_valor)
+
+    def obtener_configuraciones(self):
+        return self._modelo.obtenerConfiguraciones()
+
+    def guardar_configuracion(self, clave, valor):
+        return self._modelo.guardarConfiguracion(clave, valor)

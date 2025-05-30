@@ -3,6 +3,7 @@ from src.modelo.dao.EstudianteDao import EstudianteDao
 from src.modelo.dao.ProfesorDao import ProfesorDao
 from src.modelo.dao.PersonalComedorDao import PersonalComedorDao
 from src.modelo.dao.EstadisticaDao import EstadisticaDao
+from src.modelo.dao.ConfiguracionDao import ConfiguracionDao
 """
 from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.MenuDao import MenuDao
@@ -31,6 +32,11 @@ from datetime import date
 class BussinessObject:
     def __init__(self):
         self.user_dao = UserDao()
+        self.estadistica_dao = EstadisticaDao()
+        self.estudiante_dao = EstudianteDao()
+        self.profesor_dao = ProfesorDao()
+        self.personal_comedor_dao = PersonalComedorDao()
+
     # --- Usuarios ---
     def comprobarLogin(self, loginVO: LoginVO) -> UserVo | None:
         user_dao = UserDao()
@@ -49,37 +55,48 @@ class BussinessObject:
         if id_user:
             user.idUser = id_user
             if user.rol == "estudiante":
-                estudiante_dao = EstudianteDao()
+                estudiante_dao = self.estudiante_dao
                 estudiante_vo = EstudianteVo(id_usuario=id_user, grado_academico=user.grado_academico, tui_numero=user.tui, saldo=user.saldo)
                 estudiante_dao.insert(estudiante_vo)
             elif user.rol == "profesor":
-                profesor_dao = ProfesorDao()
+                profesor_dao = self.profesor_dao
                 profesor_vo = ProfesorVo(id_usuario=id_user, grado_academico=user.grado_academico, saldo=user.saldo)
                 profesor_dao.insert(profesor_vo)
             elif user.rol == "personal_comedor":
-                comedor_dao = PersonalComedorDao()
+                comedor_dao = self.personal_comedor_dao
                 comedor_vo = PersonalComedorVo(id_usuario=id_user, fecha_contratacion=user.fecha_alta, especialidad=user.especialidad)
                 comedor_dao.insert(comedor_vo)
             return id_user
         return None
 
     def actualizarSaldo(self, idUser: int, nuevo_saldo: float) -> bool:
-        return UserDao().update_saldo(idUser, nuevo_saldo)
+        return self.user_dao.update_saldo(idUser, nuevo_saldo)
 
     def obtenerUsuarioPorCorreo(self, correo: str) -> UserVo | None:
-        return UserDao().find_by_correo(correo)
+        return self.user_dao.find_by_correo(correo)
     
     def listarUsuarios(self) -> list[UserVo]:
-        return UserDao().select()
+        return self.user_dao.select()
     
     def eliminarUsuario(self, id_usuario: int) -> bool:
-        return UserDao().delete(id_usuario)    
+        return self.user_dao.eliminar_usuario_fisico(id_usuario)    
 
     def listarUsuarios(self):
         return self.user_dao.listarUsuarios()
+    
+    def darDeBajaUsuario(self, id_usuario: int) -> bool:
+        return self.user_dao.eliminar_usuario_logico(id_usuario)
+    
+    def actualizarUsuario(self, id_usuario: int, campo: str, nuevo_valor) -> bool:
+        return self.user_dao.actualizar_campo_usuario(id_usuario, campo, nuevo_valor)
+
+    def find_user_by_email(self, email: str) -> UserVo | None:
+        return self.user_dao.find_by_correo(email)
+    
+
     # --- Estadísticas ---
     def obtenerEstadisticas(self, tipo):
-        dao = EstadisticaDao()
+        dao = self.estadistica_dao
         if tipo == 'Pagos':
             datos = dao.obtener_pagos()
         elif tipo == 'Incidencias':
@@ -92,6 +109,13 @@ class BussinessObject:
             datos = []
         
         return EstadisticaVo(tipo, datos)
+
+    # --- Configuraciones ---
+    def obtenerConfiguraciones(self):
+        return ConfiguracionDao().obtener_configuraciones()
+    
+    def guardarConfiguracion(self, clave: str, valor: str) -> bool:
+        return ConfiguracionDao().guardar_configuracion(clave, valor)
     
 """
     # --- Reservas ---

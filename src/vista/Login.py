@@ -34,7 +34,7 @@ class Login(VentanaBase, Form):
             QMessageBox.warning(self, "Campos requeridos", "Completa todos los campos.")
             return
 
-        usuario = self._controlador.login_usuario(correo, contraseña)
+        usuario = self._controlador.login(correo, contraseña)
 
         if usuario:
             if usuario.rol == "administrador":

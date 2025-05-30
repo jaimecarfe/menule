@@ -87,41 +87,62 @@ class UserDao(Conexion):
     def eliminar_usuario_logico(self, user_id):
         """
         Marca un usuario como inactivo (eliminación lógica).
+        No permite dar de baja a un administrador.
         :param user_id: ID del usuario a desactivar
-        :return: True si se realizó la operación, False si falló
+        :return: True si se realizó la operación, "admin" si es administrador, False si falló
         """
         try:
             cursor = self.getCursor()
+            cursor.execute("SELECT tipo FROM Usuarios WHERE id_usuario = ?", (user_id,))
+            row = cursor.fetchone()
+            if row and row[0] == "administrador":
+                return "admin"
             cursor.execute("UPDATE Usuarios SET credencial_activa = 0 WHERE id_usuario = ?", (user_id,))
             return True
         except Exception as e:
-            print(f"Error al eliminar usuario: {e}")
+            print(f"Error al dar de baja usuario: {e}")
             return False
 
     def eliminar_usuario_fisico(self, user_id):
         """
         Elimina completamente al usuario de la base de datos, excepto si es administrador.
+        Devuelve:
+            True si lo elimina,
+            "admin" si es administrador,
+            "integridad" si hay error de integridad referencial,
+            False para otros errores.
         """
         try:
             cursor = self.getCursor()
             cursor.execute("SELECT tipo FROM Usuarios WHERE id_usuario = ?", (user_id,))
             row = cursor.fetchone()
             if not row:
-                print("Usuario no encontrado.")
                 return False
 
             rol = row[0]
             if rol == "administrador":
-                print("No se puede eliminar un administrador.")
-                return False
+                return "admin"
 
-            cursor.execute("DELETE FROM Estudiantes WHERE id_usuario = ?", (user_id,))
-            cursor.execute("DELETE FROM Usuarios WHERE id_usuario = ?", (user_id,))
+            # Elimina primero de la tabla correspondiente según el rol
+            if rol == "profesor":
+                cursor.execute("DELETE FROM Profesores WHERE id_usuario = ?", (user_id,))
+            elif rol == "personal_comedor":
+                cursor.execute("DELETE FROM PersonalComedor WHERE id_usuario = ?", (user_id,))
+            elif rol == "estudiante":
+                cursor.execute("DELETE FROM Estudiantes WHERE id_usuario = ?", (user_id,))
+
+            try:
+                cursor.execute("DELETE FROM Usuarios WHERE id_usuario = ?", (user_id,))
+            except sqlite3.IntegrityError as ie:
+                print(f"Error de integridad al eliminar usuario: {ie}")
+                return "integridad"
             return True
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
+            if "Integrity" in str(e):
+                return "integridad"
             return False
-
+        
     def listarUsuarios(self):
         cursor = self.getCursor()
         cursor.execute("SELECT id_usuario, dni, nombre, apellido, email, contrasena_hash, telefono, fecha_alta, credencial_activa, tipo FROM Usuarios")
@@ -170,5 +191,3 @@ class UserDao(Conexion):
         cursor.execute(sql)
         cursor.close()
         conexion.closeConnection()
-
-
