@@ -12,7 +12,7 @@ class MenuEstudiante(VentanaBase, Form):
         super().__init__()
         self.usuario = usuario
         self.configurar_interfaz()
-        self._controlador = ControladorEstudiante(self.usuario)
+        self._controlador = ControladorEstudiante()
 
         self._callback_cerrar_sesion = None
 

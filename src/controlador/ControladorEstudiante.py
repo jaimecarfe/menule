@@ -33,3 +33,8 @@ class ControladorEstudiante:
         descripcion = "Ejemplo de reporte de incidencia."
         self._modelo.reportar_incidencia(usuario.idUser, titulo, descripcion)
         QMessageBox.information(None, "Incidencia", "¡Incidencia reportada!")
+    
+    def dar_de_baja(self):
+        usuario = Sesion().get_usuario()
+        self._modelo.darDeBajaUsuario(usuario.idUser)
+        Sesion().cerrar_sesion()

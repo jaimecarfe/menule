@@ -12,7 +12,7 @@ class PanelEstudiante(VentanaBase, Form):
     def __init__(self, usuario):
         super().__init__()
         self.usuario = usuario
-        self.controlador = ControladorEstudiante(self.usuario)
+        self.controlador = ControladorEstudiante()
 
         self.setupUi(self)
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
@@ -22,7 +22,8 @@ class PanelEstudiante(VentanaBase, Form):
         self.btnConfiguracion.clicked.connect(self.abrir_configuracion)
         self.btnHistorialReservas.clicked.connect(self.ver_historial)
         self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
-
+        self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
+        
     def abrir_menu(self):
         self.menu_window = MenuEstudiante(self.usuario)
         self.menu_window.show()
@@ -46,6 +47,19 @@ class PanelEstudiante(VentanaBase, Form):
             QMessageBox.No
         )
         if respuesta == QMessageBox.Yes:
+            self.cerrar_sesion()
+
+    def dar_de_baja(self):
+        respuesta = QMessageBox.question(
+            self,
+            "Dar de Baja",
+            "¿Estás seguro de que deseas dar de baja tu cuenta?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        if respuesta == QMessageBox.Yes:
+            self.controlador.dar_de_baja()
+            QMessageBox.information(self, "Cuenta", "Tu cuenta ha sido dada de baja.")
             self.cerrar_sesion()
 
     def cerrar_sesion(self):
