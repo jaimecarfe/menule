@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QMessageBox
 from src.vista.comun.CambiarContrasena import CambiarContrasena
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QMessageBox, QApplication
 
 class ConfiguracionUsuario(QWidget):
     def __init__(self, usuario, callback_cerrar_sesion=None):
@@ -8,7 +8,7 @@ class ConfiguracionUsuario(QWidget):
         self.callback_cerrar_sesion = callback_cerrar_sesion
 
         self.setWindowTitle("Configuración de cuenta")
-        self.setGeometry(200, 200, 400, 250)
+        self.resize(300, 200)  # Solo tamaño, no posición
 
         layout = QVBoxLayout()
 
@@ -26,21 +26,20 @@ class ConfiguracionUsuario(QWidget):
 
         self.setLayout(layout)
 
-        # Estilo visual consistente
         self.setStyleSheet("""
             QWidget {
-                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                                                  stop:0 #1565c0, stop:1 #90caf9);
+            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                              stop:0 #e0e0e0, stop:1 #f5f5f5);
             }
             QPushButton {
-                background-color: #1976d2;
-                color: white;
-                font-weight: bold;
-                border-radius: 8px;
-                padding: 8px;
+            background-color: #bdbdbd;
+            color: black;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 8px;
             }
             QPushButton:hover {
-                background-color: #1565c0;
+            background-color: #9e9e9e;
             }
         """)
 

@@ -1,0 +1,93 @@
+<ui version="4.0">
+ <class>MenuProfesor</class>
+ <widget class="QMainWindow" name="MenuProfesor">
+    <property name="geometry">
+     <rect><x>0</x><y>0</y><width>900</width><height>600</height></rect>
+    </property>
+    <property name="windowTitle">
+     <string>MenULE - Menú Profesor</string>
+    </property>
+    <property name="windowState">
+     <set>Qt::WindowFullScreen</set>
+    </property>
+    <property name="styleSheet">
+     <string>
+QMainWindow {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b71c1c, stop:1 #ef9a9a);
+}
+QLabel#labelTitulo {
+    color: #b71c1c;
+    font-size: 28px;
+    font-weight: 900;
+}
+QLabel {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+}
+QPushButton {
+    background-color: #d32f2f;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 14px 0;
+    font-size: 18px;
+    min-width: 320px;
+    max-width: 340px;
+}
+QPushButton:hover {
+    background-color: #b71c1c;
+}
+QFrame#cardFrame {
+    background: rgba(255,255,255,0.16);
+    border-radius: 20px;
+    padding: 32px 32px 32px 32px;
+}
+     </string>
+    </property>
+    <widget class="QWidget" name="centralwidget">
+     <layout class="QVBoxLayout" name="mainVerticalLayout">
+        <item>
+         <widget class="QLabel" name="labelUsuario">
+            <property name="text">
+             <string>Bienvenido, Usuario</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="contentLayout">
+            <item>
+             <widget class="QCalendarWidget" name="calendarWidget"/>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="menuTextEdit"/>
+            </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="buttonLayout">
+            <item>
+             <widget class="QPushButton" name="btnVisualizarMenu">
+                <property name="text">
+                 <string>Visualizar Menú</string>
+                </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnVolver">
+                <property name="text">
+                 <string>Volver</string>
+                </property>
+             </widget>
+            </item>
+         </layout>
+        </item>
+     </layout>
+    </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

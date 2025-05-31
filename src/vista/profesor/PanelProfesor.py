@@ -2,21 +2,21 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
-from src.vista.estudiante.MenuEstudiante import MenuEstudiante
+from src.vista.profesor.MenuProfesor import MenuProfesor
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
-from src.controlador.ControladorEstudiante import ControladorEstudiante
+from src.controlador.ControladorProfesor import ControladorProfesor
 from src.vista.VentanaBase import VentanaBase
 
-Form, Window = uic.loadUiType("./src/vista/ui/PanelEstudiante.ui")
+Form, Window = uic.loadUiType("./src/vista/ui/PanelProfesor.ui")
 
-class PanelEstudiante(VentanaBase, Form):
+class PanelProfesor(VentanaBase, Form):
     def __init__(self, usuario):
         super().__init__()
         self.usuario = usuario
-        self.controlador = ControladorEstudiante()
+        self.controlador = ControladorProfesor()
         self.setupUi(self)
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
-        self.labelTitulo.setText(f"Bienvenido/a, {usuario.nombre}")
+        self.labelTitulo.setText(f"Bienvenido/a profesor/a, {usuario.nombre}")
 
         pixmap = QPixmap("./src/vista/imagenes/paneles.png")
         pixmap = pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -30,7 +30,7 @@ class PanelEstudiante(VentanaBase, Form):
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
         
     def abrir_menu(self):
-        self.menu_window = MenuEstudiante(self.usuario, parent=self)
+        self.menu_window = MenuProfesor(self.usuario, parent=self)
         self.hide()  # Oculta el panel actual
         self.menu_window.show()
 

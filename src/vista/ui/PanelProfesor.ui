@@ -1,6 +1,6 @@
 <ui version="4.0">
- <class>PanelEstudiante</class>
- <widget class="QMainWindow" name="PanelEstudiante">
+ <class>PanelProfesor</class>
+ <widget class="QMainWindow" name="PanelProfesor">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MenULE - Panel Estudiante</string>
+   <string>MenULE - Panel Profesor</string>
   </property>
   <property name="windowState">
    <set>Qt::WindowFullScreen</set>
@@ -18,10 +18,10 @@
   <property name="styleSheet">
    <string>
 QMainWindow {
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #1565c0, stop:1 #90caf9);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b71c1c, stop:1 #ef9a9a);
 }
 QLabel#labelTitulo {
-    color: #1565c0;
+    color: #b71c1c;
     font-size: 28px;
     font-weight: 900;
 }
@@ -31,7 +31,7 @@ QLabel {
     font-weight: bold;
 }
 QPushButton {
-    background-color: #1976d2;
+    background-color: #d32f2f;
     color: white;
     font-weight: bold;
     border-radius: 8px;
@@ -41,7 +41,7 @@ QPushButton {
     max-width: 340px;
 }
 QPushButton:hover {
-    background-color: #1565c0;
+    background-color: #b71c1c;
 }
 QFrame#cardFrame {
     background: rgba(255,255,255,0.16);
