@@ -1,12 +1,17 @@
 import jaydebeapi
 
 class Conexion:
-    def __init__(self, host='localhost', database='menule', user='root', password='Liverpool.840'):
-        self._host = host
-        self._database = database
-        self._user = user
-        self._password = password
-        self.conexion = self.createConnection()
+    _instancia = None
+
+    def __new__(cls, host='localhost', database='menule', user='root', password='Liverpool.840'):
+        if cls._instancia is None:
+            cls._instancia = super(Conexion, cls).__new__(cls)
+            cls._instancia._host = host
+            cls._instancia._database = database
+            cls._instancia._user = user
+            cls._instancia._password = password
+            cls._instancia.conexion = cls._instancia.createConnection()
+        return cls._instancia
 
     def createConnection(self):
         try:
@@ -23,8 +28,6 @@ class Conexion:
             print("Error creando conexión:", e)
             return None
 
-    """Un cursor es una estructura de control que permite recorrer los resultados de una 
-    consulta SQL y manipular fila por fila los datos recuperados desde una base de datos."""
     def getCursor(self):
         if self.conexion is None:
             self.createConnection()

@@ -8,13 +8,12 @@ from PyQt5 import uic
 Form, Window = uic.loadUiType("./src/vista/ui/MenuEstudiante.ui")
 
 class MenuEstudiante(VentanaBase, Form):
-    def __init__(self, usuario):
-        super().__init__()
+    def __init__(self, usuario, parent=None):
+        super().__init__(parent)
         self.usuario = usuario
-        self.configurar_interfaz()
         self._controlador = ControladorEstudiante()
-
         self._callback_cerrar_sesion = None
+        self.configurar_interfaz()
 
     def configurar_interfaz(self):
         super().setupUi(self)
@@ -26,7 +25,6 @@ class MenuEstudiante(VentanaBase, Form):
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self.btnVolver.clicked.connect(self.volver_al_panel)
 
-
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
         fecha_fin = QDate(2025, 6, 23)
@@ -34,7 +32,6 @@ class MenuEstudiante(VentanaBase, Form):
         self.calendarWidget.setMinimumDate(fecha_inicio)
         self.calendarWidget.setMaximumDate(fecha_fin)
 
-        # Deshabilitar visualmente sábados y domingos
         formato_inhabilitado = QTextCharFormat()
         formato_inhabilitado.setForeground(QColor('gray'))
         formato_inhabilitado.setBackground(QColor('#f0f0f0'))
@@ -45,7 +42,6 @@ class MenuEstudiante(VentanaBase, Form):
                 self.calendarWidget.setDateTextFormat(fecha, formato_inhabilitado)
             fecha = fecha.addDays(1)
 
-        # Conectar evento para validar selección
         self.calendarWidget.selectionChanged.connect(self.validar_fecha_seleccionada)
 
     def validar_fecha_seleccionada(self):
@@ -60,10 +56,11 @@ class MenuEstudiante(VentanaBase, Form):
         fecha = self.calendarWidget.selectedDate()
         if fecha.isValid():
             texto_fecha = fecha.toString("dddd dd/MM/yyyy")
-            # Aquí puedes conectar con la lógica del controlador para obtener el menú del día
             self.menuTextEdit.setText(f"Menú para el {texto_fecha}:\n\n- Primer plato\n- Segundo plato\n- Postre")
         else:
             QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
 
     def volver_al_panel(self):
+        if self.parent():
+            self.parent().show()
         self.close()

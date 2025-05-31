@@ -5,7 +5,6 @@ from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.VentanaBase import VentanaBase
 
-
 Form, Window = uic.loadUiType("./src/vista/ui/PanelEstudiante.ui")
 
 class PanelEstudiante(VentanaBase, Form):
@@ -13,7 +12,6 @@ class PanelEstudiante(VentanaBase, Form):
         super().__init__()
         self.usuario = usuario
         self.controlador = ControladorEstudiante()
-
         self.setupUi(self)
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
         self.labelTitulo.setText(f"Bienvenido/a, {usuario.nombre}")
@@ -25,7 +23,8 @@ class PanelEstudiante(VentanaBase, Form):
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
         
     def abrir_menu(self):
-        self.menu_window = MenuEstudiante(self.usuario)
+        self.menu_window = MenuEstudiante(self.usuario, parent=self)
+        self.hide()  # Oculta el panel actual
         self.menu_window.show()
 
     def abrir_configuracion(self):
