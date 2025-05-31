@@ -51,3 +51,5 @@ python main.py
 
 ## Créditos
 Proyecto desarrollado por el equipo de Ingeniería del Software - Curso 2024/2025.
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/jaimecarfe/menule)
