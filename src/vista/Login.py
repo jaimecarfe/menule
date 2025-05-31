@@ -3,6 +3,7 @@ from PyQt5 import uic
 from src.vista.VentanaBase import VentanaBase
 from src.vista.administrador.AdminPanel import AdminPanel
 from src.vista.estudiante.PanelEstudiante import PanelEstudiante
+from src.vista.visitante.MenuVisitante import MenuVisitante
 from src.controlador.ControladorPrincipal import ControladorPrincipal
 from src.modelo.BussinessObject import BussinessObject
 
@@ -18,13 +19,20 @@ class Login(VentanaBase, Form):
 
         self.setWindowTitle("MenULE - Iniciar Sesión")
         self.resize(432, 505)
+        self.showFullScreen()
 
         self.pushButton_aceptar.clicked.connect(self.on_button_click)
+        self.label_visitante.mousePressEvent = self.abrir_vista_visitante
 
         try:
             self.pushButton_registro.clicked.connect(self.abrir_registro)
         except AttributeError:
             pass
+
+    def abrir_vista_visitante(self, event):
+        self.ventana_visitante = MenuVisitante()
+        self.ventana_visitante.show()
+        self.hide()
 
     def on_button_click(self):
         correo = self.lineEdit_usuario.text()
@@ -56,8 +64,8 @@ class Login(VentanaBase, Form):
         from src.vista.Registro import Registro
         self.ventana_registro = Registro(volver_a=self)
         self.ventana_registro.controlador = self._controlador
-        self.ventana_registro.show()
-
+        self.ventana_registro.show() 
+        self.hide()
 
     def volver_al_login(self):
         self.login = Login()

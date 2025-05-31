@@ -1,149 +1,161 @@
 <ui version="4.0">
  <class>PanelEstudiante</class>
  <widget class="QMainWindow" name="PanelEstudiante">
-    <property name="geometry">
-     <rect><x>0</x><y>0</y><width>500</width><height>400</height></rect>
-    </property>
-    <property name="windowTitle">
-     <string>MenULE - Panel Estudiante</string>
-    </property>
-    <property name="windowState">
-     <set>Qt::WindowMaximized</set>
-    </property>
-    <property name="styleSheet">
-     <string>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MenULE - Panel Estudiante</string>
+  </property>
+  <property name="windowState">
+   <set>Qt::WindowFullScreen</set>
+  </property>
+  <property name="styleSheet">
+   <string>
 QMainWindow {
-        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                                                                            stop:0 #1565c0, stop:1 #90caf9);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #1565c0, stop:1 #90caf9);
+}
+QLabel#labelTitulo {
+    color: #1565c0;
+    font-size: 28px;
+    font-weight: 900;
 }
 QLabel {
-        font-size: 20px;
-        color: white;
-        font-weight: bold;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
 }
 QPushButton {
-        background-color: #1976d2;
-        color: white;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 6px;
-        min-width: 200px;
-        max-width: 200px;
+    background-color: #1976d2;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 14px 0;
+    font-size: 18px;
+    min-width: 320px;
+    max-width: 340px;
 }
 QPushButton:hover {
-        background-color: #1565c0;
+    background-color: #1565c0;
 }
-     </string>
-    </property>
-    <widget class="QWidget" name="centralwidget">
-     <layout class="QVBoxLayout" name="mainLayout">
-        <item>
-         <spacer name="verticalSpacerTop">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="labelTitulo">
-            <property name="text">
-             <string>Bienvenido/a</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignHCenter</set>
-            </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacerBetweenTitleAndButtons">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnVerMenu">
-            <property name="text">
-             <string>Ver Menú</string>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnConfiguracion">
-            <property name="text">
-             <string>Configuración</string>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnHistorialReservas">
-            <property name="text">
-             <string>Historial de Reservas</string>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnReportarIncidencia">
-            <property name="text">
-             <string>Reportar Incidencia</string>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnDarseDeBaja">
-            <property name="text">
-             <string>Darse de baja</string>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacerBottom">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-         </spacer>
-        </item>
-     </layout>
-    </widget>
+QFrame#cardFrame {
+    background: rgba(255,255,255,0.16);
+    border-radius: 20px;
+    padding: 32px 32px 32px 32px;
+}
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <item>
+     <spacer name="verticalSpacerTop">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Expanding</enum>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QFrame" name="cardFrame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="cardLayout">
+       <item>
+        <widget class="QLabel" name="labelTitulo">
+         <property name="text">
+          <string>
+            <span style="font-size:36px;">Bienvenido/a, Mario</span>
+          </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignHCenter|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacerCardBetweenTitleAndButtons">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>32</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="buttonLayout">
+         <property name="alignment">
+          <set>Qt::AlignHCenter</set>
+         </property>
+         <item>
+          <widget class="QPushButton" name="btnVerMenu">
+           <property name="text">
+            <string>Ver Menú</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnConfiguracion">
+           <property name="text">
+            <string>Configuración</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnHistorialReservas">
+           <property name="text">
+            <string>Historial de Reservas</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnReportarIncidencia">
+           <property name="text">
+            <string>Reportar Incidencia</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnDarseDeBaja">
+           <property name="text">
+            <string>Darse de baja</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacerBottom">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Expanding</enum>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <resources/>
  <connections/>

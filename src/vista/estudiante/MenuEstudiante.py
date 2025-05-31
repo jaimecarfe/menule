@@ -20,7 +20,7 @@ class MenuEstudiante(VentanaBase, Form):
         super().setupUi(self)
         self.menuTextEdit.setReadOnly(True)
         self.setWindowTitle("Menú Estudiante")
-        self.labelUsuario.setText(f"Bienvenido, {self.usuario.nombre}")
+        self.labelUsuario.setText(f"¿Qué habrá de comer hoy, {self.usuario.nombre}?")
         self.configurar_calendario()
         self.btnVisualizarMenu.setEnabled(False)
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
@@ -28,7 +28,6 @@ class MenuEstudiante(VentanaBase, Form):
 
 
     def configurar_calendario(self):
-        # Definir fechas del curso 2024–2025
         fecha_inicio = QDate(2024, 9, 6)
         fecha_fin = QDate(2025, 6, 23)
 

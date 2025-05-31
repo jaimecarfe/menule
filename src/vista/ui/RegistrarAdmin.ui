@@ -73,7 +73,6 @@
            <item><property name="text"><string>estudiante</string></property></item>
            <item><property name="text"><string>profesor</string></property></item>
            <item><property name="text"><string>personal_comedor</string></property></item>
-           <item><property name="text"><string>visitante</string></property></item>
            <item><property name="text"><string>administrador</string></property></item>
          </widget></item>
          <item><widget class="QLineEdit" name="lineEdit_tui"><property name="placeholderText"><string>TUI (solo estudiantes)</string></property></widget></item>

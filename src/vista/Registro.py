@@ -101,9 +101,10 @@ class Registro(VentanaBase, Form):
             QMessageBox.information(self, "Registro exitoso", "Usuario registrado correctamente.")
             self.close()
             if self._ventana_anterior:
-                self._ventana_anterior.show()
+                self._ventana_anterior.showNormal()
+                self._ventana_anterior.showMaximized()
 
     def volver(self):
         self.close()
         if self._ventana_anterior:
-            self._ventana_anterior.show()
+            self._ventana_anterior.showFullScreen()
