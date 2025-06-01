@@ -122,7 +122,7 @@ class BussinessObject:
         return ConfiguracionDao().guardar_configuracion(clave, valor)
     
     # --- Reservas ---
-    def crearReserva(self, reservaVO):
+    def crearReserva(self, reservaVO: ReservaVo) -> int | None:
         return self.reserva_dao.insert(reservaVO)
 
     def obtenerUltimaReservaId(self, id_usuario):
