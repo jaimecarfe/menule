@@ -97,7 +97,9 @@ class BussinessObject:
     def find_user_by_email(self, email: str) -> UserVo | None:
         return self.user_dao.find_by_correo(email)
     
-
+    def buscar_por_dni(self, dni: str) -> UserVo | None:
+        return self.user_dao.buscar_por_dni(dni)
+    
     # --- Estadísticas ---
     def obtenerEstadisticas(self, tipo):
         dao = self.estadistica_dao
