@@ -4,7 +4,6 @@ from src.vista.VentanaBase import VentanaBase
 from src.modelo.vo.UserVo import UserVo
 from datetime import date
 from src.modelo.BussinessObject import BussinessObject
-from src.modelo.dao.UserDao import UserDao
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
@@ -134,7 +133,6 @@ class Registro(VentanaBase, Form):
                     "Los visitantes solo pueden usar correos @gmail.com o @hotmail.com")
                 return False
 
-        # Validar formato de DNI y letra
         import re
         patron_dni = re.match(r"^(\d{8})([A-Z])$", dni.upper())
         if not patron_dni:
@@ -145,12 +143,10 @@ class Registro(VentanaBase, Form):
         letras = "TRWAGMYFPDXBNJZSQVHLCKE"
         letra_correcta = letras[int(numero_dni) % 23]
         if letra_correcta != letra_introducida:
-            QMessageBox.warning(self, "El DNI no es válido.")
+            QMessageBox.warning(self, "DNI inválido", "El DNI no es válido.")
             return False
 
-        # Validar que no exista ya el mismo DNI
-        dao = UserDao()
-        if dao.buscar_por_dni(dni):
+        if self._controlador.buscar_por_dni(dni):
             QMessageBox.warning(self, "DNI duplicado", "Ya existe un usuario registrado con este DNI.")
             return False
 
