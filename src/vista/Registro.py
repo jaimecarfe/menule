@@ -4,6 +4,7 @@ from src.vista.VentanaBase import VentanaBase
 from src.modelo.vo.UserVo import UserVo
 from datetime import date
 from src.modelo.BussinessObject import BussinessObject
+from src.utils.email_utils import enviar_correo
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
@@ -79,10 +80,9 @@ class Registro(VentanaBase, Form):
             QMessageBox.warning(self, "Contraseña débil", "La contraseña debe tener al menos 6 caracteres.")
             return
         
-        if not self.validar_datos_registro(dni, correo, rol):
+        if not self.validar_datos_registro(dni, correo, rol, nombre, apellido):
             return
         
-                    
         user = UserVo(
             idUser=None,
             nombre=nombre,
@@ -103,16 +103,15 @@ class Registro(VentanaBase, Form):
         if self._controlador.registrarUsuario(user):
             QMessageBox.information(self, "Registro exitoso", "Usuario registrado correctamente.")
             self.close()
-        if self._ventana_anterior:
-            self._ventana_anterior.showFullScreen()
-            
+            if self._ventana_anterior:
+                self._ventana_anterior.showFullScreen()
+
     def volver(self):
         self.close()
         if self._ventana_anterior:
             self._ventana_anterior.showFullScreen()
 
-    def validar_datos_registro(self, dni, correo, rol):
-        # Validar correo por rol
+    def validar_datos_registro(self, dni, correo, rol, nombre, apellido):
         dominios_validos = {
             "estudiante": "@estudiantes.unileon.es",
             "profesor": "@unileon.es",
@@ -126,7 +125,6 @@ class Registro(VentanaBase, Form):
                     f"El correo para rol '{rol}' no tiene la extensión correcta.")
                 return False
 
-        # Validar visitantes (solo para envío)
         if rol == "visitante":
             if not (correo.endswith("@gmail.com") or correo.endswith("@hotmail.com")):
                 QMessageBox.warning(self, "Correo inválido",
@@ -150,4 +148,21 @@ class Registro(VentanaBase, Form):
             QMessageBox.warning(self, "DNI duplicado", "Ya existe un usuario registrado con este DNI.")
             return False
 
+        asunto = "Registro exitoso en MenULE"
+        mensaje = (
+            f"Hola {nombre} {apellido},\n\n"
+            f"Te has registrado exitosamente en MenULE con el rol de {rol}.\n\n"
+            f"Gracias por unirte a nuestra plataforma.\n\n"
+            f"Saludos,\nEl equipo de MenULE"
+        )
+
+        try:
+            enviar_correo(correo, asunto, mensaje)
+            QMessageBox.information(self, "Correo enviado", "Se ha enviado un correo de confirmación.")
+        except Exception as e:
+            import traceback
+            print("[DEBUG] Error al enviar correo:")
+            print(traceback.format_exc())
+            QMessageBox.warning(self, "Error", "No se pudo enviar el correo. Revisa la consola para más detalles.")
+        
         return True
