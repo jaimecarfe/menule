@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QListWidget, QLabel, QVBoxLayout, QHBoxLayout, QWidget
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.estudiante.ReservaComida import ReservaComida
+from src.modelo.dao.MenuDao import MenuDao
 from PyQt5 import uic
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuEstudiante.ui")
@@ -14,20 +15,62 @@ class MenuEstudiante(VentanaBase, Form):
         self.usuario = usuario
         self._controlador = ControladorEstudiante()
         self._callback_cerrar_sesion = None
+        self.setupUi(self)
+        self.init_layouts()
         self.configurar_interfaz()
 
+    def init_layouts(self):
+        # Creamos el layout principal si no existe
+        self.layout_principal = QHBoxLayout()
+
+        # Crear layout derecho para platos
+        self.layout_derecho = QVBoxLayout()
+
+        self.lista_primero = QListWidget()
+        self.lista_segundo = QListWidget()
+        self.lista_postre = QListWidget()
+
+        self.layout_derecho.addWidget(QLabel("Primeros platos"))
+        self.layout_derecho.addWidget(self.lista_primero)
+        self.layout_derecho.addWidget(QLabel("Segundos platos"))
+        self.layout_derecho.addWidget(self.lista_segundo)
+        self.layout_derecho.addWidget(QLabel("Postres"))
+        self.layout_derecho.addWidget(self.lista_postre)
+
+        # Suponemos que ya hay un widget padre en el .ui como contenedor central
+        self.menuContentWidget = QWidget()  # si no existe en .ui, lo creamos
+        self.menuContentWidget.setLayout(self.layout_derecho)
+
+        # Añadir ambos layouts (izquierda de QtDesigner + derecha dinámica)
+        self.layout_principal.addLayout(self.mainVerticalLayout) # del .ui (calendario y botones)
+        self.layout_principal.addWidget(self.menuContentWidget)
+
+        self.setLayout(self.layout_principal)
+
     def configurar_interfaz(self):
-        super().setupUi(self)
-        self.menuTextEdit.setReadOnly(True)
         self.setWindowTitle("Menú Estudiante")
         self.labelUsuario.setText(f"¿Qué habrá de comer hoy, {self.usuario.nombre}?")
         self.configurar_calendario()
+
         self.btnVisualizarMenu.setEnabled(False)
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self.btnVolver.clicked.connect(self.volver_al_panel)
-
         self.btnReservarComida.setVisible(False)
         self.btnReservarComida.clicked.connect(self.confirmar_reserva)
+
+        # Crear las listas dinámicamente dentro del contenedor ya definido en el .ui
+        self.lista_primero = QListWidget()
+        self.lista_segundo = QListWidget()
+        self.lista_postre = QListWidget()
+
+        layout_derecha = QVBoxLayout(self.contenedorMenuDerecha)  # QVBoxLayout dentro del QWidget
+        layout_derecha.addWidget(QLabel("Primeros platos"))
+        layout_derecha.addWidget(self.lista_primero)
+        layout_derecha.addWidget(QLabel("Segundos platos"))
+        layout_derecha.addWidget(self.lista_segundo)
+        layout_derecha.addWidget(QLabel("Postres"))
+        layout_derecha.addWidget(self.lista_postre)
+
 
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
@@ -61,12 +104,28 @@ class MenuEstudiante(VentanaBase, Form):
     def visualizar_menu(self):
         fecha = self.calendarWidget.selectedDate()
         if fecha.isValid():
-            texto_fecha = fecha.toString("dddd dd/MM/yyyy")
-            self.menuTextEdit.setText(f"Menú para el {texto_fecha}:\n\n- Primer plato\n- Segundo plato\n- Postre")
+            self.cargar_menu_del_dia()
             self.btnReservarComida.setVisible(True)
         else:
             QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
             self.btnReservarComida.setVisible(False)
+
+    def cargar_menu_del_dia(self):
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+        dao = MenuDao()
+        platos = dao.obtener_platos_por_fecha(fecha)
+
+        self.lista_primero.clear()
+        self.lista_segundo.clear()
+        self.lista_postre.clear()
+
+        for nombre, tipo in platos:
+            if tipo == 'primero':
+                self.lista_primero.addItem(nombre)
+            elif tipo == 'segundo':
+                self.lista_segundo.addItem(nombre)
+            elif tipo == 'postre':
+                self.lista_postre.addItem(nombre)
 
     def confirmar_reserva(self):
         respuesta = QMessageBox.question(

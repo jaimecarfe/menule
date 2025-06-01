@@ -5,6 +5,7 @@ from src.vista.administrador.AdminPanel import AdminPanel
 from src.vista.estudiante.PanelEstudiante import PanelEstudiante
 from src.vista.profesor.PanelProfesor import PanelProfesor
 from src.vista.visitante.MenuVisitante import MenuVisitante
+from src.vista.personal_comedor.PanelComedor import PanelComedor
 from src.controlador.ControladorPrincipal import ControladorPrincipal
 from src.modelo.BussinessObject import BussinessObject
 
@@ -54,6 +55,9 @@ class Login(VentanaBase, Form):
                 self.ventana.callback_cerrar_sesion = self.volver_al_login
             elif usuario.rol == "profesor":
                 self.ventana = PanelProfesor(usuario)
+                self.ventana.callback_cerrar_sesion = self.volver_al_login
+            elif usuario.rol == "personal_comedor":
+                self.ventana = PanelComedor(usuario)
                 self.ventana.callback_cerrar_sesion = self.volver_al_login
             else:
                 QMessageBox.warning(self, "Acceso denegado", f"Rol no autorizado: {usuario.rol}")
