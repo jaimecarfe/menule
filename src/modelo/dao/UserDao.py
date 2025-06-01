@@ -191,3 +191,8 @@ class UserDao(Conexion):
         cursor.execute(sql)
         cursor.close()
         conexion.closeConnection()
+
+    def buscar_por_dni(self, dni):
+        cursor = self.getCursor()
+        cursor.execute("SELECT * FROM Usuarios WHERE dni = ?", (dni,))
+        return cursor.fetchone()
