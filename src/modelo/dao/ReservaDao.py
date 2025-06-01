@@ -1,21 +1,27 @@
 from src.modelo.conexion.Conexion import Conexion
 from datetime import datetime
+from src.modelo.vo.ReservaVo import ReservaVo
 
 class ReservaDao:
     def getCursor(self):
         return Conexion().getCursor()
 
-    def crear_reserva(self, id_usuario, total):
+    def insert(self, reservaVO):
         cursor = self.getCursor()
         try:
             cursor.execute("""
-                INSERT INTO Reservas (id_usuario, fecha, total, estado)
+                INSERT INTO Reservas (id_usuario, id_menu, fecha_reserva, estado)
                 VALUES (?, ?, ?, ?)
-            """, (id_usuario, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), total, "confirmada"))
-            return True
+            """, (
+                reservaVO.id_usuario,
+                reservaVO.id_menu,
+                datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                reservaVO.estado
+            ))
+            return cursor.lastrowid
         except Exception as e:
             print("Error al crear reserva:", e)
-            return False
+            return None
 
     def obtener_ultima_reserva_id(self, id_usuario):
         cursor = self.getCursor()
@@ -23,7 +29,7 @@ class ReservaDao:
             cursor.execute("""
                 SELECT id_reserva FROM Reservas 
                 WHERE id_usuario = ? 
-                ORDER BY fecha DESC LIMIT 1
+                ORDER BY fecha_reserva DESC LIMIT 1
             """, (id_usuario,))
             row = cursor.fetchone()
             return row[0] if row else None

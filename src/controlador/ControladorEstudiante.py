@@ -1,8 +1,8 @@
 from src.modelo.BussinessObject import BussinessObject
 from src.modelo.Sesion import Sesion
+from src.modelo.vo.ReservaVo import ReservaVo
 
 """
-from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
 from src.modelo.vo.MenuVo import MenuVo
 from src.modelo.vo.UserVo import UserVo
@@ -10,16 +10,29 @@ from src.modelo.vo.UserVo import UserVo
 class ControladorEstudiante:
     def __init__(self):
         self._modelo = BussinessObject()
+        self.menus_simulados = [
+            {"id_menu": 1, "fecha": "2025-06-03", "tipo": "Almuerzo"},
+            {"id_menu": 2, "fecha": "2025-06-04", "tipo": "Cena"},
+            {"id_menu": 3, "fecha": "2025-06-05", "tipo": "Desayuno"},
+        ]
 
-    def hacer_reserva(self, id_menu, fecha):
-        usuario = Sesion().get_usuario()  # <-- Obtén el usuario logueado
-        # Aquí puedes usar usuario.idUser, usuario.nombre, etc.
-        pass
+    def obtener_menus_disponibles(self):
+        return self.menus_simulados
+    
+    def obtener_ultima_reserva_id(self, id_usuario):
+        return self._modelo.obtenerUltimaReservaId(id_usuario)
 
-    def cancelar_reserva(self, id_reserva, motivo):
-        usuario = Sesion().get_usuario()
-        pass
-
+    def hacer_reserva(self, id_usuario: int, id_menu: int) -> bool:
+            reserva = ReservaVo(
+                id_reserva=None,
+                id_usuario=id_usuario,
+                id_menu=id_menu,
+                fecha_reserva=None,  # El modelo/BBDD la pone
+                estado="confirmada"
+            )
+            res = self._modelo.crearReserva(reserva)
+            return res is not None
+        
     def ver_historial(self):
         usuario = Sesion().get_usuario()
         historial = self._modelo.ver_historial_reservas(usuario.idUser)  # Ejemplo de uso

@@ -3,6 +3,7 @@ from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorEstudiante import ControladorEstudiante
+from src.vista.estudiante.ReservaComida import ReservaComida
 from PyQt5 import uic
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuEstudiante.ui")
@@ -24,6 +25,9 @@ class MenuEstudiante(VentanaBase, Form):
         self.btnVisualizarMenu.setEnabled(False)
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self.btnVolver.clicked.connect(self.volver_al_panel)
+
+        self.btnReservarComida.setVisible(False)
+        self.btnReservarComida.clicked.connect(self.confirmar_reserva)
 
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
@@ -49,6 +53,8 @@ class MenuEstudiante(VentanaBase, Form):
         if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
             QMessageBox.warning(self, "Fecha inválida", "Selecciona un día entre lunes y viernes.")
             self.calendarWidget.setSelectedDate(QDate())
+            self.btnVisualizarMenu.setEnabled(False)
+            self.btnReservarComida.setVisible(False)
         else:
             self.btnVisualizarMenu.setEnabled(True)
 
@@ -57,8 +63,24 @@ class MenuEstudiante(VentanaBase, Form):
         if fecha.isValid():
             texto_fecha = fecha.toString("dddd dd/MM/yyyy")
             self.menuTextEdit.setText(f"Menú para el {texto_fecha}:\n\n- Primer plato\n- Segundo plato\n- Postre")
+            self.btnReservarComida.setVisible(True)
         else:
             QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
+            self.btnReservarComida.setVisible(False)
+
+    def confirmar_reserva(self):
+        respuesta = QMessageBox.question(
+            self,
+            "Confirmar reserva",
+            "¿Quieres reservar este menú?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if respuesta == QMessageBox.Yes:
+            self.abrir_reserva_comida()
+
+    def abrir_reserva_comida(self):
+        reserva_comida = ReservaComida(self.usuario, self)
+        reserva_comida.show()
 
     def volver_al_panel(self):
         if self.parent():

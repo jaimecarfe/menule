@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ReservaComida</class>
+ <widget class="QMainWindow" name="ReservaComida">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>520</width>
+    <height>340</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Reservar Comida</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #F0F7FA, stop:1 #D6EAF8);
+}
+QLabel#labelTitulo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2E86C1;
+    margin-bottom: 16px;
+}
+QComboBox {
+    font-size: 16px;
+    padding: 4px;
+    background: #FBFCFC;
+    border: 1px solid #AED6F1;
+    border-radius: 6px;
+}
+QPushButton {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 18px;
+}
+QPushButton#btn_reservar {
+    background-color: #28B463;
+}
+QPushButton#btn_ticket {
+    background-color: #3498DB;
+}
+QPushButton#btn_generar_ticket {
+    background-color: #F39C12;
+}
+QPushButton#btn_volver {
+    background-color: #E74C3C;
+}
+QPushButton:hover {
+    opacity: 0.85;
+    border: 2px solid #2980B9;
+}
+    </string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayoutPrincipal">
+    <item>
+     <widget class="QLabel" name="labelTitulo">
+      <property name="text">
+       <string>Reservar Comida</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayoutMenu">
+      <item>
+       <widget class="QLabel" name="labelSeleccionMenu">
+        <property name="text">
+         <string>Selecciona menú disponible:</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 18px; color: #34495E;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="combo_menu"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer name="verticalSpacer1">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>22</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayoutBotones">
+      <item>
+       <widget class="QPushButton" name="btn_reservar">
+        <property name="text">
+         <string>Reservar</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_ticket">
+        <property name="text">
+         <string>Ver Ticket</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_generar_ticket">
+        <property name="text">
+         <string>Generar Ticket</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_volver">
+        <property name="text">
+         <string>Volver</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

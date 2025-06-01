@@ -4,25 +4,28 @@ from src.modelo.dao.ProfesorDao import ProfesorDao
 from src.modelo.dao.PersonalComedorDao import PersonalComedorDao
 from src.modelo.dao.EstadisticaDao import EstadisticaDao
 from src.modelo.dao.ConfiguracionDao import ConfiguracionDao
-"""
 from src.modelo.dao.ReservaDao import ReservaDao
+from src.modelo.dao.TicketDao import TicketDao
+
+"""
 from src.modelo.dao.MenuDao import MenuDao
 from src.modelo.dao.PlatoDao import PlatoDao
-from src.modelo.dao.TicketDao import TicketDao
 from src.modelo.dao.PagoDao import PagoDao
 from src.modelo.dao.IncidenciaDao import IncidenciaDao
 from src.modelo.dao.IngredienteDao import IngredienteDao
 """
+
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
 from src.modelo.vo.EstudianteVo import EstudianteVo
 from src.modelo.vo.ProfesorVo import ProfesorVo
 from src.modelo.vo.PersonalComedorVo import PersonalComedorVo
 from src.modelo.vo.EstadisticaVo import EstadisticaVo
-"""
 from src.modelo.vo.ReservaVo import ReservaVo
-from src.modelo.vo.IncidenciaVo import IncidenciaVo
 from src.modelo.vo.TicketVo import TicketVo
+
+"""
+from src.modelo.vo.IncidenciaVo import IncidenciaVo
 from src.modelo.vo.PagoVo import PagoVo
 """
 
@@ -36,6 +39,7 @@ class BussinessObject:
         self.estudiante_dao = EstudianteDao()
         self.profesor_dao = ProfesorDao()
         self.personal_comedor_dao = PersonalComedorDao()
+        self.reserva_dao = ReservaDao()
 
     # --- Usuarios ---
     def comprobarLogin(self, loginVO: LoginVO) -> UserVo | None:
@@ -117,16 +121,21 @@ class BussinessObject:
     def guardarConfiguracion(self, clave: str, valor: str) -> bool:
         return ConfiguracionDao().guardar_configuracion(clave, valor)
     
-"""
     # --- Reservas ---
-    def crearReserva(self, reservaVO: ReservaVo) -> int | None:
-        return ReservaDao().insert(reservaVO)
+    def crearReserva(self, reservaVO):
+        return self.reserva_dao.insert(reservaVO)
 
-    def cancelarReserva(self, id_reserva: int, motivo: str) -> bool:
-        return ReservaDao().cancelar(id_reserva, motivo)
+    def obtenerUltimaReservaId(self, id_usuario):
+        return self.reserva_dao.obtener_ultima_reserva_id(id_usuario)    
 
-    def obtenerReservasPorUsuario(self, id_usuario: int) -> list:
-        return ReservaDao().obtener_por_usuario(id_usuario)
+    # --- Tickets ---
+    def generarTicket(self, ticketVO: TicketVo) -> int | None:
+        return TicketDao().insert(ticketVO)
+
+    def validarTicket(self, codigo: str) -> bool:
+        return TicketDao().marcar_usado(codigo)
+    
+"""
 
     # --- Menús ---
     def obtenerMenusDisponibles(self):
@@ -136,12 +145,6 @@ class BussinessObject:
     def obtenerPlatosPorMenu(self, id_menu: int):
         return PlatoDao().buscar_por_menu(id_menu)
 
-    # --- Tickets ---
-    def generarTicket(self, ticketVO: TicketVo) -> int | None:
-        return TicketDao().insert(ticketVO)
-
-    def validarTicket(self, codigo: str) -> bool:
-        return TicketDao().marcar_usado(codigo)
 
     # --- Pagos ---
     def registrarPago(self, pagoVO: PagoVo) -> int | None:
