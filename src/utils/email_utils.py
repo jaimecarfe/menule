@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def enviar_correo(destino, asunto, mensaje):
-    remitente = "mfernc31@estudiantes.unileon.es"
+    remitente = "comedormenule@gmail.com"
     contraseña = os.environ.get("EMAIL_PASSWORD")
 
     if not contraseña:
