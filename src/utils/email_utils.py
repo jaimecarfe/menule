@@ -22,6 +22,3 @@ def enviar_correo(destino, asunto, mensaje):
         return response.status_code
     except Exception as e:
         raise RuntimeError(f"Error enviando correo: {e}")
-    
-def enviar_ticket_por_correo():
-    pass

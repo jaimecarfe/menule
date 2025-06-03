@@ -3,13 +3,15 @@ from PyQt5 import uic
 from src.modelo.vo.UserVo import UserVo
 from src.modelo.BussinessObject import BussinessObject
 from PyQt5.QtWidgets import QMessageBox
-from src.modelo.dao.UserDao import UserDao
 
 Form, Window = uic.loadUiType("./src/vista/ui/RegistrarAdmin.ui")
 
 class VentanaRegistrarAdmin(QMainWindow, Form):
     def __init__(self, callback_volver=None):
         super().__init__()
+
+        self._controlador = BussinessObject()
+
         self.setupUi(self)
         self.callback_volver = callback_volver
 
@@ -63,8 +65,8 @@ class VentanaRegistrarAdmin(QMainWindow, Form):
             activo=True
         )
 
-        bo = BussinessObject()
-        resultado = bo.registrarUsuario(user)
+        
+        resultado = self._controlador.registrarUsuario(user)
 
         if resultado:
             QMessageBox.information(self, "Éxito", "Usuario registrado correctamente.")
@@ -110,9 +112,7 @@ class VentanaRegistrarAdmin(QMainWindow, Form):
             QMessageBox.warning(self, "DNI inválido", f"El DNI no es válido.")
             return False
 
-        # Validar que no exista ya el mismo DNI
-        dao = UserDao()
-        if dao.buscar_por_dni(dni):
+        if self._controlador.buscar_por_dni(dni):
             QMessageBox.warning(self, "DNI duplicado", "Ya existe un usuario registrado con este DNI.")
             return False
 

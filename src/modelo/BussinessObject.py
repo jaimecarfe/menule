@@ -40,6 +40,7 @@ class BussinessObject:
         self.profesor_dao = ProfesorDao()
         self.personal_comedor_dao = PersonalComedorDao()
         self.reserva_dao = ReservaDao()
+        self.ticket_dao = TicketDao()
 
     # --- Usuarios ---
     def comprobarLogin(self, loginVO: LoginVO) -> UserVo | None:
@@ -132,10 +133,10 @@ class BussinessObject:
 
     # --- Tickets ---
     def generarTicket(self, ticketVO: TicketVo) -> int | None:
-        return TicketDao().insert(ticketVO)
+        return self.ticket_dao.insert(ticketVO)
 
     def validarTicket(self, codigo: str) -> bool:
-        return TicketDao().marcar_usado(codigo)
+        return self.ticket_dao.marcar_usado(codigo)
     
 """
 

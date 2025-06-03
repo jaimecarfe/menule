@@ -10,10 +10,6 @@ from src.vista.visitante.MenuVisitante import MenuVisitante
 
 from src.modelo.BussinessObject import BussinessObject
 from src.controlador.ControladorPrincipal import ControladorPrincipal
-from src.modelo.dao.UserDao import UserDao
-from src.modelo.vo.UserVo import UserVo
-import bcrypt
-from datetime import date
 
 class App:
     def __init__(self):

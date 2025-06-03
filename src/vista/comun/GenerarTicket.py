@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QMessageBox
 from src.modelo.dao.TicketDao import TicketDao
 from src.utils.ticket_generator import generar_ticket_pdf
-from src.utils.email_utils import enviar_ticket_por_correo
+from src.utils.email_utils import enviar_correo
 import os
 
 class GenerarTicket(QWidget):
@@ -59,7 +59,7 @@ class GenerarTicket(QWidget):
         generar_ticket_pdf(ticket_data, ruta)
 
         try:
-            enviar_ticket_por_correo(
+            enviar_correo(
                 destino=datos[2],
                 asunto="Tu ticket de reserva",
                 cuerpo="Adjunto encontrarás tu comprobante.",
