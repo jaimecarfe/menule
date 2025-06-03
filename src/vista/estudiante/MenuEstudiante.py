@@ -63,7 +63,7 @@ class MenuEstudiante(VentanaBase, Form):
         self.lista_segundo = QListWidget()
         self.lista_postre = QListWidget()
 
-        layout_derecha = QVBoxLayout(self.contenedorMenuDerecha)  # QVBoxLayout dentro del QWidget
+        layout_derecha = QVBoxLayout(self.contenedorMenuDerecha)
         layout_derecha.addWidget(QLabel("Primeros platos"))
         layout_derecha.addWidget(self.lista_primero)
         layout_derecha.addWidget(QLabel("Segundos platos"))
