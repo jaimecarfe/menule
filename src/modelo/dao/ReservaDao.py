@@ -18,9 +18,17 @@ class ReservaDao:
                 datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 reservaVO.estado
             ))
-            return cursor.lastrowid
+            # Obtener el último ID insertado con JayDeBeApi/MySQL
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            last_id = cursor.fetchone()[0]
+            cursor.close()
+            return last_id
         except Exception as e:
             print("Error al crear reserva:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
             return None
 
     def obtener_ultima_reserva_id(self, id_usuario):
@@ -32,7 +40,12 @@ class ReservaDao:
                 ORDER BY fecha_reserva DESC LIMIT 1
             """, (id_usuario,))
             row = cursor.fetchone()
+            cursor.close()
             return row[0] if row else None
         except Exception as e:
             print("Error al obtener última reserva:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
             return None

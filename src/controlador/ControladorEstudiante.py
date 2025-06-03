@@ -1,23 +1,18 @@
 from src.modelo.BussinessObject import BussinessObject
 from src.modelo.Sesion import Sesion
 from src.modelo.vo.ReservaVo import ReservaVo
+from src.modelo.vo.MenuVo import MenuVo
 
 """
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
-from src.modelo.vo.MenuVo import MenuVo
 from src.modelo.vo.UserVo import UserVo
 """
 class ControladorEstudiante:
     def __init__(self):
         self._modelo = BussinessObject()
-        self.menus_simulados = [
-            {"id_menu": 1, "fecha": "2025-06-03", "tipo": "Almuerzo"},
-            {"id_menu": 2, "fecha": "2025-06-04", "tipo": "Cena"},
-            {"id_menu": 3, "fecha": "2025-06-05", "tipo": "Desayuno"},
-        ]
 
     def obtener_menus_disponibles(self):
-        return self.menus_simulados
+        return self._modelo.obtenerMenusDisponibles()
     
     def obtener_ultima_reserva_id(self, id_usuario):
         return self._modelo.obtenerUltimaReservaId(id_usuario)

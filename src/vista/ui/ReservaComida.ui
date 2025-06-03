@@ -111,13 +111,6 @@ QPushButton:hover {
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btn_ticket">
-        <property name="text">
-         <string>Ver Ticket</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="btn_generar_ticket">
         <property name="text">
          <string>Generar Ticket</string>

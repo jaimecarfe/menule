@@ -6,9 +6,9 @@ from src.modelo.dao.EstadisticaDao import EstadisticaDao
 from src.modelo.dao.ConfiguracionDao import ConfiguracionDao
 from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.TicketDao import TicketDao
+from src.modelo.dao.MenuDao import MenuDao
 
 """
-from src.modelo.dao.MenuDao import MenuDao
 from src.modelo.dao.PlatoDao import PlatoDao
 from src.modelo.dao.PagoDao import PagoDao
 from src.modelo.dao.IncidenciaDao import IncidenciaDao
@@ -138,11 +138,12 @@ class BussinessObject:
     def validarTicket(self, codigo: str) -> bool:
         return self.ticket_dao.marcar_usado(codigo)
     
-"""
-
     # --- Menús ---
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
+    
+"""
+
 
     # --- Platos ---
     def obtenerPlatosPorMenu(self, id_menu: int):

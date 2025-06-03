@@ -1,4 +1,5 @@
 from src.modelo.conexion.Conexion import Conexion
+from src.modelo.vo.MenuVo import MenuVo
 
 class MenuDao:
     def getCursor(self):
@@ -14,26 +15,27 @@ class MenuDao:
             conn = Conexion()
             cursor = conn.getCursor()
 
-            # 1. Insertar o actualizar menú
-            cursor.execute("""
-                INSERT INTO Menus (fecha, tipo, max_reservas, disponible)
-                VALUES (?, 'almuerzo', 100, 1)
-                ON DUPLICATE KEY UPDATE disponible = 1
-            """, (fecha,))
+            try:
+                cursor.execute("""
+                    INSERT INTO Menus (fecha, tipo, max_reservas, disponible)
+                    VALUES (?, 'almuerzo', 100, 1)
+                """, (fecha,))
+            except Exception:
+                cursor.execute("""
+                    UPDATE Menus SET disponible = 1 WHERE fecha = ? AND tipo = 'almuerzo'
+                """, (fecha,))
 
-            # 2. Obtener el id del menú insertado o existente
-            cursor.execute("SELECT id_menu FROM Menus WHERE fecha = ?", (fecha,))
+            cursor.execute("SELECT id_menu FROM Menus WHERE fecha = ? AND tipo = 'almuerzo'", (fecha,))
             result = cursor.fetchone()
             if not result:
-                print("❌ No se pudo obtener el menú para la fecha:", fecha)
+                print("No se pudo obtener el menú para la fecha:", fecha)
+                cursor.close()
                 return False
 
             id_menu = result[0]
 
-            # 3. Eliminar platos anteriores del menú
             cursor.execute("DELETE FROM MenuPlatos WHERE id_menu = ?", (id_menu,))
 
-            # 4. Insertar platos y relacionarlos
             for nombre, tipo in lista_platos_con_tipo:
                 cursor.execute("SELECT id_plato FROM Platos WHERE nombre = ?", (nombre,))
                 row = cursor.fetchone()
@@ -41,24 +43,26 @@ class MenuDao:
                 if row:
                     id_plato = row[0]
                 else:
-                    # Insertar nuevo plato si no existe
                     cursor.execute("""
                         INSERT INTO Platos (nombre, tipo, precio)
                         VALUES (?, ?, 0.00)
                     """, (nombre, tipo))
 
-                    # Reconsultar el id recién insertado
                     cursor.execute("SELECT id_plato FROM Platos WHERE nombre = ?", (nombre,))
                     id_plato = cursor.fetchone()[0]
 
-                # Relacionar plato con menú
                 cursor.execute("INSERT INTO MenuPlatos (id_menu, id_plato) VALUES (?, ?)", (id_menu, id_plato))
 
-            #conn.conexion.commit()
+            conn.conexion.commit()
+            cursor.close()
             return True
 
         except Exception as e:
-            print("❌ Error al modificar menú:", e)
+            print("Error al modificar menú:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
             return False
 
     def obtener_platos_por_fecha(self, fecha):
@@ -68,6 +72,22 @@ class MenuDao:
             FROM Menus m
             JOIN MenuPlatos mp ON m.id_menu = mp.id_menu
             JOIN Platos p ON mp.id_plato = p.id_plato
-            WHERE m.fecha = ?
+            WHERE m.fecha = ? AND m.tipo = 'almuerzo'
         """, (fecha,))
-        return cursor.fetchall()
+        platos = cursor.fetchall()
+        cursor.close()
+        return platos
+    
+    def listar_disponibles(self):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT m.id_menu, m.fecha, m.tipo
+            FROM Menus m
+            WHERE m.disponible = 1
+        """)
+        rows = cursor.fetchall()
+        cursor.close()
+        return [
+            {"id_menu": row[0], "fecha": row[1], "tipo": row[2]}
+            for row in rows
+        ]

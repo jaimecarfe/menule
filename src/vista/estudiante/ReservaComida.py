@@ -21,7 +21,6 @@ class ReservaComida(QMainWindow, Form):
 
         # Conectar botones
         self.btn_reservar.clicked.connect(self.realizar_reserva)
-        self.btn_ticket.clicked.connect(self.abrir_ticket)
         self.btn_generar_ticket.clicked.connect(self.generar_ticket)
         self.btn_volver.clicked.connect(self.volver)
 

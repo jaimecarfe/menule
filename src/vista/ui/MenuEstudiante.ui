@@ -26,13 +26,6 @@ QCalendarWidget {
         background-color: white;
         border-radius: 8px;
 }
-QTextEdit {
-        background-color: #e3f2fd;
-        color: #0d47a1;
-        border: 1px solid #90caf9;
-        border-radius: 6px;
-        padding: 10px;
-}
 QPushButton {
         background-color: #1976d2;
         color: white;
@@ -63,21 +56,40 @@ QPushButton:disabled {
        <widget class="QCalendarWidget" name="calendarWidget"/>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="menuLayout">
-        <item>
-         <widget class="QTextEdit" name="menuTextEdit"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnReservarComida">
-          <property name="text">
-           <string>Reservar</string>
-          </property>
-          <property name="visible">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QWidget" name="contenedorMenuDerecha">
+        <layout class="QVBoxLayout" name="verticalLayoutDerecha">
+         <item>
+          <widget class="QLabel" name="labelPrimeros">
+           <property name="text">
+            <string>Primeros platos</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="listaPrimeros"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelSegundos">
+           <property name="text">
+            <string>Segundos platos</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="listaSegundos"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelPostres">
+           <property name="text">
+            <string>Postres</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="listaPostres"/>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </item>
@@ -87,6 +99,16 @@ QPushButton:disabled {
        <widget class="QPushButton" name="btnVisualizarMenu">
         <property name="text">
          <string>Visualizar Menú</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnReservarComida">
+        <property name="text">
+         <string>Reservar</string>
+        </property>
+        <property name="visible">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
