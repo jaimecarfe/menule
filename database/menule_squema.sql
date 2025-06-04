@@ -96,6 +96,7 @@ CREATE TABLE Reservas (
     id_menu INT NOT NULL,
     fecha_reserva DATETIME NOT NULL,
     estado ENUM('pendiente', 'confirmada', 'cancelada', 'recogida') DEFAULT 'pendiente',
+    estado_bit TINYINT(1) DEFAULT NULL,
     fecha_cancelacion DATETIME,
     motivo_cancelacion TEXT,
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),

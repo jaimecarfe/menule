@@ -1,10 +1,10 @@
-from modelo.BussinessObject import BussinessObject
-from modelo.vo.UserVo import UserVo
-from modelo.vo.MenuVo import MenuVo
-from modelo.vo.ReservaVo import ReservaVo
-from modelo.vo.TicketVo import TicketVo
-from modelo.vo.PlatoVo import PlatoVo
-from modelo.vo.IngredienteVo import IngredienteVo
+from src.modelo.BussinessObject import BussinessObject
+from src.modelo.vo.UserVo import UserVo
+from src.modelo.vo.MenuVo import MenuVo
+from src.modelo.vo.ReservaVo import ReservaVo
+from src.modelo.vo.TicketVo import TicketVo
+#from src.modelo.vo.PlatoVo import PlatoVo
+#from src.modelo.vo.IngredienteVo import IngredienteVo
 
 
 class ControladorComedor:
@@ -20,3 +20,6 @@ class ControladorComedor:
 
     def ver_stock(self):
         pass
+
+    def obtener_reservas(self):
+        return self._modelo.get_reservas_completas()

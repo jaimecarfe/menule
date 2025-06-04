@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ProcesarPedidos</class>
+ <widget class="QWidget" name="ProcesarPedidos">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Procesar Pedidos</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget {
+    background-color: #e6f7ff;
+    font-family: Segoe UI;
+    font-size: 14px;
+}
+
+QPushButton {
+    background-color: #33cc99;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2eb88f;
+}
+
+QPushButton:pressed {
+    background-color: #24a07a;
+}
+
+QTableWidget {
+    background-color: #ffffff;
+    gridline-color: #99ccff;
+    selection-background-color: #cceeff;
+    selection-color: #000000;
+    border: 1px solid #66b3ff;
+}
+
+QHeaderView::section {
+    background-color: #66b3ff;
+    color: white;
+    padding: 4px;
+    border: 1px solid #3399ff;
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTableWidget" name="tablaPedidos">
+     <column>
+      <property name="text">
+       <string>Fecha</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ID Reserva</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Correo</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Menú (3 platos)</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Acciones</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnActualizar">
+     <property name="text">
+      <string>Actualizar</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -60,3 +60,6 @@ class ControladorEstudiante:
     # En ControladorEstudiante
     def hacer_reserva_completa(self, id_usuario, fecha, primero, segundo, postre):
         return self._modelo.crearReservaCompleta(id_usuario, fecha, primero, segundo, postre)
+
+    def crear_reserva(self, reserva_vo):
+        self._modelo.insertar_reserva(reserva_vo)

@@ -6,6 +6,8 @@ from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.estudiante.ReservaComida import ReservaComida
 from src.modelo.dao.MenuDao import MenuDao
 from PyQt5 import uic
+from src.modelo.vo.ReservaVo import ReservaVo
+
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuEstudiante.ui")
 
@@ -101,9 +103,10 @@ class MenuEstudiante(VentanaBase, Form):
             QMessageBox.warning(self, "Selección incompleta", "Debes seleccionar un primer plato, un segundo y un postre antes de reservar.")
             return
 
-        primero = primero_item.text().strip()
-        segundo = segundo_item.text().strip()
-        postre = postre_item.text().strip()
+        primero = primero_item.text().split("  (")[0].strip()
+        segundo = segundo_item.text().split("  (")[0].strip()
+        postre = postre_item.text().split("  (")[0].strip()
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
 
         respuesta = QMessageBox.question(
             self,
@@ -114,7 +117,7 @@ class MenuEstudiante(VentanaBase, Form):
         )
 
         if respuesta == QMessageBox.Yes:
-            exito = self._controlador.hacer_reserva(self.usuario.idUser, self.calendarWidget.selectedDate().toString("yyyy-MM-dd"))
+            exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
             if exito:
                 QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
             else:
@@ -129,3 +132,14 @@ class MenuEstudiante(VentanaBase, Form):
         if self.parent():
             self.parent().show()
         self.close()
+
+    def reservar_menu(self):
+        id_menu = self.obtener_id_menu_seleccionado()  # obtén el ID del menú seleccionado en la UI
+        reserva = ReservaVo()
+        reserva.id_usuario = self.usuario_actual.id  # o self.usuario.id
+        reserva.id_menu = id_menu
+        reserva.estado = "pendiente"
+        
+        self.controlador.crear_reserva(reserva)
+        QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
+

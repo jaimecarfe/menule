@@ -60,7 +60,9 @@ class ReservaDao:
                 INSERT INTO Reservas (id_usuario, id_menu, fecha_reserva, estado)
                 VALUES (?, ?, NOW(), 'pendiente')
             """, (id_usuario, id_menu))
-            id_reserva = cursor.lastrowid
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            id_reserva = cursor.fetchone()[0]
+
 
             for plato_nombre in [primero, segundo, postre]:
                 cursor.execute("SELECT id_plato FROM Platos WHERE nombre = ?", (plato_nombre,))
@@ -71,3 +73,25 @@ class ReservaDao:
         except Exception as e:
             print("Error al crear reserva:", e)
             return None
+
+    def get_all(self):
+        cursor = self.getCursor()
+        try:
+            cursor.execute("SELECT * FROM Reservas")
+            rows = cursor.fetchall()
+            return [ReservaVo(*row) for row in rows]
+        finally:
+            cursor.close()
+
+    def obtener_platos_de_reserva(self, id_reserva):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT p.nombre
+            FROM ReservaPlatos rp
+            JOIN Platos p ON rp.id_plato = p.id_plato
+            WHERE rp.id_reserva = ?
+        """, (id_reserva,))
+        rows = cursor.fetchall()
+        cursor.close()
+        return [row[0] for row in rows]
+

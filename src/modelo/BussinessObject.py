@@ -8,13 +8,6 @@ from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.TicketDao import TicketDao
 from src.modelo.dao.MenuDao import MenuDao
 
-"""
-from src.modelo.dao.PlatoDao import PlatoDao
-from src.modelo.dao.PagoDao import PagoDao
-from src.modelo.dao.IncidenciaDao import IncidenciaDao
-from src.modelo.dao.IngredienteDao import IngredienteDao
-"""
-
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
 from src.modelo.vo.EstudianteVo import EstudianteVo
@@ -24,13 +17,9 @@ from src.modelo.vo.EstadisticaVo import EstadisticaVo
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.TicketVo import TicketVo
 
-"""
-from src.modelo.vo.IncidenciaVo import IncidenciaVo
-from src.modelo.vo.PagoVo import PagoVo
-"""
-
 import bcrypt
 from datetime import date
+
 
 class BussinessObject:
     def __init__(self):
@@ -102,7 +91,10 @@ class BussinessObject:
         return self.user_dao.buscar_por_dni(dni)
     
     def crearReservaCompleta(self, id_usuario, fecha, primero, segundo, postre):
-        return self._reservaDao.crear_reserva_completa_por_fecha(id_usuario, fecha, primero, segundo, postre)
+        return self.reserva_dao.crear_reserva_completa_por_fecha(id_usuario, fecha, primero, segundo, postre)
+
+    def insertar_reserva(self, reserva_vo):
+        return self._reservaDao.insert(reserva_vo)
 
     
     # --- Estadísticas ---
@@ -146,7 +138,7 @@ class BussinessObject:
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
     
-"""
+    """
 
 
     # --- Platos ---
@@ -175,4 +167,19 @@ class BussinessObject:
     def consultarStockIngredientes(self):
         return IngredienteDao().listar()
 
-"""
+    """
+
+    def get_reservas_completas(self):
+        reservas = self.reserva_dao.get_all()
+        resultado = []
+        for r in reservas:
+            usuario = self.user_dao.get_by_id(r.id_usuario)
+            platos = self.reserva_dao.obtener_platos_de_reserva(r.id_reserva)
+            resultado.append({
+                "id_reserva": r.id_reserva,
+                "correo": usuario.correo,
+                "fecha": r.fecha_reserva,
+                "estado": r.estado,
+                "platos": platos
+            })
+        return resultado
