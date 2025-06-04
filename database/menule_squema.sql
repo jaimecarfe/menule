@@ -244,3 +244,45 @@ FROM Reservas r
 JOIN Pagos p ON r.id_reserva = p.id_reserva AND p.estado = 'completado'
 LEFT JOIN ReservaPlatos rp ON r.id_reserva = rp.id_reserva
 GROUP BY DATE(r.fecha_reserva);
+
+
+
+'''
+-- Eliminar reservas cuando se borra un usuario
+ALTER TABLE Reservas DROP FOREIGN KEY reservas_ibfk_1;
+ALTER TABLE Reservas ADD CONSTRAINT reservas_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
+
+-- Eliminar reserva_platos cuando se borra una reserva
+ALTER TABLE ReservaPlatos DROP FOREIGN KEY reservaplatos_ibfk_1;
+ALTER TABLE ReservaPlatos ADD CONSTRAINT reservaplatos_ibfk_1 FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE;
+
+-- Eliminar tickets cuando se borra una reserva
+ALTER TABLE Tickets DROP FOREIGN KEY tickets_ibfk_1;
+ALTER TABLE Tickets ADD CONSTRAINT tickets_ibfk_1 FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE;
+
+-- Eliminar pagos cuando se borra una reserva
+ALTER TABLE Pagos DROP FOREIGN KEY pagos_ibfk_2;
+ALTER TABLE Pagos ADD CONSTRAINT pagos_ibfk_2 FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE;
+
+-- Eliminar pagos cuando se borra un usuario
+ALTER TABLE Pagos DROP FOREIGN KEY pagos_ibfk_1;
+ALTER TABLE Pagos ADD CONSTRAINT pagos_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
+
+-- Eliminar incidencias cuando se borra un usuario
+ALTER TABLE Incidencias DROP FOREIGN KEY incidencias_ibfk_1;
+ALTER TABLE Incidencias ADD CONSTRAINT incidencias_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE SET NULL;
+
+-- Eliminar incidencias cuando se borra el responsable
+ALTER TABLE Incidencias DROP FOREIGN KEY incidencias_ibfk_2;
+ALTER TABLE Incidencias ADD CONSTRAINT incidencias_ibfk_2 FOREIGN KEY (id_responsable) REFERENCES Usuarios(id_usuario) ON DELETE SET NULL;
+
+-- Eliminar estudiantes, profesores y personal de comedor si se borra el usuario
+ALTER TABLE Estudiantes DROP FOREIGN KEY estudiantes_ibfk_1;
+ALTER TABLE Estudiantes ADD CONSTRAINT estudiantes_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
+
+ALTER TABLE Profesores DROP FOREIGN KEY profesores_ibfk_1;
+ALTER TABLE Profesores ADD CONSTRAINT profesores_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
+
+ALTER TABLE PersonalComedor DROP FOREIGN KEY personalcomedor_ibfk_1;
+ALTER TABLE PersonalComedor ADD CONSTRAINT personalcomedor_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
+'''

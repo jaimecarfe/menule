@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from src.modelo.conexion.Conexion import Conexion
 from PyQt5 import uic
 
+
 #Form, Window = uic.loadUiType("./src/vista/ui/ProcesarPedidos.ui")
 
 class ProcesarPedidos(QWidget):
