@@ -146,14 +146,7 @@ class BussinessObject:
     # --- Menús ---
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
-    
-<<<<<<< HEAD
     """
-=======
-
-"""
->>>>>>> 369ee0749d9131252503cde0dc7a3d398ae40238
-
 
     # --- Platos ---
     def obtenerPlatosPorMenu(self, id_menu: int):
