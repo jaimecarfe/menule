@@ -78,7 +78,22 @@ class UserDao(Conexion):
     def update_saldo(self, id_usuario, nuevo_saldo):
         cursor = self.getCursor()
         try:
-            cursor.execute("UPDATE Usuarios SET saldo = ? WHERE id_usuario = ?", (nuevo_saldo, id_usuario))
+            # Obtener el rol del usuario
+            cursor.execute("SELECT tipo FROM Usuarios WHERE id_usuario = ?", (id_usuario,))
+            row = cursor.fetchone()
+            if not row:
+                print("Usuario no encontrado.")
+                return False
+            rol = row[0]
+
+            # Actualizar saldo en la tabla correspondiente según el rol
+            if rol == "estudiante":
+                cursor.execute("UPDATE Estudiantes SET saldo = ? WHERE id_usuario = ?", (nuevo_saldo, id_usuario))
+            elif rol == "profesor":
+                cursor.execute("UPDATE Profesores SET saldo = ? WHERE id_usuario = ?", (nuevo_saldo, id_usuario))
+            else:
+                print("El rol no tiene saldo asociado.")
+                return False
             return True
         except Exception as e:
             print("Error actualizando saldo:", e)

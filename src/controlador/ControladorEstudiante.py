@@ -2,7 +2,6 @@ from src.modelo.BussinessObject import BussinessObject
 from src.modelo.Sesion import Sesion
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.MenuVo import MenuVo
-from src.modelo.dao.EstudianteDao import EstudianteDao
 from PyQt5.QtWidgets import QMessageBox
 
 """
@@ -12,7 +11,6 @@ from src.modelo.vo.UserVo import UserVo
 class ControladorEstudiante:
     def __init__(self):
         self._modelo = BussinessObject()
-        self.dao = EstudianteDao()
 
     def obtener_menus_disponibles(self):
         return self._modelo.obtenerMenusDisponibles()
@@ -60,10 +58,10 @@ class ControladorEstudiante:
         Sesion().cerrar_sesion()
     
     def obtener_saldo(self, id_usuario):
-        return self.dao.obtener_saldo(id_usuario)
+        return self._modelo.obtener_saldo(id_usuario)
 
     def actualizar_saldo(self, id_usuario, nuevo_saldo):
-        return self.dao.actualizar_saldo(id_usuario, nuevo_saldo)
+        return self._modelo.actualizarSaldo(id_usuario, nuevo_saldo)
 
     # En ControladorEstudiante
     def hacer_reserva_completa(self, id_usuario, fecha, primero, segundo, postre):
