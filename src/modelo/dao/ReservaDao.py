@@ -49,3 +49,25 @@ class ReservaDao:
             except Exception:
                 pass
             return None
+        
+    def crear_reserva_completa_por_fecha(self, id_usuario, fecha, primero, segundo, postre):
+        cursor = self.getCursor()
+        try:
+            cursor.execute("SELECT id_menu FROM Menus WHERE fecha = ?", (fecha,))
+            id_menu = cursor.fetchone()[0]
+
+            cursor.execute("""
+                INSERT INTO Reservas (id_usuario, id_menu, fecha_reserva, estado)
+                VALUES (?, ?, NOW(), 'pendiente')
+            """, (id_usuario, id_menu))
+            id_reserva = cursor.lastrowid
+
+            for plato_nombre in [primero, segundo, postre]:
+                cursor.execute("SELECT id_plato FROM Platos WHERE nombre = ?", (plato_nombre,))
+                id_plato = cursor.fetchone()[0]
+                cursor.execute("INSERT INTO ReservaPlatos (id_reserva, id_plato) VALUES (?, ?)", (id_reserva, id_plato))
+
+            return id_reserva
+        except Exception as e:
+            print("Error al crear reserva:", e)
+            return None
