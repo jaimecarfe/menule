@@ -65,6 +65,9 @@ class BussinessObject:
 
     def actualizarSaldo(self, idUser: int, nuevo_saldo: float) -> bool:
         return self.user_dao.update_saldo(idUser, nuevo_saldo)
+    
+    def obtener_saldo(self, id_usuario):
+        return self.estudiante_dao.obtener_saldo(id_usuario)
 
     def obtenerUsuarioPorCorreo(self, correo: str) -> UserVo | None:
         return self.user_dao.find_by_correo(correo)
@@ -90,6 +93,12 @@ class BussinessObject:
     def buscar_por_dni(self, dni: str) -> UserVo | None:
         return self.user_dao.buscar_por_dni(dni)
     
+    def actualizarSaldoEstudiante(self, id_usuario, nuevo_saldo):
+        return self.estudiante_dao.actualizar_saldo(id_usuario, nuevo_saldo)
+    
+    def actualizarSaldoProfesor(self, id_usuario, nuevo_saldo):
+        return self.profesor_dao.actualizar_saldo(id_usuario, nuevo_saldo)
+
     def crearReservaCompleta(self, id_usuario, fecha, primero, segundo, postre):
         return self.reserva_dao.crear_reserva_completa_por_fecha(id_usuario, fecha, primero, segundo, postre)
 
@@ -138,7 +147,12 @@ class BussinessObject:
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
     
+<<<<<<< HEAD
     """
+=======
+
+"""
+>>>>>>> 369ee0749d9131252503cde0dc7a3d398ae40238
 
 
     # --- Platos ---

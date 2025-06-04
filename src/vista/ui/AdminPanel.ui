@@ -69,8 +69,8 @@ QPushButton:hover {
              <attribute name="title"><string>Menús</string></attribute>
              <layout class="QVBoxLayout" name="layoutMenus">
                 <item alignment="Qt::AlignHCenter">
-                 <widget class="QPushButton" name="btnNuevoMenu">
-                    <property name="text"><string>Nuevo Menú</string></property>
+                 <widget class="QPushButton" name="btnModificarMenu">
+                    <property name="text"><string>Modificar Menú</string></property>
                  </widget>
                 </item>
                 <item>

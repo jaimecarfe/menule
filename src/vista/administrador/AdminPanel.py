@@ -28,7 +28,7 @@ class AdminPanel(VentanaBase, Form):
         self.tablaUsuarios.cellChanged.connect(self.actualizar_usuario_en_bd)
         self.tabEstadisticas = VentanaEstadisticas(self)
         self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")
-        self.botonModificarMenu.clicked.connect(self.abrir_modificar_menu)  
+        self.btnModificarMenu.clicked.connect(self.abrir_modificar_menu)  
 
     @property
     def callback_cerrar_sesion(self):

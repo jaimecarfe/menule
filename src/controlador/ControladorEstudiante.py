@@ -56,6 +56,12 @@ class ControladorEstudiante:
         usuario = Sesion().get_usuario()
         self._modelo.darDeBajaUsuario(usuario.idUser)
         Sesion().cerrar_sesion()
+    
+    def obtener_saldo(self, id_usuario):
+        return self._modelo.obtener_saldo(id_usuario)
+
+    def actualizar_saldo(self, id_usuario, nuevo_saldo):
+        return self._modelo.actualizarSaldo(id_usuario, nuevo_saldo)
 
     # En ControladorEstudiante
     def hacer_reserva_completa(self, id_usuario, fecha, primero, segundo, postre):
