@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox, QListWidget, QLabel
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
@@ -28,7 +28,13 @@ class MenuEstudiante(VentanaBase, Form):
         self.btnVolver.clicked.connect(self.volver_al_panel)
         self.btnReservarComida.setVisible(False)
         self.btnReservarComida.clicked.connect(self.confirmar_reserva)
-        # Nada de layouts dinámicos, ni cambios en widgets ni layouts, solo usar los definidos en el .ui
+        self.setStyleSheet("""
+            QListWidget, QLabel {
+                color: black;
+                font-size: 16px;
+            }
+        """)
+
 
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
@@ -77,26 +83,46 @@ class MenuEstudiante(VentanaBase, Form):
         self.listaSegundos.clear()
         self.listaPostres.clear()
 
-        for nombre, tipo in platos:
+        for nombre, tipo, alergenos in platos:
+            texto = f"{nombre}  ({alergenos})" if alergenos else nombre
             if tipo == 'primero':
-                self.listaPrimeros.addItem(nombre)
+                self.listaPrimeros.addItem(texto)
             elif tipo == 'segundo':
-                self.listaSegundos.addItem(nombre)
+                self.listaSegundos.addItem(texto)
             elif tipo == 'postre':
-                self.listaPostres.addItem(nombre)
+                self.listaPostres.addItem(texto)
 
     def confirmar_reserva(self):
+        primero_item = self.listaPrimeros.currentItem()
+        segundo_item = self.listaSegundos.currentItem()
+        postre_item = self.listaPostres.currentItem()
+
+        if not primero_item or not segundo_item or not postre_item:
+            QMessageBox.warning(self, "Selección incompleta", "Debes seleccionar un primer plato, un segundo y un postre antes de reservar.")
+            return
+
+        primero = primero_item.text().strip()
+        segundo = segundo_item.text().strip()
+        postre = postre_item.text().strip()
+
         respuesta = QMessageBox.question(
             self,
             "Confirmar reserva",
-            "¿Quieres reservar este menú?",
+            f"¿Quieres reservar este menú?\n\n"
+            f"Primero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
             QMessageBox.Yes | QMessageBox.No
         )
-        if respuesta == QMessageBox.Yes:
-            self.abrir_reserva_comida()
 
-    def abrir_reserva_comida(self):
-        reserva_comida = ReservaComida(self.usuario, self)
+        if respuesta == QMessageBox.Yes:
+            exito = self._controlador.hacer_reserva(self.usuario.idUser, self.calendarWidget.selectedDate().toString("yyyy-MM-dd"))
+            if exito:
+                QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+
+
+    def abrir_reserva_comida(self, primero, segundo, postre):
+        reserva_comida = ReservaComida(self.usuario, self, primero, segundo, postre)
         reserva_comida.show()
 
     def volver_al_panel(self):

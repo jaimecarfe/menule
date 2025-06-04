@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>520</width>
-    <height>340</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,6 +85,8 @@ QPushButton:hover {
       </item>
      </layout>
     </item>
+
+    <!-- Espacio -->
     <item>
      <spacer name="verticalSpacer1">
       <property name="orientation">
@@ -101,6 +103,44 @@ QPushButton:hover {
       </property>
      </spacer>
     </item>
+
+    <!-- Resumen de selección -->
+    <item>
+     <widget class="QLabel" name="labelResumen">
+      <property name="text">
+       <string>Resumen de selección:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font-size: 16px; font-weight: bold; color: #2C3E50;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelSeleccionPrimero">
+      <property name="text">
+       <string>Primero: -</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelSeleccionSegundo">
+      <property name="text">
+       <string>Segundo: -</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelSeleccionPostre">
+      <property name="text">
+       <string>Postre: -</string>
+      </property>
+     </widget>
+    </item>
+
+    <!-- Botones -->
     <item>
      <layout class="QHBoxLayout" name="horizontalLayoutBotones">
       <item>

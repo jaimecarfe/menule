@@ -5,6 +5,8 @@ from PyQt5 import uic
 from src.vista.administrador.Estadisticas import VentanaEstadisticas
 from src.vista.administrador.VentanaRegistrarAdmin import VentanaRegistrarAdmin
 from src.vista.comun.CambiarContrasena import CambiarContrasena
+from src.vista.comun.ModificarMenuConAlergenos import ModificarMenuConAlergenos
+
 
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
@@ -25,7 +27,8 @@ class AdminPanel(VentanaBase, Form):
         self.cargar_usuarios()
         self.tablaUsuarios.cellChanged.connect(self.actualizar_usuario_en_bd)
         self.tabEstadisticas = VentanaEstadisticas(self)
-        self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")    
+        self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")
+        self.botonModificarMenu.clicked.connect(self.abrir_modificar_menu)  
 
     @property
     def callback_cerrar_sesion(self):
@@ -124,4 +127,9 @@ class AdminPanel(VentanaBase, Form):
                     QMessageBox.warning(self, "No permitido", "No se puede dar de baja un administrador.")
                 else:
                     QMessageBox.critical(self, "Error", "No se pudo dar de baja al usuario.")
+
+    def abrir_modificar_menu(self):
+        self.mod_window = ModificarMenuConAlergenos()
+        self.mod_window.show()
+
 

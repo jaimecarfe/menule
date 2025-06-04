@@ -5,6 +5,8 @@ from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.VentanaBase import VentanaBase
 from PyQt5 import uic
+from src.vista.comun.ModificarMenuConAlergenos import ModificarMenuConAlergenos
+from src.vista.personal_comedor.ProcesarPedidos import ProcesarPedidos
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelComedor.ui")
 
@@ -31,7 +33,7 @@ class PanelComedor(VentanaBase, Form):
         self.menu_window.show()
 
     def abrir_modificar_menu(self):
-        self.mod_window = ModificarMenu()
+        self.mod_window = ModificarMenuConAlergenos()
         self.mod_window.show()
 
     def abrir_configuracion(self):
@@ -44,8 +46,8 @@ class PanelComedor(VentanaBase, Form):
             self.callback_cerrar_sesion()
 
     def procesar_pedidos(self):
-        # Lógica para procesar pedidos
-        print("Procesando pedidos...")
+        self.ventana_pedidos = ProcesarPedidos()
+        self.ventana_pedidos.show()
 
     def consultar_stock(self):
         # Lógica para consultar stock interno

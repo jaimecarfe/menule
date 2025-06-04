@@ -101,6 +101,10 @@ class BussinessObject:
     def buscar_por_dni(self, dni: str) -> UserVo | None:
         return self.user_dao.buscar_por_dni(dni)
     
+    def crearReservaCompleta(self, id_usuario, fecha, primero, segundo, postre):
+        return self._reservaDao.crear_reserva_completa_por_fecha(id_usuario, fecha, primero, segundo, postre)
+
+    
     # --- Estadísticas ---
     def obtenerEstadisticas(self, tipo):
         dao = self.estadistica_dao
