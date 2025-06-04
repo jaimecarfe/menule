@@ -24,8 +24,8 @@ class GenerarTicket(QWidget):
     def generar_pdf(self):
         dao = TicketDao()
         datos = dao.obtener_datos_ticket(self.id_reserva)
-        if not datos:
-            QMessageBox.warning(self, "Error", "No hay datos para esta reserva.")
+        if not datos or len(datos) < 5:
+            QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
             return
 
         ticket_data = {
@@ -33,18 +33,18 @@ class GenerarTicket(QWidget):
             "Nombre": datos[1],
             "Email": datos[2],
             "Fecha": datos[3],
-            "Total": f"{datos[4]} €"
+            "Total": f"{datos[4]} EUR"
         }
 
-        ruta = f"ticket_reserva_{datos[0]}.pdf"
+        ruta = f"ticket_reserva_{datos[1]}.pdf"
         generar_ticket_pdf(ticket_data, ruta)
         QMessageBox.information(self, "Listo", f"Ticket guardado como {ruta}")
 
     def enviar_por_correo(self):
         dao = TicketDao()
         datos = dao.obtener_datos_ticket(self.id_reserva)
-        if not datos:
-            QMessageBox.warning(self, "Error", "No hay datos para esta reserva.")
+        if not datos or len(datos) < 5:
+            QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
             return
 
         ticket_data = {
@@ -52,7 +52,7 @@ class GenerarTicket(QWidget):
             "Nombre": datos[1],
             "Email": datos[2],
             "Fecha": datos[3],
-            "Total": f"{datos[4]} €"
+            "Total": f"{datos[4]} EUR"
         }
 
         ruta = f"ticket_reserva_{datos[0]}.pdf"
@@ -61,8 +61,8 @@ class GenerarTicket(QWidget):
         try:
             enviar_correo(
                 destino=datos[2],
-                asunto="Tu ticket de reserva",
-                cuerpo="Adjunto encontrarás tu comprobante.",
+                asunto="¡Tu ticket de reserva está aquí!",
+                cuerpo="¡Hola! 🎉\n\nGracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\nSaludos cordiales,\nEl equipo de reservas",
                 archivo_adjunto=ruta
             )
             QMessageBox.information(self, "Enviado", "Ticket enviado por correo.")

@@ -33,13 +33,17 @@ class ReservaComida(QMainWindow, Form):
         self.btn_volver.clicked.connect(self.volver)
 
     def realizar_reserva(self):
-        id_menu = self.combo_menu.currentData()
-        exito = self.controlador.hacer_reserva(self.usuario.idUser, id_menu)
-        if exito:
+        fecha = self.combo_menu.currentText().split(" - ")[0]  # o el dato correcto según tu combo
+        id_reserva = self.controlador.hacer_reserva(self.usuario.idUser, fecha)
+        if id_reserva:
             QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+            # Importa PagoWindow si hace falta
+            from src.vista.comun.PagoWindow import PagoWindow
+            self.ventana_pago = PagoWindow(self.usuario, precio=5.5, metodo="tui", callback_pago_exitoso=None, id_reserva=id_reserva)
+            self.ventana_pago.show()
         else:
             QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
-
+            
     def abrir_ticket(self):
         id_reserva = self.controlador.obtener_ultima_reserva_id(self.usuario.idUser)
         if id_reserva:

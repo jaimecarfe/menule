@@ -1,4 +1,5 @@
 from src.modelo.conexion.Conexion import Conexion
+from src.modelo.dao.PagoDao import PagoDao
 
 class TicketDao:
     def getCursor(self):
@@ -12,8 +13,13 @@ class TicketDao:
             JOIN Usuarios u ON r.id_usuario = u.id_usuario
             WHERE r.id_reserva = ?
         """, (id_reserva,))
-        return cursor.fetchone()
-    
+        datos = cursor.fetchone()
+        if datos:
+            pago_dao = PagoDao()
+            total = pago_dao.total_pagado_por_reserva(id_reserva)
+            return datos + (total,)
+        return None
+
     def insert(self, ticketVO):
         cursor = self.getCursor()
         cursor.execute("""
@@ -22,7 +28,7 @@ class TicketDao:
         """, (ticketVO.codigo, ticketVO.id_reserva, ticketVO.fecha_emision, ticketVO.estado))
         Conexion().commit()
         return cursor.lastrowid
-    
+
     def marcar_usado(self, codigo):
         cursor = self.getCursor()
         cursor.execute("""
@@ -32,4 +38,3 @@ class TicketDao:
         """, (codigo,))
         Conexion().commit()
         return cursor.rowcount > 0
-    

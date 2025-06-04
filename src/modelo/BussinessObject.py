@@ -7,6 +7,14 @@ from src.modelo.dao.ConfiguracionDao import ConfiguracionDao
 from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.TicketDao import TicketDao
 from src.modelo.dao.MenuDao import MenuDao
+from src.modelo.dao.PagoDao import PagoDao
+
+"""
+from src.modelo.dao.PlatoDao import PlatoDao
+from src.modelo.dao.IncidenciaDao import IncidenciaDao
+from src.modelo.dao.IngredienteDao import IngredienteDao
+"""
+
 
 from src.modelo.vo.LoginVO import LoginVO
 from src.modelo.vo.UserVo import UserVo
@@ -16,6 +24,12 @@ from src.modelo.vo.PersonalComedorVo import PersonalComedorVo
 from src.modelo.vo.EstadisticaVo import EstadisticaVo
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.TicketVo import TicketVo
+from src.modelo.vo.PagoVo import PagoVo
+
+"""
+from src.modelo.vo.IncidenciaVo import IncidenciaVo
+"""
+
 
 import bcrypt
 from datetime import date
@@ -146,19 +160,20 @@ class BussinessObject:
     # --- Menús ---
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
+
+    # --- Pagos ---
+    def registrarPago(self, pagoVO: PagoVo) -> int | None:
+        return PagoDao().insertar_pago(pagoVO)
+
+    def obtenerPagosPorUsuario(self, id_usuario: int):
+        return PagoDao().obtener_por_usuario(id_usuario)
+    
+    
     """
 
     # --- Platos ---
     def obtenerPlatosPorMenu(self, id_menu: int):
         return PlatoDao().buscar_por_menu(id_menu)
-
-
-    # --- Pagos ---
-    def registrarPago(self, pagoVO: PagoVo) -> int | None:
-        return PagoDao().insert(pagoVO)
-
-    def obtenerPagosPorUsuario(self, id_usuario: int):
-        return PagoDao().obtener_por_usuario(id_usuario)
 
     # --- Incidencias ---
     def reportarIncidencia(self, incidenciaVO: IncidenciaVo) -> int | None:

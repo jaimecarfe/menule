@@ -131,15 +131,21 @@ class MenuEstudiante(VentanaBase, Form):
                 precio = 7.5
                 metodo = "tarjeta"
 
-            # Callback tras pago exitoso
-            def callback_pago_exitoso():
-                self.finalizar_reserva(primero, segundo, postre, fecha)
+            # --- PRIMERO CREA LA RESERVA Y OBTÉN EL ID ---
+            id_reserva = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
+            if id_reserva:
+                QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
 
-            print("Abriendo ventana de pago")
-            self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso)
-            self.pago_window.show()
+                # Callback tras pago exitoso
+                def callback_pago_exitoso():
+                    self.abrir_ticket()
 
-
+                print("Abriendo ventana de pago")
+                self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva)
+                self.pago_window.show()
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+                
     def abrir_reserva_comida(self, primero, segundo, postre):
         reserva_comida = ReservaComida(self.usuario, self, primero, segundo, postre)
         reserva_comida.show()
