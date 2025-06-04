@@ -31,7 +31,11 @@ class PanelProfesor(VentanaBase, Form):
         self.btnHistorialReservas.clicked.connect(self.ver_historial)
         self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
-        
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.actualizar_saldo_ui()
+
     def abrir_menu(self):
         self.menu_window = MenuProfesor(self.usuario, parent=self)
         self.hide()  # Oculta el panel actual
