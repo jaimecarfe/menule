@@ -13,6 +13,7 @@ class VentanaRegistrarAdmin(QMainWindow, Form):
         self._controlador = BussinessObject()
 
         self.setupUi(self)
+        self.showFullScreen()
         self.callback_volver = callback_volver
 
         self.pushButton_registrar.clicked.connect(self.registrar_usuario)
@@ -28,8 +29,7 @@ class VentanaRegistrarAdmin(QMainWindow, Form):
             self.callback_volver()
 
     def actualizar_campos_por_rol(self, rol):
-        self.lineEdit_tui.setVisible(rol == "estudiante")
-        self.lineEdit_grado.setVisible(rol == "profesor")
+        self.lineEdit_grado.setVisible(rol == "profesor" or rol == "estudiante")
         self.lineEdit_especialidad.setVisible(rol == "personal_comedor")
 
     def registrar_usuario(self):

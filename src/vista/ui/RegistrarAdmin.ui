@@ -75,7 +75,6 @@
            <item><property name="text"><string>personal_comedor</string></property></item>
            <item><property name="text"><string>administrador</string></property></item>
          </widget></item>
-         <item><widget class="QLineEdit" name="lineEdit_tui"><property name="placeholderText"><string>TUI (solo estudiantes)</string></property></widget></item>
          <item><widget class="QLineEdit" name="lineEdit_grado"><property name="placeholderText"><string>Grado académico</string></property></widget></item>
          <item><widget class="QLineEdit" name="lineEdit_especialidad"><property name="placeholderText"><string>Especialidad (comedor)</string></property></widget></item>
          <item><widget class="QLineEdit" name="lineEdit_dni"><property name="placeholderText"><string>DNI</string></property></widget></item>
