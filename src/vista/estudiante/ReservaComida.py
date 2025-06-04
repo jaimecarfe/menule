@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel
 from src.vista.comun.GenerarTicket import GenerarTicket
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorEstudiante import ControladorEstudiante
@@ -7,14 +7,22 @@ from PyQt5 import uic
 Form, Window = uic.loadUiType("./src/vista/ui/ReservaComida.ui")
 
 class ReservaComida(QMainWindow, Form):
-    def __init__(self, usuario, parent=None):
+    def __init__(self, usuario, parent=None, primero=None, segundo=None, postre=None):
         super().__init__(parent)
         self.usuario = usuario
         self.setupUi(self)
         self.controlador = ControladorEstudiante()
         self.setWindowTitle("Reservar Comida")
 
-        # Cargar menús simulados del controlador
+        # Mostrar resumen
+        if primero:
+            self.labelSeleccionPrimero.setText(f"Primero: {primero}")
+        if segundo:
+            self.labelSeleccionSegundo.setText(f"Segundo: {segundo}")
+        if postre:
+            self.labelSeleccionPostre.setText(f"Postre: {postre}")
+
+        # Menú simulado
         self.menus_disponibles = self.controlador.obtener_menus_disponibles()
         for menu in self.menus_disponibles:
             self.combo_menu.addItem(f"{menu['fecha']} - {menu['tipo']}", userData=menu['id_menu'])

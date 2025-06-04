@@ -107,6 +107,10 @@ class BussinessObject:
     def actualizarSaldoProfesor(self, id_usuario, nuevo_saldo):
         return self.profesor_dao.actualizar_saldo(id_usuario, nuevo_saldo)
 
+    def crearReservaCompleta(self, id_usuario, fecha, primero, segundo, postre):
+        return self._reservaDao.crear_reserva_completa_por_fecha(id_usuario, fecha, primero, segundo, postre)
+
+    
     # --- Estadísticas ---
     def obtenerEstadisticas(self, tipo):
         dao = self.estadistica_dao

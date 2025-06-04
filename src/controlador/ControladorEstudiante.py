@@ -20,16 +20,25 @@ class ControladorEstudiante:
     def obtener_ultima_reserva_id(self, id_usuario):
         return self._modelo.obtenerUltimaReservaId(id_usuario)
 
-    def hacer_reserva(self, id_usuario: int, id_menu: int) -> bool:
-            reserva = ReservaVo(
-                id_reserva=None,
-                id_usuario=id_usuario,
-                id_menu=id_menu,
-                fecha_reserva=None,  # El modelo/BBDD la pone
-                estado="confirmada"
-            )
-            res = self._modelo.crearReserva(reserva)
-            return res is not None
+    def hacer_reserva(self, id_usuario: int, fecha: str) -> bool:
+        from src.modelo.dao.MenuDao import MenuDao
+        menu_dao = MenuDao()
+        id_menu = menu_dao.obtener_id_menu_por_fecha(fecha)
+
+        if not id_menu:
+            print("No hay menú disponible para la fecha:", fecha)
+            return False
+
+        reserva = ReservaVo(
+            id_reserva=None,
+            id_usuario=id_usuario,
+            id_menu=id_menu,
+            fecha_reserva=None,  # Se pone en BBDD
+            estado="confirmada"
+        )
+        res = self._modelo.crearReserva(reserva)
+        return res is not None
+
         
     def ver_historial(self):
         usuario = Sesion().get_usuario()
@@ -55,3 +64,7 @@ class ControladorEstudiante:
 
     def actualizar_saldo(self, id_usuario, nuevo_saldo):
         return self.dao.actualizar_saldo(id_usuario, nuevo_saldo)
+
+    # En ControladorEstudiante
+    def hacer_reserva_completa(self, id_usuario, fecha, primero, segundo, postre):
+        return self._modelo.crearReservaCompleta(id_usuario, fecha, primero, segundo, postre)
