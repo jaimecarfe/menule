@@ -7,6 +7,9 @@ from src.vista.estudiante.ReservaComida import ReservaComida
 from src.modelo.dao.MenuDao import MenuDao
 from PyQt5 import uic
 from src.modelo.vo.ReservaVo import ReservaVo
+from src.vista.comun.PagoWindow import PagoWindow
+from src.vista.comun.GenerarTicket import GenerarTicket
+from src.modelo.vo.UserVo import UserVo
 
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuEstudiante.ui")
@@ -110,18 +113,31 @@ class MenuEstudiante(VentanaBase, Form):
 
         respuesta = QMessageBox.question(
             self,
-            "Confirmar reserva",
+            "Confirmar selección",
             f"¿Quieres reservar este menú?\n\n"
             f"Primero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
             QMessageBox.Yes | QMessageBox.No
         )
 
         if respuesta == QMessageBox.Yes:
-            exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
-            if exito:
-                QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+            # Calcular precio y método según el rol
+            if self.usuario.rol == "estudiante":
+                precio = 5.5
+                metodo = "tui"
+            elif self.usuario.rol == "profesor":
+                precio = 6.5
+                metodo = "tui"
             else:
-                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+                precio = 7.5
+                metodo = "tarjeta"
+
+            # Callback tras pago exitoso
+            def callback_pago_exitoso():
+                self.finalizar_reserva(primero, segundo, postre, fecha)
+
+            print("Abriendo ventana de pago")
+            self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso)
+            self.pago_window.show()
 
 
     def abrir_reserva_comida(self, primero, segundo, postre):
@@ -142,4 +158,18 @@ class MenuEstudiante(VentanaBase, Form):
         
         self.controlador.crear_reserva(reserva)
         QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
+
+    def finalizar_reserva(self, primero, segundo, postre, fecha):
+        exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
+        if exito:
+            QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+            self.abrir_ticket()
+        else:
+            QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+
+    def abrir_ticket(self):
+        id_reserva = self._controlador.obtener_ultima_reserva_id(self.usuario.idUser)
+        if id_reserva:
+            self.ticket_window = GenerarTicket(id_reserva)
+            self.ticket_window.show()
 

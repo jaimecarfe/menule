@@ -49,12 +49,22 @@ class SeleccionarMenu(QWidget):
             QMessageBox.warning(self, "Incompleto", "Debes seleccionar un plato de cada categoría.")
             return
 
-        dao = ReservaDao()
-        id_reserva = dao.crear_reserva_completa(self.usuario.idUser, self.id_menu, primero, segundo, postre)
-        if id_reserva:
-            QMessageBox.information(self, "Reserva hecha", "Reserva registrada. Vamos al pago.")
-            self.pago = PagoWindow(id_reserva, self.usuario.correo)
-            self.pago.show()
-            self.close()
-        else:
-            QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+        respuesta = QMessageBox.question(
+            self,
+            "Confirmar selección",
+            f"¿Seguro que quieres seleccionar este menú?\n\n{primero}\n{segundo}\n{postre}",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if respuesta == QMessageBox.Yes:
+            # Insertar reserva
+            dao = ReservaDao()
+            id_reserva = dao.crear_reserva_completa(self.usuario.idUser, self.id_menu, primero, segundo, postre)
+
+            if id_reserva:
+                # Mostrar pantalla de pago
+                self.pago = PagoWindow(id_reserva, self.usuario)
+                self.pago.show()
+                self.close()
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
