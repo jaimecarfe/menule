@@ -65,7 +65,7 @@ class BussinessObject:
                 estudiante_dao.insert(estudiante_vo)
             elif user.rol == "profesor":
                 profesor_dao = self.profesor_dao
-                profesor_vo = ProfesorVo(id_usuario=id_user, grado_academico=user.grado_academico, saldo=user.saldo)
+                profesor_vo = ProfesorVo(id_usuario=id_user, grado_academico=user.grado_academico, tui_numero= user.tui, saldo=user.saldo)
                 profesor_dao.insert(profesor_vo)
             elif user.rol == "personal_comedor":
                 comedor_dao = self.personal_comedor_dao

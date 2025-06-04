@@ -5,6 +5,7 @@ from src.modelo.vo.UserVo import UserVo
 from datetime import date
 from src.modelo.BussinessObject import BussinessObject
 from src.utils.email_utils import enviar_correo
+import random
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
@@ -23,7 +24,6 @@ class Registro(VentanaBase, Form):
 
     def on_rol_cambiado(self):
         rol = self.comboBox_rol.currentText()
-        self.lineEdit_tui.setVisible(rol == "estudiante")
         self.lineEdit_grado.setVisible(rol in ["estudiante", "profesor"])
         self.lineEdit_especialidad.setVisible(rol == "personal_comedor")
 
@@ -33,7 +33,10 @@ class Registro(VentanaBase, Form):
         correo = self.lineEdit_correo.text()
         contrasena = self.lineEdit_password.text()
         rol = self.comboBox_rol.currentText()
-        tui = self.lineEdit_tui.text() if rol == "estudiante" else None
+        tui = None
+        if rol in ["estudiante", "profesor"]:
+            prefijo = "E" if rol == "estudiante" else "P"
+            tui = prefijo + ''.join(str(random.randint(0, 9)) for _ in range(8))
         grado = self.lineEdit_grado.text() if rol in ["estudiante", "profesor"] else None
         especialidad = self.lineEdit_especialidad.text() if rol == "personal_comedor" else None
         dni = self.lineEdit_dni.text()
