@@ -36,7 +36,10 @@ class GenerarTicket(QWidget):
             "Total": f"{datos[4]} EUR"
         }
 
-        ruta = f"ticket_reserva_{datos[1]}.pdf"
+        from pathlib import Path
+        carpeta_descargas = str(Path.home() / "Downloads")
+        ruta = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[1]}.pdf")
+
         generar_ticket_pdf(ticket_data, ruta)
         QMessageBox.information(self, "Listo", f"Ticket guardado como {ruta}")
 
