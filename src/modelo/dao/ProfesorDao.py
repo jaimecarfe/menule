@@ -3,9 +3,11 @@ from src.modelo.vo.ProfesorVo import ProfesorVo
 
 class ProfesorDao(Conexion):
     SQL_INSERT = """
-        INSERT INTO Profesores(id_usuario, grado_academico, tui_numero,saldo)
+        INSERT INTO Profesores(id_usuario, grado_academico, tui_numero, saldo)
         VALUES (?, ?, ?, ?)
     """
+    SQL_GET_SALDO = "SELECT saldo FROM Profesores WHERE id_usuario = ?"
+    SQL_UPDATE_SALDO = "UPDATE Profesores SET saldo = ? WHERE id_usuario = ?"
 
     def insert(self, profesor: ProfesorVo):
         cursor = self.getCursor()
@@ -15,3 +17,13 @@ class ProfesorDao(Conexion):
             profesor.tui_numero,
             profesor.saldo
         ))
+    def obtener_saldo(self, id_usuario):
+        cursor = self.getCursor()
+        cursor.execute(self.SQL_GET_SALDO, (id_usuario,))
+        resultado = cursor.fetchone()
+        return resultado[0] if resultado else 0.0
+
+    def actualizar_saldo(self, id_usuario, nuevo_saldo):
+        cursor = self.getCursor()
+        cursor.execute(self.SQL_UPDATE_SALDO, (nuevo_saldo, id_usuario))
+        return cursor.rowcount > 0

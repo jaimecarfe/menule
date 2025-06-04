@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QInputDialog, QDialog
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
@@ -6,6 +6,8 @@ from src.vista.profesor.MenuProfesor import MenuProfesor
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorProfesor import ControladorProfesor
 from src.vista.VentanaBase import VentanaBase
+from src.vista.profesor.AgregarFondosDialog import AgregarFondosDialog
+
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelProfesor.ui")
 
@@ -17,6 +19,7 @@ class PanelProfesor(VentanaBase, Form):
         self.setupUi(self)
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
         self.labelTitulo.setText(f"Bienvenido/a profesor/a, {usuario.nombre}")
+        self.btn_add_fondos.clicked.connect(self.agregar_fondos)
 
         pixmap = QPixmap("./src/vista/imagenes/paneles.png")
         pixmap = pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -76,3 +79,19 @@ class PanelProfesor(VentanaBase, Form):
         self.login_window = Login()
         self.login_window.controlador = ControladorPrincipal(self.login_window, self.login_window)
         self.login_window.show()
+    
+    def actualizar_saldo_ui(self):
+        saldo_actualizado = self.controlador.obtener_saldo(self.usuario.idUser)
+        self.usuario.saldo = saldo_actualizado
+        self.saldo_label.setText(f"Saldo: {saldo_actualizado:.2f}€")
+
+    def agregar_fondos(self):
+        dialog = AgregarFondosDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            cantidad = dialog.cantidad
+            nuevo_saldo = self.usuario.saldo + cantidad
+            if self.controlador.actualizar_saldo(self.usuario.idUser, nuevo_saldo):
+                self.actualizar_saldo_ui()
+                QMessageBox.information(self, "Éxito", "Fondos añadidos correctamente.")
+            else:
+                QMessageBox.warning(self, "Error", "No se pudo actualizar el saldo.")

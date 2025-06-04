@@ -52,6 +52,30 @@ QFrame#cardFrame {
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QHBoxLayout" name="saldoLayout">
+     <item>
+      <widget class="QLabel" name="saldo_label">
+       <property name="text">
+        <string>Saldo: 0.00€</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_add_fondos">
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
     <item>
      <spacer name="verticalSpacerTop">
       <property name="orientation">

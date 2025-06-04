@@ -1,6 +1,7 @@
 from src.modelo.BussinessObject import BussinessObject
 from src.modelo.Sesion import Sesion
-
+from PyQt5.QtWidgets import QMessageBox
+from src.modelo.dao.ProfesorDao import ProfesorDao
 """
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
@@ -10,6 +11,7 @@ from src.modelo.vo.UserVo import UserVo
 class ControladorProfesor:
     def __init__(self):
         self._modelo = BussinessObject()
+        self.dao = ProfesorDao()
 
     def hacer_reserva(self, id_menu, fecha):
         usuario = Sesion().get_usuario()  # <-- Obtén el usuario logueado
@@ -38,3 +40,9 @@ class ControladorProfesor:
         usuario = Sesion().get_usuario()
         self._modelo.darDeBajaUsuario(usuario.idUser)
         Sesion().cerrar_sesion()
+    
+    def obtener_saldo(self, id_usuario):
+        return self.dao.obtener_saldo(id_usuario)
+
+    def actualizar_saldo(self, id_usuario, nuevo_saldo):
+        return self.dao.actualizar_saldo(id_usuario, nuevo_saldo)

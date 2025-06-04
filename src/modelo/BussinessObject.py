@@ -101,6 +101,12 @@ class BussinessObject:
     def buscar_por_dni(self, dni: str) -> UserVo | None:
         return self.user_dao.buscar_por_dni(dni)
     
+    def actualizarSaldoEstudiante(self, id_usuario, nuevo_saldo):
+        return self.estudiante_dao.actualizar_saldo(id_usuario, nuevo_saldo)
+    
+    def actualizarSaldoProfesor(self, id_usuario, nuevo_saldo):
+        return self.profesor_dao.actualizar_saldo(id_usuario, nuevo_saldo)
+
     # --- Estadísticas ---
     def obtenerEstadisticas(self, tipo):
         dao = self.estadistica_dao
@@ -142,6 +148,7 @@ class BussinessObject:
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
     
+
 """
 
 
