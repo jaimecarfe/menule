@@ -3,10 +3,10 @@ from PyQt5 import uic
 from src.vista.VentanaBase import VentanaBase
 from src.modelo.vo.UserVo import UserVo
 from datetime import date
-from src.modelo.BussinessObject import BussinessObject
 from src.utils.email_utils import enviar_correo
 import random
 from src.vista.Login import Login
+from src.controlador.ControladorPrincipal import ControladorPrincipal
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
@@ -14,7 +14,7 @@ class Registro(VentanaBase, Form):
     def __init__(self, volver_a=None):
         super().__init__()
         self.setupUi(self)
-        self._controlador = BussinessObject()
+        self._controlador = ControladorPrincipal(self)
         self._ventana_anterior = volver_a
 
         self.setWindowTitle("MenULE - Registro")
@@ -72,7 +72,7 @@ class Registro(VentanaBase, Form):
             QMessageBox.warning(self, "Teléfono inválido", "El teléfono debe tener al menos 9 dígitos.")
             return
         
-        if self._controlador.find_user_by_email(correo):
+        if self._controlador.obtener_usuario_por_correo(correo):
             QMessageBox.warning(self, "Correo existente", "Ya existe un usuario con este correo electrónico.")
             return
         
@@ -104,17 +104,17 @@ class Registro(VentanaBase, Form):
             especialidad=especialidad
         )
 
-        if self._controlador.registrarUsuario(user):
+        if self._controlador.insertar_usuario(user):
             QMessageBox.information(self, "Registro exitoso", "Usuario registrado correctamente.")
             self.close()
             if self._ventana_anterior:
+                self._ventana_anterior.limpiar_campos()
                 self._ventana_anterior.showFullScreen()
 
     def volver(self):
         self.close()
-        self.deleteLater()
-        login = Login()
-        login.showFullScreen()
+        if self._ventana_anterior:
+            self._ventana_anterior.showFullScreen()
         
     def validar_datos_registro(self, dni, correo, rol, nombre, apellido):
         dominios_validos = {
@@ -149,7 +149,7 @@ class Registro(VentanaBase, Form):
             QMessageBox.warning(self, "DNI inválido", "El DNI no es válido.")
             return False
 
-        if self._controlador.buscar_por_dni(dni):
+        if self._controlador.buscar_usuario_por_dni(dni):
             QMessageBox.warning(self, "DNI duplicado", "Ya existe un usuario registrado con este DNI.")
             return False
 

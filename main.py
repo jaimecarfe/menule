@@ -24,7 +24,7 @@ class App:
     def abrir_login(self):
         self.welcome_window.close()
         self.login_window = Login()
-        self.controlador = ControladorPrincipal(self.login_window, self.modelo)
+        self.controlador = ControladorPrincipal(self.login_window)
         self.login_window.controlador = self.controlador
         self.login_window.abrir_registro = self.abrir_registro
         self.controlador.on_login_exitoso = self.mostrar_menu_por_rol

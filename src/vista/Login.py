@@ -7,7 +7,6 @@ from src.vista.profesor.PanelProfesor import PanelProfesor
 from src.vista.visitante.MenuVisitante import MenuVisitante
 from src.vista.personal_comedor.PanelComedor import PanelComedor
 from src.controlador.ControladorPrincipal import ControladorPrincipal
-from src.modelo.BussinessObject import BussinessObject
 
 Form, Window = uic.loadUiType("./src/vista/ui/VistaLogging.ui")
 
@@ -16,8 +15,7 @@ class Login(VentanaBase, Form):
         super().__init__()
         self.setupUi(self)
 
-        self._modelo = BussinessObject()
-        self._controlador = ControladorPrincipal(self, self._modelo)
+        self._controlador = ControladorPrincipal(self)
 
         self.setWindowTitle("MenULE - Iniciar Sesión")
         self.resize(432, 505)
@@ -32,11 +30,9 @@ class Login(VentanaBase, Form):
             pass
 
     def abrir_vista_visitante(self, event):
-        self.close()
-        self.deleteLater()
+        self.hide()
         self.ventana_visitante = MenuVisitante()
         self.ventana_visitante.show()
-        self.hide()
 
     def on_button_click(self):
         correo = self.lineEdit_usuario.text()
@@ -72,12 +68,14 @@ class Login(VentanaBase, Form):
 
     def abrir_registro(self):
         from src.vista.Registro import Registro
-        self.close()
-        self.deleteLater()
+        self.hide()  # ¡Cambia close/deleteLater por hide!
         self.ventana_registro = Registro(volver_a=self)
         self.ventana_registro._controlador = self._controlador
         self.ventana_registro.show()
 
     def volver_al_login(self):
-        self.login = Login()
-        self.login.show()
+        self.showFullScreen()
+
+    def limpiar_campos(self):
+        self.lineEdit_usuario.clear()
+        self.lineEdit_contrasena.clear()
