@@ -3,7 +3,7 @@ import jaydebeapi
 class Conexion:
     _instancia = None
 
-    def __new__(cls, host='localhost', database='menule', user='root', password='admin123'):
+    def __new__(cls, host='localhost', database='menule', user='root', password='Liverpool.840'):
         if cls._instancia is None:
             cls._instancia = super(Conexion, cls).__new__(cls)
             cls._instancia._host = host

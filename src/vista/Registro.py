@@ -6,6 +6,7 @@ from datetime import date
 from src.modelo.BussinessObject import BussinessObject
 from src.utils.email_utils import enviar_correo
 import random
+from src.vista.Login import Login
 
 Form, Window = uic.loadUiType("src/vista/ui/VistaRegistro.ui")
 
@@ -111,9 +112,10 @@ class Registro(VentanaBase, Form):
 
     def volver(self):
         self.close()
-        if self._ventana_anterior:
-            self._ventana_anterior.showFullScreen()
-
+        self.deleteLater()
+        login = Login()
+        login.showFullScreen()
+        
     def validar_datos_registro(self, dni, correo, rol, nombre, apellido):
         dominios_validos = {
             "estudiante": "@estudiantes.unileon.es",

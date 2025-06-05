@@ -67,6 +67,8 @@ class MenuVisitante(VentanaBase, Form):
                 self._callback_cerrar_sesion()
             else:
                 from src.vista.Login import Login
+                self.close()
+                self.deleteLater()
                 self._login = Login()
                 self._login.showFullScreen()
             self.close()

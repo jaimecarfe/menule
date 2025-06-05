@@ -32,6 +32,8 @@ class Login(VentanaBase, Form):
             pass
 
     def abrir_vista_visitante(self, event):
+        self.close()
+        self.deleteLater()
         self.ventana_visitante = MenuVisitante()
         self.ventana_visitante.show()
         self.hide()
@@ -70,10 +72,11 @@ class Login(VentanaBase, Form):
 
     def abrir_registro(self):
         from src.vista.Registro import Registro
+        self.close()
+        self.deleteLater()
         self.ventana_registro = Registro(volver_a=self)
-        self.ventana_registro.controlador = self._controlador
-        self.ventana_registro.show() 
-        self.hide()
+        self.ventana_registro._controlador = self._controlador
+        self.ventana_registro.show()
 
     def volver_al_login(self):
         self.login = Login()
