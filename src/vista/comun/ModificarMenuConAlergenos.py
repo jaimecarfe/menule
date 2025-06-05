@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QDateEdit, QLineEdit, QPushButton,
     QMessageBox, QFormLayout, QCheckBox, QHBoxLayout
 )
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, Qt
 from src.modelo.dao.MenuDao import MenuDao
 
 ALERGENOS = [
@@ -20,10 +20,18 @@ class ModificarMenuConAlergenos(QWidget):
         self.layout = QVBoxLayout()
         self.form = QFormLayout()
 
+        # Rango de fechas permitido
+        fecha_inicio = QDate(2024, 9, 6)
+        fecha_fin = QDate(2025, 6, 23)
+        self.fecha_edit.setMinimumDate(fecha_inicio)
+        self.fecha_edit.setMaximumDate(fecha_fin)
+
         # Fecha del menú
         self.fecha_edit = QDateEdit()
         self.fecha_edit.setDate(QDate.currentDate())
         self.fecha_edit.setCalendarPopup(True)
+        self.fecha_edit.setMinimumDate(QDate.currentDate())
+        self.fecha_edit.dateChanged.connect(self.validar_fecha)
         self.layout.addWidget(QLabel("Fecha del menú"))
         self.layout.addWidget(self.fecha_edit)
 
@@ -51,6 +59,12 @@ class ModificarMenuConAlergenos(QWidget):
         self.layout.addLayout(self.form)
         self.layout.addWidget(self.btn_guardar)
         self.setLayout(self.layout)
+
+    def validar_fecha(self, fecha):
+        # Verificar si la fecha seleccionada es un fin de semana
+        if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
+            QMessageBox.warning(self, "Fecha inválida", "No se pueden seleccionar fines de semana.")
+            self.fecha_edit.setDate(QDate.currentDate())
 
     def guardar_menu(self):
         fecha = self.fecha_edit.date().toString("yyyy-MM-dd")
