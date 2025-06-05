@@ -35,7 +35,7 @@ class MenuEstudiante(VentanaBase, Form):
         self.btnReservarComida.clicked.connect(self.confirmar_reserva)
         self.setStyleSheet("""
             QListWidget, QLabel {
-                color: black;
+                color: white;
                 font-size: 16px;
             }
         """)
@@ -44,15 +44,16 @@ class MenuEstudiante(VentanaBase, Form):
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
         fecha_fin = QDate(2025, 6, 23)
+        fecha_actual = QDate.currentDate()
 
-        self.calendarWidget.setMinimumDate(fecha_inicio)
+        self.calendarWidget.setMinimumDate(max(fecha_inicio, fecha_actual))
         self.calendarWidget.setMaximumDate(fecha_fin)
 
         formato_inhabilitado = QTextCharFormat()
         formato_inhabilitado.setForeground(QColor('gray'))
         formato_inhabilitado.setBackground(QColor('#f0f0f0'))
 
-        fecha = fecha_inicio
+        fecha = max(fecha_inicio, fecha_actual)
         while fecha <= fecha_fin:
             if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
                 self.calendarWidget.setDateTextFormat(fecha, formato_inhabilitado)
@@ -64,6 +65,11 @@ class MenuEstudiante(VentanaBase, Form):
         fecha = self.calendarWidget.selectedDate()
         if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
             QMessageBox.warning(self, "Fecha inválida", "Selecciona un día entre lunes y viernes.")
+            self.calendarWidget.setSelectedDate(QDate())
+            self.btnVisualizarMenu.setEnabled(False)
+            self.btnReservarComida.setVisible(False)
+        elif fecha < QDate.currentDate():
+            QMessageBox.warning(self, "Fecha inválida", "El menú de ese día no está disponible.")
             self.calendarWidget.setSelectedDate(QDate())
             self.btnVisualizarMenu.setEnabled(False)
             self.btnReservarComida.setVisible(False)

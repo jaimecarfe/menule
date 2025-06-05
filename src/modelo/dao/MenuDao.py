@@ -53,7 +53,6 @@ class MenuDao:
 
                 cursor.execute("INSERT INTO MenuPlatos (id_menu, id_plato) VALUES (?, ?)", (id_menu, id_plato))
 
-            #conn.conexion.commit()
             cursor.close()
             return True
 
@@ -121,7 +120,6 @@ class MenuDao:
 
                 cursor.execute("INSERT INTO MenuPlatos (id_menu, id_plato) VALUES (?, ?)", (id_menu, id_plato))
 
-            #conn.conexion.commit()
             return True
         except Exception as e:
             print("Error al guardar menú con alérgenos:", e)
