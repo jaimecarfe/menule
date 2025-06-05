@@ -20,14 +20,14 @@ class ModificarMenuConAlergenos(QWidget):
         self.layout = QVBoxLayout()
         self.form = QFormLayout()
 
+        self.fecha_edit = QDateEdit()
+
         # Rango de fechas permitido
         fecha_inicio = QDate(2024, 9, 6)
         fecha_fin = QDate(2025, 6, 23)
         self.fecha_edit.setMinimumDate(fecha_inicio)
         self.fecha_edit.setMaximumDate(fecha_fin)
-
         # Fecha del menú
-        self.fecha_edit = QDateEdit()
         self.fecha_edit.setDate(QDate.currentDate())
         self.fecha_edit.setCalendarPopup(True)
         self.fecha_edit.setMinimumDate(QDate.currentDate())
