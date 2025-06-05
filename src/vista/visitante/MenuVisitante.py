@@ -4,6 +4,10 @@ from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorVisitante import ControladorVisitante
 from PyQt5 import uic
+from src.modelo.dao.MenuDao import MenuDao
+from src.vista.comun.PagoWindow import PagoWindow
+from src.modelo.vo.UserVo import UserVo
+from src.vista.comun.GenerarTicket import GenerarTicket
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuVisitante.ui")
 
@@ -12,18 +16,45 @@ class MenuVisitante(VentanaBase, Form):
         super().__init__()
         self.configurar_interfaz()
         self._controlador = ControladorVisitante()
-
+        self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self._callback_cerrar_sesion = None
+        self.usuario_visitante = UserVo(
+            idUser=0,
+            nombre="Visitante",
+            apellido="Invitado",
+            correo=None,
+            contrasena=None,
+            rol="visitante",
+            )
+
+    def cargar_menu_del_dia(self):
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+        dao = MenuDao()
+        platos = dao.obtener_platos_por_fecha(fecha)
+
+        self.listaPrimeros.clear()
+        self.listaSegundos.clear()
+        self.listaPostres.clear()
+
+        for nombre, tipo, alergenos in platos:
+            texto = f"{nombre}  ({alergenos})" if alergenos else nombre
+            if tipo == 'primero':
+                self.listaPrimeros.addItem(texto)
+            elif tipo == 'segundo':
+                self.listaSegundos.addItem(texto)
+            elif tipo == 'postre':
+                self.listaPostres.addItem(texto)
 
     def configurar_interfaz(self):
         super().setupUi(self)
-        self.menuTextEdit.setReadOnly(True)
         self.setWindowTitle("Menú Visitante")
         self.labelUsuario.setText("¿Qué habrá de comer hoy?")
         self.configurar_calendario()
         self.btnVisualizarMenu.setEnabled(False)
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self.btnVolver.clicked.connect(self.volver_al_panel)
+        self.btnReservarComida.setVisible(False)
+        self.btnReservarComida.clicked.connect(self.confirmar_reserva)
 
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
@@ -54,7 +85,55 @@ class MenuVisitante(VentanaBase, Form):
 
     def visualizar_menu(self):
         fecha = self.calendarWidget.selectedDate()
+        if fecha.isValid():
+            self.cargar_menu_del_dia()
+            self.btnReservarComida.setVisible(True)
+        else:
+            QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
+            self.btnReservarComida.setVisible(False)
 
+    def confirmar_reserva(self):
+        primero_item = self.listaPrimeros.currentItem()
+        segundo_item = self.listaSegundos.currentItem()
+        postre_item = self.listaPostres.currentItem()
+
+        if not primero_item or not segundo_item or not postre_item:
+            QMessageBox.warning(self, "Selección incompleta", "Debes seleccionar un primer plato, un segundo y un postre antes de reservar.")
+            return
+
+        primero = primero_item.text().split("  (")[0].strip()
+        segundo = segundo_item.text().split("  (")[0].strip()
+        postre = postre_item.text().split("  (")[0].strip()
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+
+        respuesta = QMessageBox.question(
+            self,
+            "Confirmar selección",
+            f"¿Quieres reservar este menú?\n\n"
+            f"Primero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if respuesta == QMessageBox.Yes:
+            # Calcular precio y método según el rol
+            precio = 7.5
+            metodo = "tarjeta"
+
+            # --- PRIMERO CREA LA RESERVA Y OBTÉN EL ID ---
+            id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
+            if id_reserva:
+                QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+
+                # Callback tras pago exitoso
+                def callback_pago_exitoso():
+                    self.abrir_ticket()
+
+                print("Abriendo ventana de pago")
+                self.pago_window = PagoWindow(self.usuario_visitante, precio, metodo, callback_pago_exitoso, id_reserva)
+                self.pago_window.show()
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+           
     def volver_al_panel(self):
         respuesta = QMessageBox.question(
             self,
@@ -72,3 +151,9 @@ class MenuVisitante(VentanaBase, Form):
                 self._login = Login()
                 self._login.showFullScreen()
             self.close()
+        
+    def abrir_ticket(self):
+        id_reserva = self._controlador.obtener_ultima_reserva_id(self.usuario_visitante.idUser)
+        if id_reserva:
+            self.ticket_window = GenerarTicket(id_reserva)
+            self.ticket_window.show()

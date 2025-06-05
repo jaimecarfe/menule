@@ -1,7 +1,6 @@
 from src.modelo.BussinessObject import BussinessObject
 from src.modelo.Sesion import Sesion
 from src.modelo.vo.ReservaVo import ReservaVo
-from src.modelo.vo.MenuVo import MenuVo
 from PyQt5.QtWidgets import QMessageBox
 
 """
@@ -62,9 +61,9 @@ class ControladorEstudiante:
     def actualizar_saldo(self, id_usuario, nuevo_saldo):
         return self._modelo.actualizarSaldo(id_usuario, nuevo_saldo)
 
-    # En ControladorEstudiante
     def hacer_reserva_completa(self, id_usuario, fecha, primero, segundo, postre):
         return self._modelo.crearReservaCompleta(id_usuario, fecha, primero, segundo, postre)
     
+
     def crear_reserva(self, reserva_vo):
         self._modelo.insertar_reserva(reserva_vo)

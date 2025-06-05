@@ -116,6 +116,9 @@ class BussinessObject:
     def crearReservaCompleta(self, id_usuario, fecha, primero, segundo, postre):
         return self.reserva_dao.crear_reserva_completa_por_fecha(id_usuario, fecha, primero, segundo, postre)
 
+    def crearReservaAnonima(self, fecha, primero, segundo, postre):
+        return self.reserva_dao.crear_reserva_anonima(fecha, primero, segundo, postre)
+    
     def insertar_reserva(self, reserva_vo):
         return self._reservaDao.insert(reserva_vo)
 
@@ -149,6 +152,7 @@ class BussinessObject:
 
     def obtenerUltimaReservaId(self, id_usuario):
         return self.reserva_dao.obtener_ultima_reserva_id(id_usuario)    
+
 
     # --- Tickets ---
     def generarTicket(self, ticketVO: TicketVo) -> int | None:
