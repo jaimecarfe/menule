@@ -10,6 +10,8 @@ from src.modelo.vo.UserVo import UserVo
 from src.vista.comun.GenerarTicket import GenerarTicket
 from src.vista.visitante.IntroducirCorreoDialog import IntroducirCorreoDialog
 from src.utils.email_utils import enviar_correo
+from src.utils.ticket_generator import generar_ticket_pdf
+import os
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuVisitante.ui")
 
@@ -172,16 +174,29 @@ class MenuVisitante(VentanaBase, Form):
         if dialog.exec_():
             correo = dialog.correo
 
-            # Aquí debes obtener la ruta del PDF generado por GenerarTicket
-            # Suponemos que GenerarTicket tiene un método o atributo para la ruta del PDF:
-            if hasattr(self.ticket_window, 'ruta_pdf'):
-                archivo_pdf = self.ticket_window.ruta_pdf
-            elif hasattr(self.ticket_window, 'generar_pdf'):
-                archivo_pdf = self.ticket_window.generar_pdf()
-            else:
-                archivo_pdf = None
+            # 1. OBTÉN LOS DATOS DE LA RESERVA PARA EL TICKET
+            from src.modelo.dao.TicketDao import TicketDao
+            dao = TicketDao()
+            datos = dao.obtener_datos_ticket(id_reserva)
+            if not datos or len(datos) < 5:
+                QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
+                return
 
-            asunto = "¡Hola! 🎉"
+            ticket_data = {
+                "ID": datos[0],
+                "Nombre": datos[1],
+                "Email": correo,      # usa el correo introducido por el visitante
+                "Fecha": datos[3],
+                "Total": f"{datos[4]} EUR"
+            }
+
+            # 2. GENERA EL PDF CON QR SIEMPRE ANTES DE ENVIAR
+            from pathlib import Path
+            carpeta_descargas = str(Path.home() / "Downloads")
+            ruta_pdf = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[0]}.pdf")
+            generar_ticket_pdf(ticket_data, ruta_pdf)  # Esta función debe añadir el QR
+
+            asunto = "¡Tu ticket de reserva está aquí!"
             cuerpo = (
                 "¡Hola! 🎉\n\n"
                 "Gracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\n"
@@ -190,10 +205,14 @@ class MenuVisitante(VentanaBase, Form):
             )
 
             try:
-                status = enviar_correo(destino=correo, asunto=asunto, cuerpo=cuerpo, archivo_adjunto=archivo_pdf)
+                status = enviar_correo(destino=correo, asunto=asunto, cuerpo=cuerpo, archivo_adjunto=ruta_pdf)
                 if 200 <= status < 300:
                     QMessageBox.information(self, "Correo enviado", "El tíquet ha sido enviado a tu correo.")
                 else:
                     QMessageBox.warning(self, "Error", "No se pudo enviar el correo.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Error enviando el correo: {e}")
+            finally:
+                # Opcional: elimina el PDF si no lo quieres dejar en "Downloads"
+                if os.path.exists(ruta_pdf):
+                    os.remove(ruta_pdf)
