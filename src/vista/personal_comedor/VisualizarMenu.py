@@ -27,7 +27,12 @@ class VisualizarMenu(VentanaBase, Form):
         self.btnVisualizarMenu.clicked.connect(self.ver_menu)
 
         self.setStyleSheet("""
-            QListWidget, QLabel {
+            QListWidget {
+                background-color: #e3f2fd;
+                color: black;
+                font-size: 16px;
+            }
+            QLabel {
                 color: white;
                 font-size: 16px;
             }
@@ -51,8 +56,8 @@ class VisualizarMenu(VentanaBase, Form):
         self.calendarWidget.setMaximumDate(fecha_fin)
 
         formato_inhabilitado = QTextCharFormat()
-        formato_inhabilitado.setForeground(QColor('gray'))
-        formato_inhabilitado.setBackground(QColor('#f0f0f0'))
+        formato_inhabilitado.setForeground(QColor('black'))
+        formato_inhabilitado.setBackground(QColor("#5e5a5a"))
 
         fecha = max(fecha_inicio, fecha_actual)
         while fecha <= fecha_fin:

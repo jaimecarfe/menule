@@ -6,13 +6,8 @@ from src.vista.estudiante.MenuEstudiante import MenuEstudiante
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.VentanaBase import VentanaBase
-from src.vista.estudiante.AgregarFondosDialog import AgregarFondosDialog
-from src.modelo.vo.IncidenciaVo import IncidenciaVo
-from src.modelo.Sesion import Sesion
+from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
 from src.controlador.ControladorEstudiante import ControladorEstudiante
-from src.controlador.ControladorProfesor import ControladorProfesor
-from src.controlador.ControladorComedor import ControladorComedor
-import uuid
 from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelEstudiante.ui")
@@ -58,9 +53,6 @@ class PanelEstudiante(VentanaBase, Form):
 
     def ver_historial(self):
         QMessageBox.information(self, "Historial de Reservas", "Aquí se mostrará el historial.")
-
-    def reportar_incidencia(self):
-        QMessageBox.information(self, "Reportar Incidencia", "Aquí se podrá reportar una incidencia.")
 
     def confirmar_cerrar_sesion(self):
         respuesta = QMessageBox.question(

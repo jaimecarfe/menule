@@ -19,4 +19,4 @@ class AgregarFondosDialog(QDialog):
             self.cantidad = cantidad
             self.accept()
         except ValueError:
-            QMessageBox.warning(self, "Valor inválido", "Introducí una cantidad positiva válida.")
+            QMessageBox.warning(self, "Valor inválido", "Introduce una cantidad positiva válida.")

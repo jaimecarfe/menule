@@ -32,11 +32,17 @@ class MenuEstudiante(VentanaBase, Form):
         self.btnReservarComida.setVisible(False)
         self.btnReservarComida.clicked.connect(self.confirmar_reserva)
         self.setStyleSheet("""
-            QListWidget, QLabel {
+            QListWidget {
+                background-color: #e3f2fd;
+                color: black;
+                font-size: 16px;
+            }
+            QLabel {
                 color: white;
                 font-size: 16px;
             }
         """)
+
 
 
     def configurar_calendario(self):
