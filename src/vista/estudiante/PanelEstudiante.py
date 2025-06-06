@@ -6,7 +6,7 @@ from src.vista.estudiante.MenuEstudiante import MenuEstudiante
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.VentanaBase import VentanaBase
-from src.vista.estudiante.AgregarFondosDialog import AgregarFondosDialog
+from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
 from src.modelo.Sesion import Sesion
 from src.controlador.ControladorEstudiante import ControladorEstudiante

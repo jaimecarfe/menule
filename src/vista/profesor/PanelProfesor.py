@@ -6,7 +6,7 @@ from src.vista.profesor.MenuProfesor import MenuProfesor
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorProfesor import ControladorProfesor
 from src.vista.VentanaBase import VentanaBase
-from src.vista.profesor.AgregarFondosDialog import AgregarFondosDialog
+from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
 
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelProfesor.ui")
@@ -19,7 +19,6 @@ class PanelProfesor(VentanaBase, Form):
         self.setupUi(self)
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
         self.labelTitulo.setText(f"Bienvenido/a profesor/a, {usuario.nombre}")
-        self.btn_add_fondos.clicked.connect(self.agregar_fondos)
 
         pixmap = QPixmap("./src/vista/imagenes/paneles.png")
         pixmap = pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -31,11 +30,13 @@ class PanelProfesor(VentanaBase, Form):
         self.btnHistorialReservas.clicked.connect(self.ver_historial)
         self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
+        self.btn_add_fondos.clicked.connect(self.agregar_fondos)
 
-    def showEvent(self, event):
-        super().showEvent(event)
-        self.actualizar_saldo_ui()
 
+        saldo_real = self.controlador.obtener_saldo(self.usuario.idUser)
+        self.usuario.saldo = saldo_real
+        self.saldo_label.setText(f"Saldo: {saldo_real:.2f}€")
+        
     def abrir_menu(self):
         self.menu_window = MenuProfesor(self.usuario, parent=self)
         self.hide()  # Oculta el panel actual
@@ -84,6 +85,10 @@ class PanelProfesor(VentanaBase, Form):
         self.login_window.controlador = ControladorPrincipal(self.login_window)
         self.login_window.show()
     
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.actualizar_saldo_ui()
+        
     def actualizar_saldo_ui(self):
         saldo_actualizado = self.controlador.obtener_saldo(self.usuario.idUser)
         self.usuario.saldo = saldo_actualizado
