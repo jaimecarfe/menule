@@ -180,6 +180,9 @@ class BussinessObject:
 
     def obtenerPagosPorUsuario(self, id_usuario: int):
         return PagoDao().obtener_por_usuario(id_usuario)
+
+    def obtener_todos_pagos(self):
+        return PagoDao().obtener_todos_pagos()
     
     
     """

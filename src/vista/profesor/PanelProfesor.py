@@ -81,7 +81,7 @@ class PanelProfesor(VentanaBase, Form):
 
         self.close()
         self.login_window = Login()
-        self.login_window.controlador = ControladorPrincipal(self.login_window, self.login_window)
+        self.login_window.controlador = ControladorPrincipal(self.login_window)
         self.login_window.show()
     
     def actualizar_saldo_ui(self):

@@ -1,5 +1,6 @@
 from src.modelo.conexion.Conexion import Conexion
 from datetime import datetime
+from src.modelo.vo.PagoVo import PagoVo
 
 class PagoDao:
     def getCursor(self):
@@ -34,7 +35,7 @@ class PagoDao:
         cursor.execute("SELECT LAST_INSERT_ID()")
         last_id = cursor.fetchone()[0]
         return last_id
-    
+    '''
     def obtener_por_usuario(self, id_usuario):
         cursor = self.getCursor()
         cursor.execute("""
@@ -45,3 +46,29 @@ class PagoDao:
         """, (id_usuario,))
         pagos = cursor.fetchall()
         return pagos if pagos else []
+    '''
+    def obtener_todos_pagos(self):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT id_pago, id_usuario, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id
+            FROM Pagos
+            ORDER BY fecha_pago DESC
+        """)
+        pagos = []
+        for row in cursor.fetchall():
+            id_pago, id_usuario, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id = row
+            pago = PagoVo(
+                id_pago=id_pago,
+                id_usuario=id_usuario,
+                id_reserva=id_reserva,
+                monto=monto,
+                metodo=metodo,
+                fecha_pago=fecha_pago,
+                descuento=descuento,
+                estado=estado,
+                transaccion_id=transaccion_id
+            )
+            pagos.append(pago)
+        return pagos
+
+
