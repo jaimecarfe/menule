@@ -4,12 +4,10 @@ from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.estudiante.ReservaComida import ReservaComida
-from src.modelo.dao.MenuDao import MenuDao
-from PyQt5 import uic
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.vista.comun.PagoWindow import PagoWindow
 from src.vista.comun.GenerarTicket import GenerarTicket
-from src.modelo.vo.UserVo import UserVo
+from PyQt5 import uic
 
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuEstudiante.ui")
@@ -87,8 +85,7 @@ class MenuEstudiante(VentanaBase, Form):
 
     def cargar_menu_del_dia(self):
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
-        dao = MenuDao()
-        platos = dao.obtener_platos_por_fecha(fecha)
+        platos = self._controlador.obtener_platos_por_fecha(fecha)
 
         self.listaPrimeros.clear()
         self.listaSegundos.clear()

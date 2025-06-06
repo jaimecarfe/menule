@@ -3,8 +3,6 @@ from src.modelo.vo.UserVo import UserVo
 from src.modelo.vo.MenuVo import MenuVo
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.TicketVo import TicketVo
-#from src.modelo.vo.PlatoVo import PlatoVo
-#from src.modelo.vo.IngredienteVo import IngredienteVo
 
 
 class ControladorComedor:
@@ -23,3 +21,6 @@ class ControladorComedor:
 
     def obtener_reservas(self):
         return self._modelo.get_reservas_completas()
+    
+    def obtener_platos_por_fecha(self, fecha):
+        return self._modelo.obtenerMenuPorFecha(fecha)

@@ -1,5 +1,4 @@
 from src.modelo.conexion.Conexion import Conexion
-from src.modelo.vo.MenuVo import MenuVo
 
 class MenuDao:
     def getCursor(self):

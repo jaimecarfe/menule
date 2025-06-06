@@ -5,8 +5,7 @@ from PyQt5 import uic
 from src.vista.administrador.Estadisticas import VentanaEstadisticas
 from src.vista.administrador.VentanaRegistrarAdmin import VentanaRegistrarAdmin
 from src.vista.comun.CambiarContrasena import CambiarContrasena
-from src.vista.comun.ModificarMenuConAlergenos import ModificarMenuConAlergenos
-
+from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuConAlergenos
 
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")

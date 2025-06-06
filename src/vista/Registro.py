@@ -47,11 +47,7 @@ class Registro(VentanaBase, Form):
         if not all([nombre, apellido, correo, contrasena, rol]):
             QMessageBox.warning(self, "Campos obligatorios", "Por favor, completa todos los campos obligatorios.")
             return
-        
-        if rol == "estudiante" and not tui:
-            QMessageBox.warning(self, "Campo obligatorio", "El campo TUI es obligatorio para estudiantes.")
-            return
-        
+                
         if rol in ["estudiante", "profesor"] and not grado:
             QMessageBox.warning(self, "Campo obligatorio", "El campo Grado Académico es obligatorio para estudiantes y profesores.")
             return

@@ -67,3 +67,7 @@ class ControladorEstudiante:
 
     def crear_reserva(self, reserva_vo):
         self._modelo.insertar_reserva(reserva_vo)
+
+    def obtener_platos_por_fecha(self, fecha):
+        return self._modelo.obtenerMenuPorFecha(fecha)
+

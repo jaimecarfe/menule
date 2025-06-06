@@ -85,9 +85,9 @@ class PanelEstudiante(VentanaBase, Form):
 
         self.close()
         self.login_window = Login()
-        self.login_window.controlador = ControladorPrincipal(self.login_window, self.login_window)
+        self.login_window.controlador = ControladorPrincipal(self.login_window)
         self.login_window.show()
-
+        
     def actualizar_saldo_ui(self):
         saldo_actualizado = self.controlador.obtener_saldo(self.usuario.idUser)
         self.usuario.saldo = saldo_actualizado

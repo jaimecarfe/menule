@@ -165,6 +165,9 @@ class BussinessObject:
     def obtenerMenusDisponibles(self):
         return MenuDao().listar_disponibles()
 
+    def obtenerMenuPorFecha(self, fecha: str):
+        return MenuDao().obtener_platos_por_fecha(fecha)
+
     # --- Pagos ---
     def registrarPago(self, pagoVO: PagoVo) -> int | None:
         return PagoDao().insertar_pago(pagoVO)
