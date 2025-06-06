@@ -8,6 +8,8 @@ from src.modelo.dao.MenuDao import MenuDao
 from src.vista.comun.PagoWindow import PagoWindow
 from src.modelo.vo.UserVo import UserVo
 from src.vista.comun.GenerarTicket import GenerarTicket
+from src.vista.visitante.IntroducirCorreoDialog import IntroducirCorreoDialog
+from src.utils.email_utils import enviar_correo
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuVisitante.ui")
 
@@ -134,7 +136,7 @@ class MenuVisitante(VentanaBase, Form):
 
                 # Callback tras pago exitoso
                 def callback_pago_exitoso():
-                    self.abrir_ticket()
+                    self.abrir_ticket(id_reserva)
 
                 print("Abriendo ventana de pago")
                 self.pago_window = PagoWindow(self.usuario_visitante, precio, metodo, callback_pago_exitoso, id_reserva)
@@ -160,8 +162,38 @@ class MenuVisitante(VentanaBase, Form):
                 self._login.showFullScreen()
             self.close()
         
-    def abrir_ticket(self):
-        id_reserva = self._controlador.obtener_ultima_reserva_id(self.usuario_visitante.idUser)
-        if id_reserva:
-            self.ticket_window = GenerarTicket(id_reserva)
-            self.ticket_window.show()
+    def abrir_ticket(self, id_reserva):
+        # Mostrar el ticket
+        self.ticket_window = GenerarTicket(id_reserva)
+        self.ticket_window.show()
+
+        # Pedir el correo y enviar el ticket por correo
+        dialog = IntroducirCorreoDialog(self)
+        if dialog.exec_():
+            correo = dialog.correo
+
+            # Aquí debes obtener la ruta del PDF generado por GenerarTicket
+            # Suponemos que GenerarTicket tiene un método o atributo para la ruta del PDF:
+            if hasattr(self.ticket_window, 'ruta_pdf'):
+                archivo_pdf = self.ticket_window.ruta_pdf
+            elif hasattr(self.ticket_window, 'generar_pdf'):
+                archivo_pdf = self.ticket_window.generar_pdf()
+            else:
+                archivo_pdf = None
+
+            asunto = "¡Hola! 🎉"
+            cuerpo = (
+                "¡Hola! 🎉\n\n"
+                "Gracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\n"
+                "Saludos cordiales,\n"
+                "El equipo de reservas"
+            )
+
+            try:
+                status = enviar_correo(destino=correo, asunto=asunto, cuerpo=cuerpo, archivo_adjunto=archivo_pdf)
+                if 200 <= status < 300:
+                    QMessageBox.information(self, "Correo enviado", "El tíquet ha sido enviado a tu correo.")
+                else:
+                    QMessageBox.warning(self, "Error", "No se pudo enviar el correo.")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Error enviando el correo: {e}")

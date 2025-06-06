@@ -7,11 +7,7 @@ from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorProfesor import ControladorProfesor
 from src.vista.VentanaBase import VentanaBase
 from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
-<<<<<<< HEAD
 from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
-=======
-
->>>>>>> f457a212852de772c066c53d6422d391aaa72189
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelProfesor.ui")
 
