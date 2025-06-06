@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QMessageBox
 from src.modelo.dao.TicketDao import TicketDao
 from src.utils.ticket_generator import generar_ticket_pdf
 from src.utils.email_utils import enviar_correo
+from src.vista.visitante import IntroducirCorreoDialog
 import os
 
 class GenerarTicket(QWidget):
@@ -62,8 +63,17 @@ class GenerarTicket(QWidget):
         generar_ticket_pdf(ticket_data, ruta)
 
         try:
+            email_destino = datos[2]
+            if email_destino.strip() == "":
+                dialog = IntroducirCorreoDialog(self)
+                if dialog.exec_() == IntroducirCorreoDialog.Accepted:
+                    email_destino = dialog.get_email()
+                else:
+                    QMessageBox.warning(self, "Cancelado", "No se introdujo un correo.")
+                    return
+
             enviar_correo(
-                destino=datos[2],
+                destino=email_destino,
                 asunto="¡Tu ticket de reserva está aquí!",
                 cuerpo="¡Hola! 🎉\n\nGracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\nSaludos cordiales,\nEl equipo de reservas",
                 archivo_adjunto=ruta

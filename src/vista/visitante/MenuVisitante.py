@@ -8,6 +8,10 @@ from src.modelo.dao.MenuDao import MenuDao
 from src.vista.comun.PagoWindow import PagoWindow
 from src.modelo.vo.UserVo import UserVo
 from src.vista.comun.GenerarTicket import GenerarTicket
+from src.vista.visitante.IntroducirCorreoDialog import IntroducirCorreoDialog
+from src.utils.email_utils import enviar_correo
+from src.utils.ticket_generator import generar_ticket_pdf
+import os
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuVisitante.ui")
 
@@ -134,7 +138,7 @@ class MenuVisitante(VentanaBase, Form):
 
                 # Callback tras pago exitoso
                 def callback_pago_exitoso():
-                    self.abrir_ticket()
+                    self.abrir_ticket(id_reserva)
 
                 print("Abriendo ventana de pago")
                 self.pago_window = PagoWindow(self.usuario_visitante, precio, metodo, callback_pago_exitoso, id_reserva)
@@ -160,8 +164,55 @@ class MenuVisitante(VentanaBase, Form):
                 self._login.showFullScreen()
             self.close()
         
-    def abrir_ticket(self):
-        id_reserva = self._controlador.obtener_ultima_reserva_id(self.usuario_visitante.idUser)
-        if id_reserva:
-            self.ticket_window = GenerarTicket(id_reserva)
-            self.ticket_window.show()
+    def abrir_ticket(self, id_reserva):
+        # Mostrar el ticket
+        self.ticket_window = GenerarTicket(id_reserva)
+        self.ticket_window.show()
+
+        # Pedir el correo y enviar el ticket por correo
+        dialog = IntroducirCorreoDialog(self)
+        if dialog.exec_():
+            correo = dialog.correo
+
+            # 1. OBTÉN LOS DATOS DE LA RESERVA PARA EL TICKET
+            from src.modelo.dao.TicketDao import TicketDao
+            dao = TicketDao()
+            datos = dao.obtener_datos_ticket(id_reserva)
+            if not datos or len(datos) < 5:
+                QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
+                return
+
+            ticket_data = {
+                "ID": datos[0],
+                "Nombre": datos[1],
+                "Email": correo,      # usa el correo introducido por el visitante
+                "Fecha": datos[3],
+                "Total": f"{datos[4]} EUR"
+            }
+
+            # 2. GENERA EL PDF CON QR SIEMPRE ANTES DE ENVIAR
+            from pathlib import Path
+            carpeta_descargas = str(Path.home() / "Downloads")
+            ruta_pdf = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[0]}.pdf")
+            generar_ticket_pdf(ticket_data, ruta_pdf)  # Esta función debe añadir el QR
+
+            asunto = "¡Tu ticket de reserva está aquí!"
+            cuerpo = (
+                "¡Hola! 🎉\n\n"
+                "Gracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\n"
+                "Saludos cordiales,\n"
+                "El equipo de reservas"
+            )
+
+            try:
+                status = enviar_correo(destino=correo, asunto=asunto, cuerpo=cuerpo, archivo_adjunto=ruta_pdf)
+                if 200 <= status < 300:
+                    QMessageBox.information(self, "Correo enviado", "El tíquet ha sido enviado a tu correo.")
+                else:
+                    QMessageBox.warning(self, "Error", "No se pudo enviar el correo.")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Error enviando el correo: {e}")
+            finally:
+                # Opcional: elimina el PDF si no lo quieres dejar en "Downloads"
+                if os.path.exists(ruta_pdf):
+                    os.remove(ruta_pdf)
