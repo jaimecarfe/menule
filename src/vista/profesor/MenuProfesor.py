@@ -25,6 +25,18 @@ class MenuProfesor(VentanaBase, Form):
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self.btnVolver.clicked.connect(self.volver_al_panel)
 
+        self.setStyleSheet("""
+            QListWidget {
+                background-color: #e3f2fd;
+                color: black;
+                font-size: 16px;
+            }
+            QLabel {
+                color: white;
+                font-size: 16px;
+            }
+        """)
+
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
         fecha_fin = QDate(2025, 6, 23)
