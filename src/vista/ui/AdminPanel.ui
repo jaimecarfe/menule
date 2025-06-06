@@ -97,14 +97,7 @@ QPushButton:hover {
              </layout>
             </widget>
 
-            <widget class="QWidget" name="tabIncidencias">
-             <attribute name="title"><string>Incidencias</string></attribute>
-             <layout class="QVBoxLayout" name="layoutIncidencias">
-                <item>
-                 <widget class="QTableWidget" name="tablaIncidencias"/>
-                </item>
-             </layout>
-            </widget>
+            
 
             <widget class="QWidget" name="tabConfiguracion">
              <attribute name="title"><string>Configuración</string></attribute>

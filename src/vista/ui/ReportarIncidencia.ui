@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ReportarIncidenciaGeneral</class>
+ <widget class="QWidget" name="ReportarIncidenciaGeneral">
+  <property name="windowTitle">
+   <string>Reportar Incidencia</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="labelTitulo">
+     <property name="text">
+      <string>Título de la incidencia:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="titulo_input"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelDescripcion">
+     <property name="text">
+      <string>Descripción:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="descripcion_input"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelFecha">
+     <property name="text">
+      <string>Fecha:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDateEdit" name="fecha_input">
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="enviar_btn">
+     <property name="text">
+      <string>Enviar Incidencia</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

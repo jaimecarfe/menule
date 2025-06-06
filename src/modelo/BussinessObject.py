@@ -8,6 +8,9 @@ from src.modelo.dao.ReservaDao import ReservaDao
 from src.modelo.dao.TicketDao import TicketDao
 from src.modelo.dao.MenuDao import MenuDao
 from src.modelo.dao.PagoDao import PagoDao
+from src.modelo.dao.IncidenciaDao import IncidenciaDao
+
+
 
 """
 from src.modelo.dao.PlatoDao import PlatoDao
@@ -25,6 +28,7 @@ from src.modelo.vo.EstadisticaVo import EstadisticaVo
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.modelo.vo.TicketVo import TicketVo
 from src.modelo.vo.PagoVo import PagoVo
+from src.modelo.vo.IncidenciaVo import IncidenciaVo
 
 """
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
@@ -44,6 +48,8 @@ class BussinessObject:
         self.personal_comedor_dao = PersonalComedorDao()
         self.reserva_dao = ReservaDao()
         self.ticket_dao = TicketDao()
+        self.incidencia_dao = IncidenciaDao()
+
 
     # --- Usuarios ---
     def comprobarLogin(self, loginVO: LoginVO) -> UserVo | None:
@@ -181,17 +187,17 @@ class BussinessObject:
     # --- Platos ---
     def obtenerPlatosPorMenu(self, id_menu: int):
         return PlatoDao().buscar_por_menu(id_menu)
-
+    """
     # --- Incidencias ---
     def reportarIncidencia(self, incidenciaVO: IncidenciaVo) -> int | None:
-        return IncidenciaDao().insert(incidenciaVO)
+        return IncidenciaDao().insertar_incidencia(incidenciaVO)
 
     def listarIncidencias(self):
         return IncidenciaDao().listar_todas()
 
     def resolverIncidencia(self, id_incidencia: int, solucion: str) -> bool:
         return IncidenciaDao().resolver(id_incidencia, solucion)
-
+    """
     # --- Ingredientes ---
     def consultarStockIngredientes(self):
         return IngredienteDao().listar()

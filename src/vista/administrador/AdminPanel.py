@@ -5,8 +5,9 @@ from PyQt5 import uic
 from src.vista.administrador.Estadisticas import VentanaEstadisticas
 from src.vista.administrador.VentanaRegistrarAdmin import VentanaRegistrarAdmin
 from src.vista.comun.CambiarContrasena import CambiarContrasena
-from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuConAlergenos
-
+from src.vista.comun.ModificarMenuConAlergenos import ModificarMenuConAlergenos
+from src.vista.administrador.GestionIncidencias import PanelIncidenciasAdmin
+from PyQt5.QtWidgets import QHeaderView 
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
@@ -28,6 +29,10 @@ class AdminPanel(VentanaBase, Form):
         self.tabEstadisticas = VentanaEstadisticas(self)
         self.tabPanel.addTab(self.tabEstadisticas, "Estadísticas")
         self.btnModificarMenu.clicked.connect(self.abrir_modificar_menu)  
+        self.panel_incidencias = PanelIncidenciasAdmin()
+        self.tabPanel.addTab(self.panel_incidencias, "Incidencias")
+
+
 
     @property
     def callback_cerrar_sesion(self):
@@ -131,4 +136,9 @@ class AdminPanel(VentanaBase, Form):
         self.mod_window = ModificarMenuConAlergenos()
         self.mod_window.show()
 
+    '''
+    def abrir_panel_incidencias(self):
+        self.ventana_incidencias = AdminPanel()
+        self.ventana_incidencias.show()
+    '''
 

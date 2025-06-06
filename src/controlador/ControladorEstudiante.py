@@ -42,12 +42,12 @@ class ControladorEstudiante:
         # Mostrar el historial como tú quieras (por ahora solo placeholder):
         QMessageBox.information(None, "Historial", "Aquí se mostrará el historial.")
 
-    def reportar_incidencia(self):
+    def reportar_incidencia(self, incidencia):
         usuario = Sesion().get_usuario()
         # Aquí podrías abrir un formulario para recoger título y descripción
         titulo = "Incidencia ejemplo"
         descripcion = "Ejemplo de reporte de incidencia."
-        self._modelo.reportar_incidencia(usuario.idUser, titulo, descripcion)
+        self._modelo.reportarIncidencia(incidencia)
         QMessageBox.information(None, "Incidencia", "¡Incidencia reportada!")
     
     def dar_de_baja(self):
