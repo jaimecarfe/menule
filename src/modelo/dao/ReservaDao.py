@@ -73,7 +73,7 @@ class ReservaDao:
             print("Error al crear reserva anónima:", e)
             return None
 
-    def crear_reserva_completa_por_fecha(self, fecha, primero, segundo, postre):
+    def crear_reserva_completa_por_fecha(self, id_usuario, fecha, primero, segundo, postre):
         cursor = self.getCursor()
         try:
             cursor.execute("SELECT id_menu FROM Menus WHERE fecha = ?", (fecha,))
@@ -81,8 +81,8 @@ class ReservaDao:
 
             cursor.execute("""
                 INSERT INTO Reservas (id_usuario, id_menu, fecha_reserva, estado)
-                VALUES (NULL, ?, NOW(), 'pendiente')
-            """, (id_menu,))
+                VALUES (?, ?, NOW(), 'pendiente')
+            """, (id_usuario, id_menu))
             cursor.execute("SELECT LAST_INSERT_ID()")
             id_reserva = cursor.fetchone()[0]
 
@@ -94,8 +94,7 @@ class ReservaDao:
             return id_reserva
         except Exception as e:
             print("Error al crear reserva completa por fecha:", e)
-            return None
-    
+            return None    
 
     def get_all(self):
         cursor = self.getCursor()
