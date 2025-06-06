@@ -17,11 +17,6 @@ class ProfesorDao(Conexion):
             profesor.tui_numero,
             profesor.saldo
         ))
-    def obtener_saldo(self, id_usuario):
-        cursor = self.getCursor()
-        cursor.execute(self.SQL_GET_SALDO, (id_usuario,))
-        resultado = cursor.fetchone()
-        return resultado[0] if resultado else 0.0
 
     def actualizar_saldo(self, id_usuario, nuevo_saldo):
         cursor = self.getCursor()

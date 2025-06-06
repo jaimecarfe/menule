@@ -6,8 +6,8 @@ from src.vista.profesor.MenuProfesor import MenuProfesor
 from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorProfesor import ControladorProfesor
 from src.vista.VentanaBase import VentanaBase
-from src.vista.profesor.AgregarFondosDialog import AgregarFondosDialog
-
+from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
+from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelProfesor.ui")
 
@@ -20,6 +20,11 @@ class PanelProfesor(VentanaBase, Form):
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
         self.labelTitulo.setText(f"Bienvenido/a profesor/a, {usuario.nombre}")
         self.btn_add_fondos.clicked.connect(self.agregar_fondos)
+
+        # Refresca el saldo al iniciar
+        saldo_real = self.controlador.obtener_saldo(self.usuario.idUser)
+        self.usuario.saldo = saldo_real
+        self.saldo_label.setText(f"Saldo: {saldo_real:.2f}€")
 
         pixmap = QPixmap("./src/vista/imagenes/paneles.png")
         pixmap = pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -99,3 +104,7 @@ class PanelProfesor(VentanaBase, Form):
                 QMessageBox.information(self, "Éxito", "Fondos añadidos correctamente.")
             else:
                 QMessageBox.warning(self, "Error", "No se pudo actualizar el saldo.")
+
+    def abrir_ventana_incidencia(self):
+        self.ventana_incidencia = ReportarIncidenciaGeneral()
+        self.ventana_incidencia.show()

@@ -232,3 +232,30 @@ class UserDao(Conexion):
         else:
             return None
 
+    def obtener_saldo(self, id_usuario):
+        cursor = self.getCursor()
+        try:
+            # Obtener el rol del usuario
+            cursor.execute("SELECT tipo FROM Usuarios WHERE id_usuario = ?", (id_usuario,))
+            row = cursor.fetchone()
+            if not row:
+                print("Usuario no encontrado.")
+                return None
+            rol = row[0]
+
+            # Filtrar por rol y obtener saldo
+            if rol == "estudiante":
+                cursor.execute("SELECT saldo FROM Estudiantes WHERE id_usuario = ?", (id_usuario,))
+            elif rol == "profesor":
+                cursor.execute("SELECT saldo FROM Profesores WHERE id_usuario = ?", (id_usuario,))
+            else:
+                print("El rol no tiene saldo asociado.")
+                return None
+
+            fila = cursor.fetchone()
+            if fila:
+                return fila[0]
+            return None
+        except Exception as e:
+            print("Error obteniendo saldo:", e)
+            return None

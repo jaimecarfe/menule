@@ -87,7 +87,7 @@ class BussinessObject:
         return self.user_dao.update_saldo(idUser, nuevo_saldo)
     
     def obtener_saldo(self, id_usuario):
-        return self.estudiante_dao.obtener_saldo(id_usuario)
+        return self.user_dao.obtener_saldo(id_usuario)
 
     def obtenerUsuarioPorCorreo(self, correo: str) -> UserVo | None:
         return self.user_dao.find_by_correo(correo)
