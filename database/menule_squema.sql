@@ -288,3 +288,7 @@ ALTER TABLE PersonalComedor DROP FOREIGN KEY personalcomedor_ibfk_1;
 ALTER TABLE PersonalComedor ADD CONSTRAINT personalcomedor_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
 '''
 
+
+"
+ ALTER TABLE Incidencias ADD COLUMN numero_seguimiento VARCHAR(50);
+"
