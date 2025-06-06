@@ -24,7 +24,7 @@ class ControladorAdmin:
             tabla.setItem(fila, 3, QTableWidgetItem(usuario.correo))           # Correo
             tabla.setItem(fila, 4, QTableWidgetItem(usuario.rol))              # Rol
             tabla.setItem(fila, 5, QTableWidgetItem("Sí" if usuario.activo else "No"))  # Activo
-            
+
     def eliminar_usuario(self, user_id):
         return self._modelo.eliminarUsuario(user_id)
     
@@ -42,3 +42,7 @@ class ControladorAdmin:
     
     def obtener_pagos(self):
         return self._modelo.obtener_todos_pagos()
+    
+    def obtener_reservas(self):
+        return self._modelo.obtener_reservas()
+

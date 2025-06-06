@@ -32,6 +32,7 @@ class AdminPanel(VentanaBase, Form):
         self.panel_incidencias = PanelIncidenciasAdmin()
         self.tabPanel.addTab(self.panel_incidencias, "Incidencias")
         self.cargar_pagos()
+        self.cargar_reservas()
 
 
 
@@ -56,9 +57,9 @@ class AdminPanel(VentanaBase, Form):
             self._callback_cerrar_sesion()
 
     def cargar_usuarios(self):
-        self.tablaUsuarios.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         """Obtiene todos los usuarios y los muestra en la tabla."""
         self.tablaUsuarios.setRowCount(0)
+        self.tablaUsuarios.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         usuarios = self._controlador.obtener_usuarios()
         for fila_idx, usuario in enumerate(usuarios):
             self.tablaUsuarios.insertRow(fila_idx)
@@ -165,3 +166,19 @@ class AdminPanel(VentanaBase, Form):
             self.tablaPagos.setItem(fila_idx, 7, QTableWidgetItem(pago.estado))
             self.tablaPagos.setItem(fila_idx, 8, QTableWidgetItem(str(pago.transaccion_id) if pago.transaccion_id else ""))
 
+    def cargar_reservas(self):
+        self.tablaReservas.setRowCount(0)
+        reservas = self._controlador.obtener_reservas()
+        self.tablaReservas.setColumnCount(6)
+        self.tablaReservas.setHorizontalHeaderLabels([
+            "ID Reserva", "ID Usuario", "ID Menú", "Fecha", "Fecha de Cancelación", "Motivo de Cancelación"
+        ])
+        self.tablaReservas.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        for fila_idx, reserva in enumerate(reservas):
+            self.tablaReservas.insertRow(fila_idx)
+            self.tablaReservas.setItem(fila_idx, 0, QTableWidgetItem(str(reserva.id_reserva)))
+            self.tablaReservas.setItem(fila_idx, 1, QTableWidgetItem(str(reserva.id_usuario)))
+            self.tablaReservas.setItem(fila_idx, 2, QTableWidgetItem(str(reserva.id_menu)))
+            self.tablaReservas.setItem(fila_idx, 3, QTableWidgetItem(str(reserva.fecha_reserva)))
+            self.tablaReservas.setItem(fila_idx, 4, QTableWidgetItem(str(reserva.fecha_cancelacion)))
+            self.tablaReservas.setItem(fila_idx, 5, QTableWidgetItem(str(reserva.motivo_cancelacion)))

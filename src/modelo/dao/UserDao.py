@@ -52,7 +52,7 @@ class UserDao(Conexion):
             )
             usuarios.append(usuario)
         return usuarios
-
+    
     def find_by_correo(self, correo):
         cursor = self.getCursor()
         cursor.execute(self.SQL_FIND_BY_CORREO, (correo,))

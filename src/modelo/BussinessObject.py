@@ -91,10 +91,10 @@ class BussinessObject:
 
     def obtenerUsuarioPorCorreo(self, correo: str) -> UserVo | None:
         return self.user_dao.find_by_correo(correo)
-    
+
     def listarUsuarios(self) -> list[UserVo]:
         return self.user_dao.select()
-    
+
     def eliminarUsuario(self, id_usuario: int) -> bool:
         return self.user_dao.eliminar_usuario_fisico(id_usuario)    
 
@@ -159,6 +159,8 @@ class BussinessObject:
     def obtenerUltimaReservaId(self, id_usuario):
         return self.reserva_dao.obtener_ultima_reserva_id(id_usuario)    
 
+    def obtener_reservas(self):
+        return self.reserva_dao.listar_reservas()
 
     # --- Tickets ---
     def generarTicket(self, ticketVO: TicketVo) -> int | None:

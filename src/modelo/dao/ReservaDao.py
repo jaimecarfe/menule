@@ -117,3 +117,24 @@ class ReservaDao:
         cursor.close()
         return [row[0] for row in rows]
 
+    def listar_reservas(self):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT id_reserva, id_usuario, id_menu, fecha_reserva, estado, fecha_cancelacion, motivo_cancelacion
+            FROM Reservas
+            ORDER BY id_reserva asc
+        """)
+        reservas = []
+        for row in cursor.fetchall():
+            id_reserva, id_usuario, id_menu, fecha_reserva, estado, fecha_cancelacion, motivo_cancelacion = row
+            reserva = ReservaVo(
+                id_reserva=id_reserva,
+                id_usuario=id_usuario,
+                id_menu=id_menu,
+                fecha_reserva=fecha_reserva,
+                estado=estado,
+                fecha_cancelacion=fecha_cancelacion,
+                motivo_cancelacion=motivo_cancelacion
+            )
+            reservas.append(reserva)
+        return reservas

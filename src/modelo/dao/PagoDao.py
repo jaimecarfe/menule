@@ -52,7 +52,7 @@ class PagoDao:
         cursor.execute("""
             SELECT id_pago, id_usuario, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id
             FROM Pagos
-            ORDER BY fecha_pago DESC
+            ORDER BY id_pago asc
         """)
         pagos = []
         for row in cursor.fetchall():
