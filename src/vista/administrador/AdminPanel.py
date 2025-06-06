@@ -5,7 +5,7 @@ from PyQt5 import uic
 from src.vista.administrador.Estadisticas import VentanaEstadisticas
 from src.vista.administrador.VentanaRegistrarAdmin import VentanaRegistrarAdmin
 from src.vista.comun.CambiarContrasena import CambiarContrasena
-from src.vista.comun.ModificarMenuConAlergenos import ModificarMenuConAlergenos
+from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuConAlergenos
 from src.vista.administrador.GestionIncidencias import PanelIncidenciasAdmin
 from PyQt5.QtWidgets import QHeaderView 
 
@@ -31,6 +31,7 @@ class AdminPanel(VentanaBase, Form):
         self.btnModificarMenu.clicked.connect(self.abrir_modificar_menu)  
         self.panel_incidencias = PanelIncidenciasAdmin()
         self.tabPanel.addTab(self.panel_incidencias, "Incidencias")
+        self.cargar_pagos()
 
 
 
@@ -55,6 +56,7 @@ class AdminPanel(VentanaBase, Form):
             self._callback_cerrar_sesion()
 
     def cargar_usuarios(self):
+        self.tablaUsuarios.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         """Obtiene todos los usuarios y los muestra en la tabla."""
         self.tablaUsuarios.setRowCount(0)
         usuarios = self._controlador.obtener_usuarios()
@@ -141,4 +143,25 @@ class AdminPanel(VentanaBase, Form):
         self.ventana_incidencias = AdminPanel()
         self.ventana_incidencias.show()
     '''
+
+    def cargar_pagos(self):
+        self.tablaPagos.setRowCount(0)
+        pagos = self._controlador.obtener_pagos()
+        self.tablaPagos.setColumnCount(9)
+        self.tablaPagos.setHorizontalHeaderLabels([
+            "ID Pago", "ID Usuario", "ID Reserva", "Monto", "Método",
+            "Fecha de Pago", "Descuento", "Estado", "Transacción ID"
+        ])
+        self.tablaPagos.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        for fila_idx, pago in enumerate(pagos):
+            self.tablaPagos.insertRow(fila_idx)
+            self.tablaPagos.setItem(fila_idx, 0, QTableWidgetItem(str(pago.id_pago)))
+            self.tablaPagos.setItem(fila_idx, 1, QTableWidgetItem(str(pago.id_usuario)))
+            self.tablaPagos.setItem(fila_idx, 2, QTableWidgetItem(str(pago.id_reserva)))
+            self.tablaPagos.setItem(fila_idx, 3, QTableWidgetItem(str(pago.monto)))
+            self.tablaPagos.setItem(fila_idx, 4, QTableWidgetItem(pago.metodo))
+            self.tablaPagos.setItem(fila_idx, 5, QTableWidgetItem(str(pago.fecha_pago)))
+            self.tablaPagos.setItem(fila_idx, 6, QTableWidgetItem(str(pago.descuento)))
+            self.tablaPagos.setItem(fila_idx, 7, QTableWidgetItem(pago.estado))
+            self.tablaPagos.setItem(fila_idx, 8, QTableWidgetItem(str(pago.transaccion_id) if pago.transaccion_id else ""))
 

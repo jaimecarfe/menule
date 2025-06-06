@@ -39,3 +39,6 @@ class ControladorAdmin:
 
     def guardar_configuracion(self, clave, valor):
         return self._modelo.guardarConfiguracion(clave, valor)
+    
+    def obtener_pagos(self):
+        return self._modelo.obtener_todos_pagos()
