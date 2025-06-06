@@ -35,12 +35,9 @@ class ControladorEstudiante:
         )
         id_reserva = self._modelo.crearReserva(reserva)
         return id_reserva  # <-- Devuelve el id_reserva directamente
-    
-    def ver_historial(self):
-        usuario = Sesion().get_usuario()
-        historial = self._modelo.ver_historial_reservas(usuario.idUser)  # Ejemplo de uso
-        # Mostrar el historial como tú quieras (por ahora solo placeholder):
-        QMessageBox.information(None, "Historial", "Aquí se mostrará el historial.")
+
+    def obtener_reservas_estudiante(self, id_usuario):
+        return self._modelo.obtener_reservas_estudiante(id_usuario)
 
     def reportar_incidencia(self, incidencia):
         usuario = Sesion().get_usuario()

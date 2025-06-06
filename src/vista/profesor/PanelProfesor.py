@@ -7,11 +7,9 @@ from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorProfesor import ControladorProfesor
 from src.vista.VentanaBase import VentanaBase
 from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
-<<<<<<< HEAD
 from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
-=======
+from src.vista.comun.HistorialReservas import HistorialReservas
 
->>>>>>> f457a212852de772c066c53d6422d391aaa72189
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelProfesor.ui")
 
@@ -36,7 +34,7 @@ class PanelProfesor(VentanaBase, Form):
         
         self.btnVerMenu.clicked.connect(self.abrir_menu)
         self.btnConfiguracion.clicked.connect(self.abrir_configuracion)
-        self.btnHistorialReservas.clicked.connect(self.ver_historial)
+        self.btnHistorialReservas.clicked.connect(self.abrir_historial)
         self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
         self.btn_add_fondos.clicked.connect(self.agregar_fondos)
@@ -54,9 +52,6 @@ class PanelProfesor(VentanaBase, Form):
     def abrir_configuracion(self):
         self.config_window = ConfiguracionUsuario(self.usuario, self.confirmar_cerrar_sesion)
         self.config_window.show()
-
-    def ver_historial(self):
-        QMessageBox.information(self, "Historial de Reservas", "Aquí se mostrará el historial.")
 
     def reportar_incidencia(self):
         QMessageBox.information(self, "Reportar Incidencia", "Aquí se podrá reportar una incidencia.")
@@ -117,3 +112,8 @@ class PanelProfesor(VentanaBase, Form):
     def abrir_ventana_incidencia(self):
         self.ventana_incidencia = ReportarIncidenciaGeneral()
         self.ventana_incidencia.show()
+
+    def abrir_historial(self):
+        print("Abriendo historial...")
+        self.ventana_historial = HistorialReservas(self.usuario)
+        self.ventana_historial.show()

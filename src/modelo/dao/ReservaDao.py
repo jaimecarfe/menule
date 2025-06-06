@@ -138,3 +138,26 @@ class ReservaDao:
             )
             reservas.append(reserva)
         return reservas
+
+    def obtener_por_usuario(self, id_usuario):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT id_reserva, id_usuario, id_menu, fecha_reserva, estado, fecha_cancelacion, motivo_cancelacion
+            FROM Reservas
+            WHERE id_usuario = ?
+            ORDER BY id_reserva asc
+        """, (id_usuario,))
+        reservas = []
+        for row in cursor.fetchall():
+            id_reserva, id_usuario, id_menu, fecha_reserva, estado, fecha_cancelacion, motivo_cancelacion = row
+            reserva = ReservaVo(
+                id_reserva=id_reserva,
+                id_usuario=id_usuario,
+                id_menu=id_menu,
+                fecha_reserva=fecha_reserva,
+                estado=estado,
+                fecha_cancelacion=fecha_cancelacion,
+                motivo_cancelacion=motivo_cancelacion
+            )
+            reservas.append(reserva)
+        return reservas

@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QInputDialog, QDialog, QWidget
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QInputDialog, QDialog, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QTabWidget
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
@@ -9,6 +11,7 @@ from src.vista.VentanaBase import VentanaBase
 from src.vista.comun.AgregarFondosDialog import AgregarFondosDialog
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
+from src.vista.comun.HistorialReservas import HistorialReservas
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelEstudiante.ui")
 
@@ -34,7 +37,7 @@ class PanelEstudiante(VentanaBase, Form):
         
         self.btnVerMenu.clicked.connect(self.abrir_menu)
         self.btnConfiguracion.clicked.connect(self.abrir_configuracion)
-        self.btnHistorialReservas.clicked.connect(self.ver_historial)
+        self.btnHistorialReservas.clicked.connect(self.abrir_historial)
         self.btnReportarIncidencia.clicked.connect(self.abrir_ventana_incidencia)
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
     
@@ -51,8 +54,10 @@ class PanelEstudiante(VentanaBase, Form):
         self.config_window = ConfiguracionUsuario(self.usuario, self.confirmar_cerrar_sesion)
         self.config_window.show()
 
-    def ver_historial(self):
-        QMessageBox.information(self, "Historial de Reservas", "Aquí se mostrará el historial.")
+    def abrir_historial(self):
+        print("Abriendo historial...")
+        self.ventana_historial = HistorialReservas(self.usuario)
+        self.ventana_historial.show()
 
     def confirmar_cerrar_sesion(self):
         respuesta = QMessageBox.question(

@@ -162,6 +162,8 @@ class BussinessObject:
     def obtener_reservas(self):
         return self.reserva_dao.listar_reservas()
 
+    def obtener_reservas_estudiante(self, id_usuario):
+        return self.reserva_dao.obtener_por_usuario(id_usuario)
     # --- Tickets ---
     def generarTicket(self, ticketVO: TicketVo) -> int | None:
         return self.ticket_dao.insert(ticketVO)
