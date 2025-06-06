@@ -146,6 +146,7 @@ CREATE TABLE Incidencias (
     id_usuario INT,
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
+    numero_seguimiento VARCHAR(50), 
     fecha_reporte DATETIME NOT NULL,
     estado ENUM('abierta', 'en_proceso', 'resuelta', 'cerrada') DEFAULT 'abierta',
     prioridad ENUM('baja', 'media', 'alta', 'critica') DEFAULT 'media',
@@ -286,3 +287,4 @@ ALTER TABLE Profesores ADD CONSTRAINT profesores_ibfk_1 FOREIGN KEY (id_usuario)
 ALTER TABLE PersonalComedor DROP FOREIGN KEY personalcomedor_ibfk_1;
 ALTER TABLE PersonalComedor ADD CONSTRAINT personalcomedor_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
 '''
+

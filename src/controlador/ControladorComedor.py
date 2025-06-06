@@ -11,6 +11,7 @@ class ControladorComedor:
     def __init__(self, usuario_actual):
         self._usuario = usuario_actual
         self._modelo = BussinessObject()
+        self.bo = BussinessObject()
 
     def procesar_ticket(self, codigo_qr):
         pass
@@ -23,3 +24,6 @@ class ControladorComedor:
 
     def obtener_reservas(self):
         return self._modelo.get_reservas_completas()
+    
+    def reportar_incidencia(self, incidenciaVo):
+        self.bo.registrar_incidencia(incidenciaVo)

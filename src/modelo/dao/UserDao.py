@@ -211,3 +211,24 @@ class UserDao(Conexion):
         cursor = self.getCursor()
         cursor.execute("SELECT * FROM Usuarios WHERE dni = ?", (dni,))
         return cursor.fetchone()
+    
+
+    def get_by_id(self, id_usuario):
+        cursor = self.getCursor()
+        cursor.execute("SELECT id_usuario, nombre, apellido, email, tipo FROM Usuarios WHERE id_usuario = ?", (id_usuario,))
+        fila = cursor.fetchone()
+        cursor.close()
+
+        if fila:
+            from src.modelo.vo.UserVo import UserVo
+            return UserVo(
+                idUser=fila[0],
+                nombre=fila[1],
+                apellido=fila[2],
+                correo=fila[3],
+                contrasena="",
+                rol=fila[4]
+            )
+        else:
+            return None
+

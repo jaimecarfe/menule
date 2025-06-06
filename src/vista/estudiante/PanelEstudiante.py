@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QInputDialog, QDialog
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QInputDialog, QDialog, QWidget
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
@@ -7,6 +7,13 @@ from src.vista.comun.ConfiguracionUsuario import ConfiguracionUsuario
 from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.VentanaBase import VentanaBase
 from src.vista.estudiante.AgregarFondosDialog import AgregarFondosDialog
+from src.modelo.vo.IncidenciaVo import IncidenciaVo
+from src.modelo.Sesion import Sesion
+from src.controlador.ControladorEstudiante import ControladorEstudiante
+from src.controlador.ControladorProfesor import ControladorProfesor
+from src.controlador.ControladorComedor import ControladorComedor
+import uuid
+from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelEstudiante.ui")
 
@@ -33,7 +40,7 @@ class PanelEstudiante(VentanaBase, Form):
         self.btnVerMenu.clicked.connect(self.abrir_menu)
         self.btnConfiguracion.clicked.connect(self.abrir_configuracion)
         self.btnHistorialReservas.clicked.connect(self.ver_historial)
-        self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
+        self.btnReportarIncidencia.clicked.connect(self.abrir_ventana_incidencia)
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
     
     def showEvent(self, event):
@@ -85,7 +92,7 @@ class PanelEstudiante(VentanaBase, Form):
 
         self.close()
         self.login_window = Login()
-        self.login_window.controlador = ControladorPrincipal(self.login_window, self.login_window)
+        self.login_window.controlador = ControladorPrincipal(self.login_window)
         self.login_window.show()
 
     def actualizar_saldo_ui(self):
@@ -104,4 +111,6 @@ class PanelEstudiante(VentanaBase, Form):
             else:
                 QMessageBox.warning(self, "Error", "No se pudo actualizar el saldo.")
 
-
+    def abrir_ventana_incidencia(self):
+        self.ventana_incidencia = ReportarIncidenciaGeneral()
+        self.ventana_incidencia.show()
