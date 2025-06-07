@@ -10,6 +10,7 @@ from src.vista.personal_comedor.ProcesarPedidos import ProcesarPedidos
 from src.vista.personal_comedor.VisualizarMenu import VisualizarMenu
 from src.controlador.ControladorComedor import ControladorComedor
 from src.vista.personal_comedor.StockComedor import StockComedor
+from src.vista.comun.ReportarIncidenciaGeneral import ReportarIncidenciaGeneral
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelComedor.ui")
 
@@ -77,11 +78,10 @@ class PanelComedor(VentanaBase, Form):
     def consultar_stock(self):
         self.ventana_stock = StockComedor()
         self.ventana_stock.show()
-        print("Consultando stock interno...")
     
     def reportar_incidencia(self):
-        pass
-        print("Reportando incidencia... (Funcionalidad no implementada)")
+        self.ventana_incidencia = ReportarIncidenciaGeneral()
+        self.ventana_incidencia.show()
     
     def dar_de_baja(self):
         print("Dar de baja cuenta...")
