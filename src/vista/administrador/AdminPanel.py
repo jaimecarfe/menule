@@ -8,7 +8,6 @@ from src.vista.comun.CambiarContrasena import CambiarContrasena
 from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuConAlergenos
 from src.vista.administrador.GestionIncidencias import PanelIncidenciasAdmin
 from PyQt5.QtWidgets import QHeaderView 
-import subprocess
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
 class AdminPanel(VentanaBase, Form):
@@ -184,35 +183,15 @@ class AdminPanel(VentanaBase, Form):
         
     def descargar_base_datos(self):
         try:
-            # Diálogo para elegir dónde guardar
             ruta_destino, _ = QFileDialog.getSaveFileName(
-                self,
-                "Guardar copia de la base de datos...",
-                "menule_backup.sql",
-                "Archivos SQL (*.sql)"
+                self, "Guardar copia de la base de datos...", "menule_backup.sql", "Archivos SQL (*.sql)"
             )
             if not ruta_destino:
                 return
-            usuario = "root"
-            password = "admin123"
-            nombre_bd = "menule"
-            host = "localhost"
-
-            comando = [
-                "mysqldump",
-                f"-u{usuario}",
-                f"-p{password}",
-                "-h", host,
-                nombre_bd
-            ]
-            with open(ruta_destino, "w") as salida:
-                resultado = subprocess.run(comando, stdout=salida, stderr=subprocess.PIPE, text=True)
-
+            resultado = self._controlador.descargar_base_datos(ruta_destino)
             if resultado.returncode == 0:
                 QMessageBox.information(self, "Éxito", "Base de datos exportada correctamente.")
             else:
                 raise Exception(resultado.stderr)
-
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo exportar la base de datos:\n{str(e)}")
-
