@@ -4,6 +4,7 @@ from src.controlador.ControladorReservas import ControladorReservas
 from src.controlador.ControladorConfiguracion import ControladorConfiguracion
 from src.controlador.ControladorIncidencias import ControladorIncidencias
 from PyQt5.QtWidgets import QTableWidgetItem
+import subprocess
 
 class ControladorAdmin:
     def __init__(self, vista=None):
@@ -56,3 +57,19 @@ class ControladorAdmin:
     
     def responder_incidencia(self, id_incidencia, respuesta, fecha):
         return self.incidencia_ctrl.responder_incidencia(id_incidencia, respuesta, fecha)
+    
+    def descargar_base_datos(self, ruta_destino):
+        usuario = "root"
+        password = "Liverpool.840"
+        nombre_bd = "menule"
+        host = "localhost"
+        comando = [
+            "mysqldump",
+            f"-u{usuario}",
+            f"-p{password}",
+            "-h", host,
+            nombre_bd
+        ]
+        with open(ruta_destino, "w") as salida:
+            resultado = subprocess.run(comando, stdout=salida, stderr=subprocess.PIPE, text=True)
+        return resultado

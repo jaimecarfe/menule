@@ -61,4 +61,9 @@ class LogicaReserva:
         )
         return self.reserva_dao.insert(reserva)
 
+    def obtener_reservas_con_detalle(self, estados=('confirmada', 'pendiente')):
+        return self.reserva_dao.obtener_reservas_con_detalle(estados)
+
+    def actualizar_estado_reserva(self, id_reserva, bit):
+        return self.reserva_dao.actualizar_estado_reserva(id_reserva, bit)
 

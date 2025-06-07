@@ -22,3 +22,9 @@ class ControladorReservas:
 
     def obtener_todas_las_reservas(self):
         return self._modelo.reserva_service.listar_reservas()
+    
+    def obtener_reservas_con_detalle(self, estados=('confirmada', 'pendiente')):
+        return self._modelo.reserva_service.obtener_reservas_con_detalle(estados)
+
+    def actualizar_estado_reserva(self, id_reserva, bit):
+        return self._modelo.reserva_service.actualizar_estado_reserva(id_reserva, bit)

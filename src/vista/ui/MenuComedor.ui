@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MenuComedor</class>
  <widget class="QMainWindow" name="MenuComedor">
@@ -18,32 +19,50 @@
   <property name="styleSheet">
    <string>
 QMainWindow {
-        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #ffffff, stop:1 #f0f0f0);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #ffffff, stop:1 #f0f0f0);
 }
 QLabel#labelTitulo {
-        color: black;
-        font-size: 28px;
-        font-weight: 900;
+    color: #0d47a1;
+    font-size: 28px;
+    font-weight: 900;
 }
 QLabel#labelUsuario {
-        font-size: 20px;
-        color: white;
-        font-weight: bold;
-        padding: 8px;
+    font-size: 22px;
+    color: #0d47a1;
+    font-weight: bold;
+    padding: 8px;
+}
+QLabel#labelPrimeros,
+QLabel#labelSegundos,
+QLabel#labelPostres {
+    color: #1976d2;
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 4px;
 }
 QCalendarWidget {
-        background-color: white;
-        border-radius: 8px;
+    background-color: white;
+    border-radius: 8px;
+    color: #0d47a1;
+    font-size: 16px;
+}
+QListWidget {
+    background-color: #f4faff;
+    color: #0d47a1;
+    border: 1.5px solid #bbdefb;
+    border-radius: 8px;
+    font-size: 16px;
 }
 QPushButton {
-        background-color: #1976d2;
-        color: white;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 6px;
+    background-color: #1976d2;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 18px;
 }
 QPushButton:disabled {
-        background-color: #90a4ae;
+    background-color: #90a4ae;
 }
    </string>
   </property>

@@ -178,3 +178,35 @@ class ReservaDao:
         resultado = cursor.fetchall()
         cursor.close()
         return resultado
+
+    def obtener_reservas_con_detalle(self, estados=('confirmada', 'pendiente')):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT r.id_reserva, r.fecha_reserva, u.email,
+                GROUP_CONCAT(p.nombre, ', ') as menu,
+                r.estado_bit
+            FROM Reservas r
+            JOIN Usuarios u ON r.id_usuario = u.id_usuario
+            JOIN ReservaPlatos rp ON r.id_reserva = rp.id_reserva
+            JOIN Platos p ON rp.id_plato = p.id_plato
+            WHERE r.estado IN ({})
+            GROUP BY r.id_reserva
+            ORDER BY r.fecha_reserva DESC
+        """.format(','.join(['?']*len(estados))), estados)
+        rows = cursor.fetchall()
+        cursor.close()
+        return [
+            {
+                'id_reserva': row[0],
+                'fecha': row[1],
+                'correo': row[2],
+                'menu': row[3],
+                'estado_bit': row[4]
+            }
+            for row in rows
+        ]
+
+    def actualizar_estado_reserva(self, id_reserva, bit):
+        cursor = self.getCursor()
+        cursor.execute("UPDATE Reservas SET estado_bit = ? WHERE id_reserva = ?", (bit, id_reserva))
+        cursor.close()

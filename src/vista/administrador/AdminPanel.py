@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
+from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem, QPushButton, QFileDialog
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorAdmin import ControladorAdmin
 from PyQt5 import uic
@@ -25,6 +25,7 @@ class AdminPanel(VentanaBase, Form):
         self.btnAgregarUsuario.clicked.connect(self.abrir_ventana_registrar_admin)
         self.btnDarDeBaja.clicked.connect(self.dar_de_baja_usuario_seleccionado)
         self.btnCambiarContrasena.clicked.connect(self.abrir_cambio_contrasena)
+        self.btnDescargarBD.clicked.connect(self.descargar_base_datos)
         self.cargar_usuarios()
         self.tablaUsuarios.cellChanged.connect(self.actualizar_usuario_en_bd)
         self.tabEstadisticas = VentanaEstadisticas(self)
@@ -35,8 +36,6 @@ class AdminPanel(VentanaBase, Form):
         self.cargar_pagos()
         self.cargar_reservas()
         self.btnVerMenuAdmin.clicked.connect(self.abrir_menu_admin)
-
-
 
     @property
     def callback_cerrar_sesion(self):
@@ -188,3 +187,18 @@ class AdminPanel(VentanaBase, Form):
     def abrir_menu_admin(self):
         self.menu_admin_window = MenuAdmin(self.usuario, parent=self)
         self.menu_admin_window.show()
+        
+    def descargar_base_datos(self):
+        try:
+            ruta_destino, _ = QFileDialog.getSaveFileName(
+                self, "Guardar copia de la base de datos...", "menule_backup.sql", "Archivos SQL (*.sql)"
+            )
+            if not ruta_destino:
+                return
+            resultado = self._controlador.descargar_base_datos(ruta_destino)
+            if resultado.returncode == 0:
+                QMessageBox.information(self, "Éxito", "Base de datos exportada correctamente.")
+            else:
+                raise Exception(resultado.stderr)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo exportar la base de datos:\n{str(e)}")
