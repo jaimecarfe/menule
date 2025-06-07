@@ -14,7 +14,6 @@ class ReportarIncidenciaGeneral(QWidget):
         super().__init__()
         uic.loadUi("src/vista/ui/ReportarIncidencia.ui", self)
 
-        # Establecer fecha actual y deshabilitar edición
         hoy = QDate.currentDate()
         self.fecha_input.setDate(hoy)
         self.fecha_input.setEnabled(False)
@@ -28,7 +27,6 @@ class ReportarIncidenciaGeneral(QWidget):
         titulo = self.titulo_input.text().strip()
         descripcion = self.descripcion_input.toPlainText().strip()
 
-        # Validación de campos obligatorios
         if not titulo or not descripcion:
             QMessageBox.warning(self, "Campos obligatorios", "Por favor, completa el título y la descripción.")
             return

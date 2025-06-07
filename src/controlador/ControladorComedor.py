@@ -2,6 +2,8 @@ from src.controlador.ControladorReservas import ControladorReservas
 from src.controlador.ControladorIncidencias import ControladorIncidencias
 from src.controlador.ControladorTickets import ControladorTickets
 from src.modelo.BussinessObject import BussinessObject
+from src.controlador.ControladorUsuarios import ControladorUsuarios
+from src.modelo.Sesion import Sesion
 
 class ControladorComedor:
     def __init__(self, usuario_actual):
@@ -10,6 +12,7 @@ class ControladorComedor:
         self.reserva_ctrl = ControladorReservas()
         self.incidencia_ctrl = ControladorIncidencias()
         self.ticket_ctrl = ControladorTickets()
+        self.usuario_ctrl = ControladorUsuarios()
         # self.ingrediente_ctrl = ControladorIngredientes()
 
     def procesar_ticket(self, codigo_qr):
@@ -35,3 +38,8 @@ class ControladorComedor:
 
     def obtener_platos_por_fecha(self, fecha):
         return self._modelo.menu_service.obtener_menu_por_fecha(fecha)
+
+    def dar_de_baja(self):
+        usuario = Sesion().get_usuario()
+        self._modelo.usuario_service.dar_de_baja_usuario(usuario.idUser)
+        Sesion().cerrar_sesion()
