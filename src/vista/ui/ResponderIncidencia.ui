@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ResponderIncidenciaForm</class>
+ <widget class="QWidget" name="ResponderIncidenciaForm">
+  <property name="windowTitle">
+   <string>Responder Incidencia</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+
+   <!-- Etiqueta fija "Título:" -->
+   <item>
+    <widget class="QLabel" name="tituloFijoLabel">
+     <property name="text">
+      <string><b>Título:</b></string>
+     </property>
+    </widget>
+   </item>
+
+   <!-- Contenido dinámico del título -->
+   <item>
+    <widget class="QLabel" name="tituloLabel">
+     <property name="text">
+      <string>(Aquí se mostrará el título de la incidencia)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+
+   <!-- Etiqueta fija "Descripción:" -->
+   <item>
+    <widget class="QLabel" name="descripcionFijoLabel">
+     <property name="text">
+      <string><b>Descripción:</b></string>
+     </property>
+    </widget>
+   </item>
+
+   <!-- Contenido dinámico de la descripción -->
+   <item>
+    <widget class="QLabel" name="descripcionLabel">
+     <property name="text">
+      <string>(Aquí se mostrará la descripción de la incidencia)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+
+   <!-- Caja de texto para respuesta -->
+   <item>
+    <widget class="QTextEdit" name="respuestaBox">
+     <property name="placeholderText">
+      <string>Escribe aquí la respuesta del administrador...</string>
+     </property>
+    </widget>
+   </item>
+
+   <!-- Botón para enviar respuesta -->
+   <item>
+    <widget class="QPushButton" name="enviarBtn">
+     <property name="text">
+      <string>Enviar respuesta</string>
+     </property>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

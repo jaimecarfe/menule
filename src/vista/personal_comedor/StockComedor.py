@@ -21,6 +21,7 @@ class StockComedor(QWidget):
         self.cargar_datos()
 
     def cargar_datos(self):
+        """Carga los datos de los ingredientes en la tabla."""
         ingredientes = self.controlador.obtener_ingredientes()
         self.tabla.setRowCount(len(ingredientes))
         self.tabla.setColumnCount(7)

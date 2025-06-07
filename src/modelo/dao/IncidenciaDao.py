@@ -1,6 +1,6 @@
 from src.modelo.conexion.Conexion import Conexion
 from src.modelo.vo.IncidenciaVo import IncidenciaVo
-
+from datetime import date
 class IncidenciaDao:
     def __init__(self):
         self.conexion = Conexion()
@@ -44,3 +44,14 @@ class IncidenciaDao:
         cursor.execute("UPDATE incidencias SET estado = ? WHERE id_incidencia = ?", (nuevo_estado, id_incidencia))
         #self.conexion.conexion.commit()
         cursor.close()
+
+    def guardar_respuesta(self, id_incidencia, respuesta, fecha):
+        fecha_str = fecha.strftime("%Y-%m-%d") 
+
+        cursor = self.conexion.getCursor()
+        query = """
+        UPDATE Incidencias
+        SET solucion = ?, fecha_resolucion = ?, estado = 'resuelta'
+        WHERE id_incidencia = ?
+        """
+        cursor.execute(query, (respuesta, fecha_str, id_incidencia))
