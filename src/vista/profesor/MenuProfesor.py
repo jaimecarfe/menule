@@ -63,22 +63,35 @@ class MenuProfesor(VentanaBase, Form):
             QMessageBox.warning(self, "Fecha inválida", "Selecciona un día entre lunes y viernes.")
             self.calendarWidget.setSelectedDate(QDate())
             self.btnVisualizarMenu.setEnabled(False)
-            self.btnReservarComida.setVisible(False)
         elif fecha < QDate.currentDate():
             QMessageBox.warning(self, "Fecha inválida", "El menú de ese día no está disponible.")
             self.calendarWidget.setSelectedDate(QDate())
             self.btnVisualizarMenu.setEnabled(False)
-            self.btnReservarComida.setVisible(False)
         else:
             self.btnVisualizarMenu.setEnabled(True)
 
     def visualizar_menu(self):
         fecha = self.calendarWidget.selectedDate()
         if fecha.isValid():
-            texto_fecha = fecha.toString("dddd dd/MM/yyyy")
-            self.menuTextEdit.setText(f"Menú para el {texto_fecha}:\n\n- Primer plato\n- Segundo plato\n- Postre")
+            fecha_str = fecha.toString("yyyy-MM-dd")
+            platos = self._controlador.obtener_menu_por_fecha(fecha_str)
+            texto_menu = self.formatear_menu(platos, fecha)
+            self.menuTextEdit.setText(texto_menu)
         else:
             QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
+
+    def formatear_menu(self, platos, fecha_qdate):
+        primeros = [p[0] for p in platos if p[1] == "primero"]
+        segundos = [p[0] for p in platos if p[1] == "segundo"]
+        postres = [p[0] for p in platos if p[1] == "postre"]
+
+        texto_fecha = fecha_qdate.toString("dddd dd/MM/yyyy")
+        return (
+            f"Menú para el {texto_fecha}:\n\n"
+            f"Primeros:\n- " + "\n- ".join(primeros or ["(No disponible)"]) + "\n\n"
+            f"Segundos:\n- " + "\n- ".join(segundos or ["(No disponible)"]) + "\n\n"
+            f"Postres:\n- " + "\n- ".join(postres or ["(No disponible)"])
+        )
 
     def volver_al_panel(self):
         if self.parent():

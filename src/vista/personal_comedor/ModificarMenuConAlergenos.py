@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QMessageBox, QFormLayout, QCheckBox, QHBoxLayout, QApplication
 )
 from PyQt5.QtCore import QDate, Qt, QEvent
-from src.modelo.dao.MenuDao import MenuDao
+from src.controlador.ControladorComedor import ControladorComedor
 
 ALERGENOS = [
     "gluten", "crustáceos", "huevos", "pescado", "cacahuetes",
@@ -12,45 +12,54 @@ ALERGENOS = [
 ]
 
 class ModificarMenuConAlergenos(QWidget):
-    def __init__(self):
+    def __init__(self, usuario_actual):
         super().__init__()
         self.setWindowTitle("Modificar Menú con Alérgenos")
-        # Ahora más grande para que se vean todos los alérgenos
         self.resize(1500, 800)
         self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.size())
 
         self.setStyleSheet("""
             QWidget {
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            color: black;
+                background-color: #f0f0f0;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                color: black;
             }
             QLabel { font-weight: bold; color: black; }
-            QLineEdit, QDateEdit { border: 1px solid #ccc; border-radius: 4px; padding: 4px; color: black; }
+            QLineEdit, QDateEdit {
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 4px;
+                color: black;
+            }
             QCheckBox { margin: 2px; color: black; }
             QPushButton {
-            background-color: #4CAF50; color: white; border: none; border-radius: 4px;
-            padding: 8px 16px; font-size: 14px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 16px;
+                font-size: 14px;
             }
             QPushButton:hover { background-color: #45a049; }
             QPushButton:pressed { background-color: #3e8e41; }
         """)
+
+        self.controlador = ControladorComedor(usuario_actual)
 
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignCenter)
         self.form = QFormLayout()
 
         self.fecha_edit = QDateEdit()
-        fecha_inicio = QDate(2024, 9, 6)
-        fecha_fin = QDate(2025, 6, 23)
-        self.fecha_edit.setMinimumDate(fecha_inicio)
-        self.fecha_edit.setMaximumDate(fecha_fin)
+        self.fecha_edit.setMinimumDate(QDate(2024, 9, 6))
+        self.fecha_edit.setMaximumDate(QDate(2025, 6, 23))
         self.fecha_edit.setDate(QDate.currentDate())
         self.fecha_edit.setCalendarPopup(True)
         self.fecha_edit.setMinimumDate(QDate.currentDate())
         self.fecha_edit.dateChanged.connect(self.validar_fecha)
+
         self.layout.addWidget(QLabel("Fecha del menú"))
         self.layout.addWidget(self.fecha_edit)
 
@@ -60,7 +69,6 @@ class ModificarMenuConAlergenos(QWidget):
                 nombre = QLineEdit()
                 alergenos = [QCheckBox(al) for al in ALERGENOS]
                 alergenos_layout = QHBoxLayout()
-                # Ajusta el ancho de cada checkbox para que no se corten y haya hueco suficiente
                 for cb in alergenos:
                     cb.setMinimumWidth(110)
                     alergenos_layout.addWidget(cb)
@@ -81,7 +89,6 @@ class ModificarMenuConAlergenos(QWidget):
         self.setLayout(self.layout)
 
     def showEvent(self, event):
-        # Centrar la ventana en la pantalla principal al mostrarla
         frame_geo = self.frameGeometry()
         screen = QApplication.primaryScreen().availableGeometry().center()
         frame_geo.moveCenter(screen)
@@ -95,7 +102,6 @@ class ModificarMenuConAlergenos(QWidget):
 
     def guardar_menu(self):
         fecha = self.fecha_edit.date().toString("yyyy-MM-dd")
-        dao = MenuDao()
         datos = []
         for nombre_edit, tipo, checkboxes in self.platos:
             nombre = nombre_edit.text().strip()
@@ -103,10 +109,12 @@ class ModificarMenuConAlergenos(QWidget):
                 continue
             alergenos = [cb.text() for cb in checkboxes if cb.isChecked()]
             datos.append((nombre, tipo, ",".join(alergenos)))
+
         if not datos:
             QMessageBox.warning(self, "Error", "Introduce al menos un plato.")
             return
-        exito = dao.guardar_menu_con_alergenos(fecha, datos)
+
+        exito = self.controlador.guardar_menu_con_alergenos(fecha, datos)
         if exito:
             QMessageBox.information(self, "Éxito", "Menú guardado con éxito.")
             self.close()

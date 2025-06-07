@@ -5,7 +5,7 @@ from src.vista.Registro import Registro
 from src.vista.estudiante.MenuEstudiante import MenuEstudiante
 from src.vista.administrador.AdminPanel import AdminPanel
 from src.vista.profesor.MenuProfesor import MenuProfesor
-from src.vista.personal_comedor.MenuComedor import MenuComedor
+#from src.vista.personal_comedor.MenuComedor import MenuComedor
 from src.vista.visitante.MenuVisitante import MenuVisitante
 
 from src.modelo.BussinessObject import BussinessObject
@@ -27,7 +27,6 @@ class App:
         self.controlador = ControladorPrincipal(self.login_window)
         self.login_window.controlador = self.controlador
         self.login_window.abrir_registro = self.abrir_registro
-        self.controlador.on_login_exitoso = self.mostrar_menu_por_rol
         self.login_window.show()
 
     def abrir_registro(self):
@@ -35,7 +34,7 @@ class App:
         self.registro_window = Registro(volver_a=self.login_window)
         self.registro_window.controlador = self.controlador
         self.registro_window.show()
-
+    """
     def mostrar_menu_por_rol(self, usuario):
         self.login_window.close()
         if usuario.rol == "estudiante":
@@ -53,7 +52,7 @@ class App:
             print(f"Rol no soportado: {usuario.rol}")
             return
         self.ventana_actual.show()
-
+    """
     def run(self):
         self.app.exec()
 

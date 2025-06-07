@@ -1,74 +1,99 @@
 from src.modelo.conexion.Conexion import Conexion
 from datetime import datetime
 from src.modelo.vo.PagoVo import PagoVo
+from datetime import datetime
 
 class PagoDao:
-    def getCursor(self):
-        return Conexion().getCursor()
+    def __init__(self):
+        self.conexion = Conexion()
+
+    def insertar_pago(self, pago_vo):
+        cursor = self.conexion.getCursor()
+        try:
+            if not isinstance(pago_vo.fecha_pago, str):
+                fecha_str = pago_vo.fecha_pago.strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                fecha_str = pago_vo.fecha_pago
+
+            if pago_vo.id_usuario is not None and pago_vo.id_usuario != 0:
+
+                cursor.execute("""
+                    INSERT INTO Pagos (id_usuario, id_reserva, monto, metodo, fecha_pago)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (
+                    pago_vo.id_usuario,
+                    pago_vo.id_reserva,
+                    pago_vo.monto,
+                    pago_vo.metodo,
+                    fecha_str
+                ))
+            else:  # Visitante
+                cursor.execute("""
+                    INSERT INTO Pagos (id_usuario, id_reserva, monto, metodo, fecha_pago, correo)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (
+                    0,
+                    pago_vo.id_reserva,
+                    pago_vo.monto,
+                    pago_vo.metodo,
+                    fecha_str,
+                    pago_vo.correo
+                ))
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            pago_id = cursor.fetchone()[0]
+            cursor.close()
+            return pago_id
+        except Exception as e:
+            print("Error al insertar pago:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
+            return None
 
     def total_pagado_por_reserva(self, id_reserva):
-        cursor = self.getCursor()
-        cursor.execute("""
-            SELECT COALESCE(SUM(monto), 0)
-            FROM Pagos
-            WHERE id_reserva = ?
-        """, (id_reserva,))
-        resultado = cursor.fetchone()
-        return resultado[0] if resultado else 0
-
-    def insertar_pago(self, id_usuario, monto, metodo, id_reserva=None, descuento=0, estado='completado', transaccion_id=None):
-        cursor = self.getCursor()
-        fecha_pago = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        cursor.execute("""
-            INSERT INTO Pagos (id_usuario, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            id_usuario,
-            id_reserva,
-            monto,
-            metodo,
-            fecha_pago,
-            descuento,
-            estado,
-            transaccion_id
-        ))
-        cursor.execute("SELECT LAST_INSERT_ID()")
-        last_id = cursor.fetchone()[0]
-        return last_id
-    '''
-    def obtener_por_usuario(self, id_usuario):
-        cursor = self.getCursor()
-        cursor.execute("""
-            SELECT id_pago, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id
-            FROM Pagos
-            WHERE id_usuario = ?
-            ORDER BY fecha_pago DESC
-        """, (id_usuario,))
-        pagos = cursor.fetchall()
-        return pagos if pagos else []
-    '''
+        cursor = self.conexion.getCursor()
+        try:
+            cursor.execute("""
+                SELECT SUM(monto) FROM Pagos WHERE id_reserva = ?
+            """, (id_reserva,))
+            total = cursor.fetchone()[0]
+            cursor.close()
+            return total if total else 0
+        except Exception as e:
+            print("Error al obtener total pagado por reserva:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
+            return 0
+        
     def obtener_todos_pagos(self):
-        cursor = self.getCursor()
-        cursor.execute("""
-            SELECT id_pago, id_usuario, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id
-            FROM Pagos
-            ORDER BY id_pago asc
-        """)
-        pagos = []
-        for row in cursor.fetchall():
-            id_pago, id_usuario, id_reserva, monto, metodo, fecha_pago, descuento, estado, transaccion_id = row
-            pago = PagoVo(
-                id_pago=id_pago,
-                id_usuario=id_usuario,
-                id_reserva=id_reserva,
-                monto=monto,
-                metodo=metodo,
-                fecha_pago=fecha_pago,
-                descuento=descuento,
-                estado=estado,
-                transaccion_id=transaccion_id
-            )
-            pagos.append(pago)
-        return pagos
-
-
+        cursor = self.conexion.getCursor()
+        try:
+            cursor.execute("SELECT * FROM Pagos")
+            pagos = cursor.fetchall()
+            cursor.close()
+            return [PagoVo(*pago) for pago in pagos]
+        except Exception as e:
+            print("Error al obtener todos los pagos:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
+            return []
+        
+    def obtener_por_usuario(self, id_usuario):
+        cursor = self.conexion.getCursor()
+        try:
+            cursor.execute("SELECT * FROM Pagos WHERE id_usuario = ?", (id_usuario,))
+            pagos = cursor.fetchall()
+            cursor.close()
+            return [PagoVo(*pago) for pago in pagos]
+        except Exception as e:
+            print("Error al obtener pagos por usuario:", e)
+            try:
+                cursor.close()
+            except Exception:
+                pass
+            return []

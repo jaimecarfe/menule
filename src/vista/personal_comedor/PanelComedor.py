@@ -40,7 +40,7 @@ class PanelComedor(VentanaBase, Form):
         self.menu_window.show()
 
     def abrir_modificar_menu(self):
-        self.mod_window = ModificarMenuConAlergenos()
+        self.mod_window = ModificarMenuConAlergenos(self.usuario)
         self.mod_window.show()
 
     def abrir_configuracion(self):
@@ -68,7 +68,7 @@ class PanelComedor(VentanaBase, Form):
         self.login_window.show()
 
     def procesar_pedidos(self):
-        self.ventana_pedidos = ProcesarPedidos()
+        self.ventana_pedidos = ProcesarPedidos(self.usuario)
         self.ventana_pedidos.show()
 
     def consultar_stock(self):

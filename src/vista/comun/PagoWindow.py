@@ -1,9 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QRadioButton, QPushButton, QMessageBox
-from src.vista.comun.GenerarTicket import GenerarTicket
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMessageBox, QLabel, QLineEdit, QPushButton
 from PyQt5 import uic
-from src.modelo.BussinessObject import BussinessObject
-from src.modelo.vo.UserVo import UserVo
-from src.modelo.dao.PagoDao import PagoDao
+from src.controlador.ControladorPagos import ControladorPagos
 
 Form, Window = uic.loadUiType("src/vista/ui/PagoWindow.ui")
 
@@ -13,76 +10,65 @@ class PagoWindow(QWidget, Form):
         self.usuario = usuario
         self.precio = precio
         self.metodo = metodo
+        self.id_reserva = id_reserva
         self.callback_pago_exitoso = callback_pago_exitoso
+        self.controlador = ControladorPagos()
         self.pago_realizado = False
-        self.id_reserva = id_reserva  # <--- GUARDA EL ID DE RESERVA
+
         self.setupUi(self)
+
         self.setWindowTitle("Pago")
-
-        # Detectar tipo
-        tipo = usuario.rol  # 'estudiante', 'profesor', 'visitante'
-        if tipo == 'estudiante':
-            self.precio = 5.5
-            self.metodo = 'tui'
-        elif tipo == 'profesor':
-            self.precio = 6.5
-            self.metodo = 'tui'
-        else:
-            self.precio = 7.5
-            self.metodo = 'tarjeta'
-
         self.labelPrecio.setText(f"Total: {self.precio:.2f} EUR")
 
         if self.metodo == 'tui':
             self.stackTarjeta.setVisible(False)
-            self.btnPagar.clicked.connect(self.pagar_con_tui)
+            self.btnPagar.clicked.connect(self.realizar_pago_tui)
         else:
             self.stackTarjeta.setVisible(True)
-            self.btnPagar.clicked.connect(self.pagar_con_tarjeta)
+            self.btnPagar.clicked.connect(self.realizar_pago_tarjeta)
 
-    def pagar_con_tui(self):
-        saldo = self.usuario.saldo
-        if saldo >= self.precio:
-            nuevo_saldo = saldo - self.precio
-            actualizado = BussinessObject().actualizarSaldo(self.usuario.idUser, nuevo_saldo)
-            if actualizado:
-                # Registrar el pago en la base de datos
-                pago_dao = PagoDao()
-                # Usa el id de reserva real
-                pago_dao.insertar_pago(self.usuario.idUser, self.precio, "TUI", id_reserva=self.id_reserva)
-                self.pago_realizado = True
-                QMessageBox.information(self, "Éxito", "Pago con TUI realizado.")
-                if self.callback_pago_exitoso:
-                    self.callback_pago_exitoso()
-                self.close()
-            else:
-                QMessageBox.warning(self, "Error", "No se pudo actualizar el saldo.")
+    def realizar_pago_tui(self):
+        ok, mensaje = self.controlador.pagar_con_tui(self.usuario, self.precio, self.id_reserva)
+        self._finalizar_pago(ok, mensaje)
+
+    def realizar_pago_tarjeta(self):
+        if self.usuario.rol == "visitante":
+            numero = self.inputNumero.text().strip()
+            fecha = self.inputCaducidad.text().strip()
+            cvv = self.inputCVV.text().strip()
+
+            if not all([numero, fecha, cvv]):
+                QMessageBox.warning(self, "Campos vacíos", "Completa todos los campos.")
+                return
+
+            ok, mensaje = self.controlador.pagar_con_tarjeta(
+                monto=self.precio,
+                id_reserva=self.id_reserva,
+                id_usuario=0  # visitante = usuario anónimo
+            )
         else:
-            QMessageBox.warning(self, "Saldo insuficiente", "No tienes saldo suficiente en el TUI.")
+            ok, mensaje = self.controlador.pagar_con_tarjeta(
+                correo=self.usuario.correo,
+                monto=self.precio,
+                id_reserva=self.id_reserva,
+                id_usuario=self.usuario.idUser
+            )
 
-    def pagar_con_tarjeta(self):
-        numero = self.inputNumero.text()
-        fecha = self.inputCaducidad.text()
-        cvv = self.inputCVV.text()
+        self._finalizar_pago(ok, mensaje)
 
-        if not (numero and fecha and cvv):
-            QMessageBox.warning(self, "Campos vacíos", "Debes completar todos los campos.")
-            return
-
-        # Registrar el pago en la base de datos
-        pago_dao = PagoDao()
-        # Usa el id de reserva real
-        pago_dao.insertar_pago(self.usuario.idUser, self.precio, "Tarjeta", id_reserva=self.id_reserva)
-
-        self.pago_realizado = True
-        QMessageBox.information(self, "Éxito", "Pago con tarjeta registrado.")
-        if self.callback_pago_exitoso:
-            self.callback_pago_exitoso()
-        self.close()
+    def _finalizar_pago(self, ok, mensaje):
+        if ok:
+            QMessageBox.information(self, "Pago exitoso", mensaje)
+            self.pago_realizado = True
+            if self.callback_pago_exitoso:
+                self.callback_pago_exitoso()
+            self.close()
+        else:
+            QMessageBox.warning(self, "Error de pago", mensaje)
 
     def closeEvent(self, event):
-        print("Cerrando ventana de pago (evento closeEvent)")
         if not self.pago_realizado:
-            print("Pago NO realizado")
-        self.hide()  # Oculta la ventana en lugar de cerrarla
-        event.ignore()  # Ignora el evento de cierre
+            print("Pago no completado")
+        self.hide()
+        event.ignore()
+

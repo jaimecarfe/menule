@@ -1,70 +1,83 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton, QMessageBox
-from src.modelo.dao.ReservaDao import ReservaDao
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QListWidget, QMessageBox
+from src.controlador.ControladorEstudiante import ControladorEstudiante
 from src.vista.comun.PagoWindow import PagoWindow
 
 class SeleccionarMenu(QWidget):
-    def __init__(self, usuario, id_menu, platos_menu):
+    def __init__(self, usuario, fecha, id_menu):
         super().__init__()
         self.usuario = usuario
+        self.fecha = fecha
         self.id_menu = id_menu
-        self.platos_menu = platos_menu
+        self.controlador = ControladorEstudiante()
 
-        self.setWindowTitle("Selecciona tu menú")
+        self.setWindowTitle(f"Seleccionar Menú para {fecha}")
+        self.setGeometry(300, 300, 500, 400)
 
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("Primer Plato:"))
-        self.combo_primero = QComboBox()
-        layout.addWidget(self.combo_primero)
 
-        layout.addWidget(QLabel("Segundo Plato:"))
-        self.combo_segundo = QComboBox()
-        layout.addWidget(self.combo_segundo)
+        self.label = QLabel("Selecciona los platos:")
+        layout.addWidget(self.label)
 
-        layout.addWidget(QLabel("Postre o Fruta:"))
-        self.combo_postre = QComboBox()
-        layout.addWidget(self.combo_postre)
+        self.listaPrimeros = QListWidget()
+        self.listaSegundos = QListWidget()
+        self.listaPostres = QListWidget()
 
-        self.btn_reservar = QPushButton("Reservar y Pagar")
-        self.btn_reservar.clicked.connect(self.reservar)
-        layout.addWidget(self.btn_reservar)
+        layout.addWidget(QLabel("Primer Plato"))
+        layout.addWidget(self.listaPrimeros)
+        layout.addWidget(QLabel("Segundo Plato"))
+        layout.addWidget(self.listaSegundos)
+        layout.addWidget(QLabel("Postre"))
+        layout.addWidget(self.listaPostres)
+
+        self.btnReservar = QPushButton("Reservar")
+        self.btnReservar.clicked.connect(self.reservar)
+        layout.addWidget(self.btnReservar)
 
         self.setLayout(layout)
         self.cargar_platos()
 
     def cargar_platos(self):
-        primeros = [p['nombre'] for p in self.platos_menu if p['tipo'] == 'primero']
-        segundos = [p['nombre'] for p in self.platos_menu if p['tipo'] == 'segundo']
-        postres = [p['nombre'] for p in self.platos_menu if p['tipo'] == 'postre']
-
-        self.combo_primero.addItems(primeros)
-        self.combo_segundo.addItems(segundos)
-        self.combo_postre.addItems(postres)
+        platos = self.controlador.obtener_platos_por_fecha(self.fecha)
+        for nombre, tipo, _ in platos:
+            if tipo == "primero":
+                self.listaPrimeros.addItem(nombre)
+            elif tipo == "segundo":
+                self.listaSegundos.addItem(nombre)
+            elif tipo == "postre":
+                self.listaPostres.addItem(nombre)
 
     def reservar(self):
-        primero = self.combo_primero.currentText()
-        segundo = self.combo_segundo.currentText()
-        postre = self.combo_postre.currentText()
+        def get_text(list_widget):
+            item = list_widget.currentItem()
+            return item.text() if item else None
 
-        if not (primero and segundo and postre):
-            QMessageBox.warning(self, "Incompleto", "Debes seleccionar un plato de cada categoría.")
+        primero = get_text(self.listaPrimeros)
+        segundo = get_text(self.listaSegundos)
+        postre = get_text(self.listaPostres)
+
+        if not all([primero, segundo, postre]):
+            QMessageBox.warning(self, "Error", "Debes seleccionar un plato de cada tipo.")
             return
 
-        respuesta = QMessageBox.question(
-            self,
-            "Confirmar selección",
-            f"¿Seguro que quieres seleccionar este menú?\n\n{primero}\n{segundo}\n{postre}",
-            QMessageBox.Yes | QMessageBox.No
+        id_reserva = self.controlador.reservar_menu(
+            self.usuario.idUser,
+            self.id_menu,
+            primero,
+            segundo,
+            postre
         )
 
-        if respuesta == QMessageBox.Yes:
-            # Insertar reserva
-            dao = ReservaDao()
-            id_reserva = dao.crear_reserva_completa(self.usuario.idUser, self.id_menu, primero, segundo, postre)
+        if id_reserva:
+            self.abrir_pago(id_reserva)
+        else:
+            QMessageBox.critical(self, "Error", "No se pudo completar la reserva.")
 
-            if id_reserva:
-                # Mostrar pantalla de pago
-                self.pago = PagoWindow(id_reserva, self.usuario)
-                self.pago.show()
-                self.close()
-            else:
-                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+    def abrir_pago(self, id_reserva):
+        self.pago_window = PagoWindow(
+            usuario=self.usuario,
+            precio=3.5,  # o calcular dinámicamente según rol
+            metodo_pago="tui",
+            callback_pago_exitoso=None,
+            id_reserva=id_reserva
+        )
+        self.pago_window.show()

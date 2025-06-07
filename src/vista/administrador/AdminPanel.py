@@ -53,8 +53,8 @@ class AdminPanel(VentanaBase, Form):
             QMessageBox.No
         )
         if respuesta == QMessageBox.Yes and self._callback_cerrar_sesion:
-            self.close()
             self._callback_cerrar_sesion()
+            self.close()
 
     def cargar_usuarios(self):
         """Obtiene todos los usuarios y los muestra en la tabla."""
@@ -136,7 +136,7 @@ class AdminPanel(VentanaBase, Form):
                     QMessageBox.critical(self, "Error", "No se pudo dar de baja al usuario.")
 
     def abrir_modificar_menu(self):
-        self.mod_window = ModificarMenuConAlergenos()
+        self.mod_window = ModificarMenuConAlergenos(usuario_actual=self.usuario)
         self.mod_window.show()
 
     '''

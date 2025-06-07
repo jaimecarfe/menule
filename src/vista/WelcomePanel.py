@@ -11,7 +11,9 @@ class WelcomePanel(VentanaBase, Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.resize(432, 505)
+        self.resize(750, 600)
+        self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+        self.setFixedSize(self.size())
         logo_path = "./src/vista/imagenes/paneles.png"
         if os.path.exists(logo_path):
             pixmap = QPixmap(logo_path)

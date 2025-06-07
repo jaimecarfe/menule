@@ -161,3 +161,20 @@ class ReservaDao:
             )
             reservas.append(reserva)
         return reservas
+    
+    def obtener_reservas_confirmadas(self):
+        cursor = self.getCursor()
+        cursor.execute("""
+            SELECT r.id_reserva, r.fecha_reserva, u.email,
+                GROUP_CONCAT(p.nombre, ', ') AS platos
+            FROM Reservas r
+            JOIN Usuarios u ON r.id_usuario = u.id_usuario
+            JOIN MenuPlatos mp ON r.id_menu = mp.id_menu
+            JOIN Platos p ON mp.id_plato = p.id_plato
+            WHERE r.estado = 'confirmada'
+            GROUP BY r.id_reserva
+            ORDER BY r.fecha_reserva DESC
+        """)
+        resultado = cursor.fetchall()
+        cursor.close()
+        return resultado

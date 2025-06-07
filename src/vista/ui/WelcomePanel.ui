@@ -17,7 +17,7 @@
    <string notr="true">
     QMainWindow {
         background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                                          stop:0 #2e7d32, stop:1 #a5d6a7);
+        stop:0 #3a1c71, stop:1 #d76d77);
     }
     QLabel {
         color: white;
@@ -26,13 +26,13 @@
     }
     QPushButton {
         background-color: #ffffff;
-        color: #2e7d32;
+        color: #000000;
         border-radius: 10px;
         padding: 10px;
         font-size: 16px;
     }
     QPushButton:hover {
-        background-color: #c8e6c9;
+        background-color: #e0f2f1;
     }
    </string>
   </property>

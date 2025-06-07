@@ -4,6 +4,7 @@ from src.vista.VentanaBase import VentanaBase
 from src.modelo.vo.UserVo import UserVo
 from datetime import date
 from src.utils.email_utils import enviar_correo
+from src.utils import validador_usuario as val
 import random
 from src.vista.Login import Login
 from src.controlador.ControladorPrincipal import ControladorPrincipal
@@ -44,45 +45,38 @@ class Registro(VentanaBase, Form):
         telefono = self.lineEdit_telefono.text()
         fecha_alta = date.today()
 
+        # Validaciones simples
         if not all([nombre, apellido, correo, contrasena, rol]):
-            QMessageBox.warning(self, "Campos obligatorios", "Por favor, completa todos los campos obligatorios.")
+            QMessageBox.warning(self, "Campos obligatorios", "Completa todos los campos.")
             return
-                
         if rol in ["estudiante", "profesor"] and not grado:
-            QMessageBox.warning(self, "Campo obligatorio", "El campo Grado Académico es obligatorio para estudiantes y profesores.")
+            QMessageBox.warning(self, "Falta grado", "El campo grado académico es obligatorio.")
             return
-        
         if rol == "personal_comedor" and not especialidad:
-            QMessageBox.warning(self, "Campo obligatorio", "El campo Especialidad es obligatorio para personal de comedor.")
+            QMessageBox.warning(self, "Falta especialidad", "El campo especialidad es obligatorio.")
             return
-        
-        if not dni or not telefono:
-            QMessageBox.warning(self, "Campos obligatorios", "DNI y Teléfono son campos obligatorios.")
+        if not dni or len(dni) != 9 or not dni[:-1].isdigit() or not dni[-1].isalpha():
+            QMessageBox.warning(self, "DNI inválido", "Debe tener 8 números y 1 letra.")
             return
-        
-        if len(dni) != 9 or not dni[:-1].isdigit() or not dni[-1].isalpha():
-            QMessageBox.warning(self, "DNI inválido", "El DNI debe tener 8 dígitos seguidos de una letra.")
+        if not val.validar_dni(dni):
+            QMessageBox.warning(self, "DNI inválido", "La letra del DNI no es válida.")
             return
-        
-        if len(telefono) < 9 or not telefono.isdigit():
-            QMessageBox.warning(self, "Teléfono inválido", "El teléfono debe tener al menos 9 dígitos.")
+        if not telefono.isdigit() or len(telefono) < 9:
+            QMessageBox.warning(self, "Teléfono inválido", "Debe tener al menos 9 dígitos.")
             return
-        
         if self._controlador.obtener_usuario_por_correo(correo):
-            QMessageBox.warning(self, "Correo existente", "Ya existe un usuario con este correo electrónico.")
+            QMessageBox.warning(self, "Correo existente", "Ya existe un usuario con este correo.")
             return
-        
-        if correo.count('@') != 1 or correo.count('.') < 1:
-            QMessageBox.warning(self, "Correo inválido", "El correo electrónico debe tener un formato válido.")
+        if not val.validar_correo_por_rol(correo, rol):
+            QMessageBox.warning(self, "Correo inválido", f"El correo no es válido para el rol {rol}.")
             return
-        
         if len(contrasena) < 6:
-            QMessageBox.warning(self, "Contraseña débil", "La contraseña debe tener al menos 6 caracteres.")
+            QMessageBox.warning(self, "Contraseña débil", "Debe tener al menos 6 caracteres.")
             return
-        
-        if not self.validar_datos_registro(dni, correo, rol, nombre, apellido):
+        if self._controlador.buscar_usuario_por_dni(dni):
+            QMessageBox.warning(self, "DNI duplicado", "Ya existe un usuario registrado con este DNI.")
             return
-        
+
         user = UserVo(
             idUser=None,
             nombre=nombre,
@@ -101,6 +95,18 @@ class Registro(VentanaBase, Form):
         )
 
         if self._controlador.insertar_usuario(user):
+            try:
+                asunto = "Registro exitoso en MenULE"
+                mensaje = (
+                    f"Hola {nombre} {apellido},\n\n"
+                    f"Te has registrado exitosamente en MenULE con el rol de {rol}.\n\n"
+                    f"Gracias por unirte a nuestra plataforma.\n\n"
+                    f"Saludos,\nEl equipo de MenULE"
+                )
+                enviar_correo(correo, asunto, mensaje)
+                QMessageBox.information(self, "Correo enviado", "Se ha enviado un correo de confirmación.")
+            except Exception:
+                QMessageBox.warning(self, "Error", "No se pudo enviar el correo.")
             QMessageBox.information(self, "Registro exitoso", "Usuario registrado correctamente.")
             self.close()
             if self._ventana_anterior:
@@ -111,59 +117,3 @@ class Registro(VentanaBase, Form):
         self.close()
         if self._ventana_anterior:
             self._ventana_anterior.showFullScreen()
-        
-    def validar_datos_registro(self, dni, correo, rol, nombre, apellido):
-        dominios_validos = {
-            "estudiante": "@estudiantes.unileon.es",
-            "profesor": "@unileon.es",
-            "personal_comedor": "@comedor.unileon.es",
-            "administrador": "@menule.com",
-        }
-
-        if rol in dominios_validos:
-            if not correo.endswith(dominios_validos[rol]):
-                QMessageBox.warning(self, "Correo inválido",
-                    f"El correo para rol '{rol}' no tiene la extensión correcta.")
-                return False
-
-        if rol == "visitante":
-            if not (correo.endswith("@gmail.com") or correo.endswith("@hotmail.com")):
-                QMessageBox.warning(self, "Correo inválido",
-                    "Los visitantes solo pueden usar correos @gmail.com o @hotmail.com")
-                return False
-
-        import re
-        patron_dni = re.match(r"^(\d{8})([A-Z])$", dni.upper())
-        if not patron_dni:
-            QMessageBox.warning(self, "DNI inválido", "El DNI debe tener 8 números y una letra en mayúscula.")
-            return False
-
-        numero_dni, letra_introducida = patron_dni.groups()
-        letras = "TRWAGMYFPDXBNJZSQVHLCKE"
-        letra_correcta = letras[int(numero_dni) % 23]
-        if letra_correcta != letra_introducida:
-            QMessageBox.warning(self, "DNI inválido", "El DNI no es válido.")
-            return False
-
-        if self._controlador.buscar_usuario_por_dni(dni):
-            QMessageBox.warning(self, "DNI duplicado", "Ya existe un usuario registrado con este DNI.")
-            return False
-
-        asunto = "Registro exitoso en MenULE"
-        mensaje = (
-            f"Hola {nombre} {apellido},\n\n"
-            f"Te has registrado exitosamente en MenULE con el rol de {rol}.\n\n"
-            f"Gracias por unirte a nuestra plataforma.\n\n"
-            f"Saludos,\nEl equipo de MenULE"
-        )
-
-        try:
-            enviar_correo(correo, asunto, mensaje)
-            QMessageBox.information(self, "Correo enviado", "Se ha enviado un correo de confirmación.")
-        except Exception as e:
-            import traceback
-            print("[DEBUG] Error al enviar correo:")
-            print(traceback.format_exc())
-            QMessageBox.warning(self, "Error", "No se pudo enviar el correo. Revisa la consola para más detalles.")
-        
-        return True

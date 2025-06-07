@@ -1,61 +1,51 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
-import bcrypt
-from src.modelo.dao.UserDao import UserDao
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
+from src.modelo.Sesion import Sesion
+from src.controlador.ControladorUsuarios import ControladorUsuarios
 
 class CambiarContrasena(QWidget):
     def __init__(self, usuario):
         super().__init__()
         self.usuario = usuario
-        self.user_dao = UserDao()
+        self.setWindowTitle("Cambiar Contraseña")
+        self.setGeometry(400, 400, 300, 200)
 
-        self.setWindowTitle("Cambiar contraseña")
-        self.setGeometry(300, 300, 350, 200)
+        self.controlador = ControladorUsuarios()
 
         layout = QVBoxLayout()
 
         self.input_actual = QLineEdit()
         self.input_actual.setEchoMode(QLineEdit.Password)
         self.input_actual.setPlaceholderText("Contraseña actual")
-        layout.addWidget(QLabel("Contraseña actual"))
-        layout.addWidget(self.input_actual)
 
         self.input_nueva = QLineEdit()
         self.input_nueva.setEchoMode(QLineEdit.Password)
         self.input_nueva.setPlaceholderText("Nueva contraseña")
-        layout.addWidget(QLabel("Nueva contraseña"))
+
+        self.input_repetir = QLineEdit()
+        self.input_repetir.setEchoMode(QLineEdit.Password)
+        self.input_repetir.setPlaceholderText("Repetir nueva contraseña")
+
+        self.btn_cambiar = QPushButton("Cambiar")
+        self.btn_cambiar.clicked.connect(self.cambiar)
+
+        layout.addWidget(QLabel("Introduce tus credenciales:"))
+        layout.addWidget(self.input_actual)
         layout.addWidget(self.input_nueva)
-
-        self.input_repetida = QLineEdit()
-        self.input_repetida.setEchoMode(QLineEdit.Password)
-        self.input_repetida.setPlaceholderText("Repetir nueva contraseña")
-        layout.addWidget(QLabel("Repetir nueva contraseña"))
-        layout.addWidget(self.input_repetida)
-
-        self.boton_guardar = QPushButton("Guardar")
-        self.boton_guardar.clicked.connect(self.cambiar_contrasena)
-        layout.addWidget(self.boton_guardar)
+        layout.addWidget(self.input_repetir)
+        layout.addWidget(self.btn_cambiar)
 
         self.setLayout(layout)
 
-    def cambiar_contrasena(self):
+    def cambiar(self):
         actual = self.input_actual.text()
         nueva = self.input_nueva.text()
-        repetida = self.input_repetida.text()
+        repetir = self.input_repetir.text()
+        usuario = Sesion().get_usuario()
 
-        if not bcrypt.checkpw(actual.encode(), self.usuario.contrasena.encode()):
-            QMessageBox.critical(self, "Error", "La contraseña actual es incorrecta.")
-            return
+        ok, mensaje = self.controlador.cambiar_contrasena(usuario, actual, nueva, repetir)
 
-        if nueva != repetida:
-            QMessageBox.warning(self, "Error", "Las nuevas contraseñas no coinciden.")
-            return
-
-        nueva_hash = bcrypt.hashpw(nueva.encode(), bcrypt.gensalt()).decode()
-        self.usuario.contrasena = nueva_hash
-        actualizado = self.user_dao.actualizar_contrasena(self.usuario.idUser, nueva_hash)
-
-        if actualizado:
-            QMessageBox.information(self, "Éxito", "Contraseña actualizada correctamente.")
+        if ok:
+            QMessageBox.information(self, "Éxito", mensaje)
             self.close()
         else:
-            QMessageBox.critical(self, "Error", "No se pudo actualizar la contraseña.")
+            QMessageBox.warning(self, "Error", mensaje)

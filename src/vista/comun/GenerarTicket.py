@@ -1,15 +1,15 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QMessageBox
-from src.modelo.dao.TicketDao import TicketDao
-from src.utils.ticket_generator import generar_ticket_pdf
-from src.utils.email_utils import enviar_correo
-from src.vista.visitante import IntroducirCorreoDialog
-import os
+from src.controlador.ControladorTickets import ControladorTickets
+from src.vista.visitante.IntroducirCorreoDialog import IntroducirCorreoDialog
 
 class GenerarTicket(QWidget):
     def __init__(self, id_reserva):
         super().__init__()
         self.id_reserva = id_reserva
-        self.setWindowTitle("Generar Ticket")
+        self.controlador = ControladorTickets()
+
+        self.setWindowTitle("Ticket de Reserva")
+        self.setFixedSize(220, 120)
 
         self.btn_generar = QPushButton("Generar PDF")
         self.btn_enviar = QPushButton("Enviar por correo")
@@ -22,65 +22,37 @@ class GenerarTicket(QWidget):
         layout.addWidget(self.btn_enviar)
         self.setLayout(layout)
 
+        # Si es visitante, ocultar botón de correo y abrir diálogo directamente
+        if self.controlador.es_reserva_de_visitante(self.id_reserva):
+            self.btn_enviar.setVisible(False)
+            self._pedir_y_enviar_correo_a_visitante()
+
     def generar_pdf(self):
-        dao = TicketDao()
-        datos = dao.obtener_datos_ticket(self.id_reserva)
-        if not datos or len(datos) < 5:
-            QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
-            return
-
-        ticket_data = {
-            "ID": datos[0],
-            "Nombre": datos[1],
-            "Email": datos[2],
-            "Fecha": datos[3],
-            "Total": f"{datos[4]} EUR"
-        }
-
-        from pathlib import Path
-        carpeta_descargas = str(Path.home() / "Downloads")
-        ruta = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[1]}.pdf")
-
-        generar_ticket_pdf(ticket_data, ruta)
-        QMessageBox.information(self, "Listo", f"Ticket guardado como {ruta}")
+        ruta = self.controlador.generar_pdf_ticket(self.id_reserva)
+        if ruta:
+            QMessageBox.information(self, "PDF generado", f"Ticket guardado en:\n{ruta}")
+        else:
+            QMessageBox.warning(self, "Error", "No se pudo generar el ticket.")
 
     def enviar_por_correo(self):
-        dao = TicketDao()
-        datos = dao.obtener_datos_ticket(self.id_reserva)
-        if not datos or len(datos) < 5:
-            QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
+        datos = self.controlador.obtener_datos_ticket(self.id_reserva)
+        if not datos or not datos[2] or datos[2].strip() == "":
+            QMessageBox.warning(self, "Sin correo", "No se puede enviar el ticket: el correo no está disponible.")
             return
 
-        ticket_data = {
-            "ID": datos[0],
-            "Nombre": datos[1],
-            "Email": datos[2],
-            "Fecha": datos[3],
-            "Total": f"{datos[4]} EUR"
-        }
+        correo = datos[2]
+        exito, error = self.controlador.enviar_ticket_por_correo(self.id_reserva, correo)
+        if exito:
+            QMessageBox.information(self, "Enviado", "Ticket enviado correctamente.")
+        else:
+            QMessageBox.warning(self, "Error", f"No se pudo enviar el ticket: {error}")
 
-        ruta = f"ticket_reserva_{datos[0]}.pdf"
-        generar_ticket_pdf(ticket_data, ruta)
-
-        try:
-            email_destino = datos[2]
-            if email_destino.strip() == "":
-                dialog = IntroducirCorreoDialog(self)
-                if dialog.exec_() == IntroducirCorreoDialog.Accepted:
-                    email_destino = dialog.get_email()
-                else:
-                    QMessageBox.warning(self, "Cancelado", "No se introdujo un correo.")
-                    return
-
-            enviar_correo(
-                destino=email_destino,
-                asunto="¡Tu ticket de reserva está aquí!",
-                cuerpo="¡Hola! 🎉\n\nGracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\nSaludos cordiales,\nEl equipo de reservas",
-                archivo_adjunto=ruta
-            )
-            QMessageBox.information(self, "Enviado", "Ticket enviado por correo.")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo enviar: {e}")
-        finally:
-            if os.path.exists(ruta):
-                os.remove(ruta)
+    def _pedir_y_enviar_correo_a_visitante(self):
+        dialog = IntroducirCorreoDialog(self)
+        if dialog.exec_():
+            correo = dialog.correo
+            exito, error = self.controlador.enviar_ticket_por_correo(self.id_reserva, correo)
+            if exito:
+                QMessageBox.information(self, "Enviado", "Ticket enviado correctamente.")
+            else:
+                QMessageBox.warning(self, "Error", f"No se pudo enviar el ticket: {error}")

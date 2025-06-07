@@ -74,7 +74,9 @@ class Login(VentanaBase, Form):
         self.ventana_registro.show()
 
     def volver_al_login(self):
+        self.limpiar_campos()
         self.showFullScreen()
+        self.lineEdit_usuario.setFocus()
 
     def limpiar_campos(self):
         self.lineEdit_usuario.clear()

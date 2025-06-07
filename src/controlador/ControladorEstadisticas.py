@@ -7,7 +7,7 @@ class ControladorEstadisticas:
 
     def cargar_estadisticas(self, tipo):
         try:
-            estadistica_vo = self._modelo.obtenerEstadisticas(tipo)
+            estadistica_vo = self._modelo.estadistica_service.obtener_estadisticas(tipo)
             if not estadistica_vo.datos:
                 self._vista.mostrar_mensaje("No hay datos disponibles para mostrar.")
             else:

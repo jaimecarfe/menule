@@ -4,14 +4,9 @@ from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorVisitante import ControladorVisitante
 from PyQt5 import uic
-from src.modelo.dao.MenuDao import MenuDao
 from src.vista.comun.PagoWindow import PagoWindow
 from src.modelo.vo.UserVo import UserVo
 from src.vista.comun.GenerarTicket import GenerarTicket
-from src.vista.visitante.IntroducirCorreoDialog import IntroducirCorreoDialog
-from src.utils.email_utils import enviar_correo
-from src.utils.ticket_generator import generar_ticket_pdf
-import os
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuVisitante.ui")
 
@@ -29,12 +24,11 @@ class MenuVisitante(VentanaBase, Form):
             correo=None,
             contrasena=None,
             rol="visitante",
-            )
+        )
 
     def cargar_menu_del_dia(self):
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
-        dao = MenuDao()
-        platos = dao.obtener_platos_por_fecha(fecha)
+        platos = self._controlador.obtener_menu_por_fecha(fecha)
 
         self.listaPrimeros.clear()
         self.listaSegundos.clear()
@@ -82,13 +76,8 @@ class MenuVisitante(VentanaBase, Form):
 
     def validar_fecha_seleccionada(self):
         fecha = self.calendarWidget.selectedDate()
-        if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
-            QMessageBox.warning(self, "Fecha inválida", "Selecciona un día entre lunes y viernes.")
-            self.calendarWidget.setSelectedDate(QDate())
-            self.btnVisualizarMenu.setEnabled(False)
-            self.btnReservarComida.setVisible(False)
-        elif fecha < QDate.currentDate():
-            QMessageBox.warning(self, "Fecha inválida", "El menú de ese día no está disponible.")
+        if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday) or fecha < QDate.currentDate():
+            QMessageBox.warning(self, "Fecha inválida", "Selecciona un día hábil y no pasado.")
             self.calendarWidget.setSelectedDate(QDate())
             self.btnVisualizarMenu.setEnabled(False)
             self.btnReservarComida.setVisible(False)
@@ -100,119 +89,46 @@ class MenuVisitante(VentanaBase, Form):
         if fecha.isValid():
             self.cargar_menu_del_dia()
             self.btnReservarComida.setVisible(True)
-        else:
-            QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
-            self.btnReservarComida.setVisible(False)
 
     def confirmar_reserva(self):
-        primero_item = self.listaPrimeros.currentItem()
-        segundo_item = self.listaSegundos.currentItem()
-        postre_item = self.listaPostres.currentItem()
+        def extraer_nombre(item):
+            return item.text().split("  (")[0].strip() if item else ""
 
-        if not primero_item or not segundo_item or not postre_item:
-            QMessageBox.warning(self, "Selección incompleta", "Debes seleccionar un primer plato, un segundo y un postre antes de reservar.")
+        primero = extraer_nombre(self.listaPrimeros.currentItem())
+        segundo = extraer_nombre(self.listaSegundos.currentItem())
+        postre = extraer_nombre(self.listaPostres.currentItem())
+
+        if not (primero and segundo and postre):
+            QMessageBox.warning(self, "Selección incompleta", "Selecciona un primer plato, segundo y postre.")
             return
 
-        primero = primero_item.text().split("  (")[0].strip()
-        segundo = segundo_item.text().split("  (")[0].strip()
-        postre = postre_item.text().split("  (")[0].strip()
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+        confirmacion = QMessageBox.question(self, "Confirmar reserva",
+            f"¿Confirmas esta selección?\n\nPrimero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
+            QMessageBox.Yes | QMessageBox.No)
+        if confirmacion != QMessageBox.Yes:
+            return
 
-        respuesta = QMessageBox.question(
-            self,
-            "Confirmar selección",
-            f"¿Quieres reservar este menú?\n\n"
-            f"Primero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
-            QMessageBox.Yes | QMessageBox.No
-        )
+        id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
+        if id_reserva:
+            def callback_pago_exitoso():
+                self.abrir_ticket(id_reserva)
 
-        if respuesta == QMessageBox.Yes:
-            # Calcular precio y método según el rol
-            precio = 7.5
-            metodo = "tarjeta"
+            self.pago_window = PagoWindow(self.usuario_visitante, 7.5, "tarjeta", callback_pago_exitoso, id_reserva)
+            self.pago_window.show()
+        else:
+            QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
 
-            # --- PRIMERO CREA LA RESERVA Y OBTÉN EL ID ---
-            id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
-            if id_reserva:
-                QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
-
-                # Callback tras pago exitoso
-                def callback_pago_exitoso():
-                    self.abrir_ticket(id_reserva)
-
-                print("Abriendo ventana de pago")
-                self.pago_window = PagoWindow(self.usuario_visitante, precio, metodo, callback_pago_exitoso, id_reserva)
-                self.pago_window.show()
-            else:
-                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
-           
     def volver_al_panel(self):
-        respuesta = QMessageBox.question(
-            self,
-            "Confirmación",
-            "¿Quieres volver al inicio?",
-            QMessageBox.Yes | QMessageBox.No
-        )
-        if respuesta == QMessageBox.Yes:
+        if QMessageBox.question(self, "Confirmación", "¿Volver al inicio?", QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
             if self._callback_cerrar_sesion:
                 self._callback_cerrar_sesion()
             else:
                 from src.vista.Login import Login
                 self.close()
-                self.deleteLater()
                 self._login = Login()
                 self._login.showFullScreen()
-            self.close()
-        
+
     def abrir_ticket(self, id_reserva):
-        # Mostrar el ticket
         self.ticket_window = GenerarTicket(id_reserva)
         self.ticket_window.show()
-
-        # Pedir el correo y enviar el ticket por correo
-        dialog = IntroducirCorreoDialog(self)
-        if dialog.exec_():
-            correo = dialog.correo
-
-            # 1. OBTÉN LOS DATOS DE LA RESERVA PARA EL TICKET
-            from src.modelo.dao.TicketDao import TicketDao
-            dao = TicketDao()
-            datos = dao.obtener_datos_ticket(id_reserva)
-            if not datos or len(datos) < 5:
-                QMessageBox.warning(self, "Error", "No hay datos suficientes para esta reserva.")
-                return
-
-            ticket_data = {
-                "ID": datos[0],
-                "Nombre": datos[1],
-                "Email": correo,      # usa el correo introducido por el visitante
-                "Fecha": datos[3],
-                "Total": f"{datos[4]} EUR"
-            }
-
-            # 2. GENERA EL PDF CON QR SIEMPRE ANTES DE ENVIAR
-            from pathlib import Path
-            carpeta_descargas = str(Path.home() / "Downloads")
-            ruta_pdf = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[0]}.pdf")
-            generar_ticket_pdf(ticket_data, ruta_pdf)  # Esta función debe añadir el QR
-
-            asunto = "¡Tu ticket de reserva está aquí!"
-            cuerpo = (
-                "¡Hola! 🎉\n\n"
-                "Gracias por reservar con nosotros. Aquí tienes tu ticket de reserva adjunto. ¡Esperamos que disfrutes de tu experiencia!\n\n"
-                "Saludos cordiales,\n"
-                "El equipo de reservas"
-            )
-
-            try:
-                status = enviar_correo(destino=correo, asunto=asunto, cuerpo=cuerpo, archivo_adjunto=ruta_pdf)
-                if 200 <= status < 300:
-                    QMessageBox.information(self, "Correo enviado", "El tíquet ha sido enviado a tu correo.")
-                else:
-                    QMessageBox.warning(self, "Error", "No se pudo enviar el correo.")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Error enviando el correo: {e}")
-            finally:
-                # Opcional: elimina el PDF si no lo quieres dejar en "Downloads"
-                if os.path.exists(ruta_pdf):
-                    os.remove(ruta_pdf)

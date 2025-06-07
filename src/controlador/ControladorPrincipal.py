@@ -11,15 +11,16 @@ class ControladorPrincipal:
 
     def login(self, correo, contrasena):
         loginVO = LoginVO(correo, contrasena)
-        usuario = self._modelo.comprobarLogin(loginVO)
+        usuario = self._modelo.usuario_service.comprobar_login(loginVO)
         if usuario:
             Sesion().set_usuario(usuario)
             if self.on_login_exitoso:
                 self.on_login_exitoso(usuario)
             return usuario
+        return None
 
     def insertar_usuario(self, userVO: UserVo):
-        id_nuevo = self._modelo.registrarUsuario(userVO)
+        id_nuevo = self._modelo.usuario_service.registrar_usuario(userVO)
         if id_nuevo:
             print(f"Usuario registrado con ID: {id_nuevo}")
             return True
@@ -30,7 +31,7 @@ class ControladorPrincipal:
         return Sesion().get_usuario()
     
     def obtener_usuario_por_correo(self, correo: str) -> UserVo | None:
-        return self._modelo.obtenerUsuarioPorCorreo(correo)
+        return self._modelo.usuario_service.obtener_usuario_por_correo(correo)
     
-    def buscar_usuario_por_dni(self, id_usuario: int) -> UserVo | None:
-        return self._modelo.buscar_por_dni(id_usuario)
+    def buscar_usuario_por_dni(self, dni: str) -> UserVo | None:
+        return self._modelo.usuario_service.buscar_por_dni(dni)
