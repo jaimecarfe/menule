@@ -40,7 +40,6 @@ QPushButton:hover {
             <property name="tabPosition">
              <enum>QTabWidget::North</enum>
             </property>
-
         <widget class="QWidget" name="tabUsuarios">
          <attribute name="title"><string>Usuarios</string></attribute>
          <layout class="QVBoxLayout" name="layoutUsuarios">
@@ -64,7 +63,6 @@ QPushButton:hover {
             </item>
          </layout>
         </widget>
-
             <widget class="QWidget" name="tabMenus">
              <attribute name="title"><string>Menús</string></attribute>
              <layout class="QVBoxLayout" name="layoutMenus">
@@ -96,9 +94,6 @@ QPushButton:hover {
                 </item>
              </layout>
             </widget>
-
-            
-
             <widget class="QWidget" name="tabConfiguracion">
              <attribute name="title"><string>Configuración</string></attribute>
              <layout class="QVBoxLayout" name="layoutConfiguracion">
@@ -116,10 +111,14 @@ QPushButton:hover {
                  <widget class="QPushButton" name="btnCerrarSesion">
                     <property name="text"><string>Cerrar Sesión</string></property>
                  </widget>
-                </item>
-             </layout>
+               </item>
+               <item alignment="Qt::AlignHCenter">
+                  <widget class="QPushButton" name="btnDescargarBD">
+                     <property name="text"><string>Descargar base de datos</string></property>
+                  </widget>
+                  </item>
+               </layout>
             </widget>
-
          </widget>
         </item>
      </layout>
