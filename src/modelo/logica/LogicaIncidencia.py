@@ -16,3 +16,6 @@ class LogicaIncidencia:
 
     def actualizar_estado(self, id_incidencia: int, nuevo_estado: str) -> bool:
         return self.incidencia_dao.actualizar_estado(id_incidencia, nuevo_estado)
+
+    def responder_incidencia(self, id_incidencia: int, respuesta: str, fecha) -> bool:
+        return self.incidencia_dao.responder_incidencia(id_incidencia, respuesta, fecha)

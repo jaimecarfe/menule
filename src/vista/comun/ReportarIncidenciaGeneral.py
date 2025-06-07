@@ -58,11 +58,11 @@ class ReportarIncidenciaGeneral(QWidget):
             return
 
         resumen = f"""
-Número de Seguimiento: {numero_seguimiento}
-Título: {titulo}
-Correo: {correo}
-Fecha: {fecha}
-Descripción: {descripcion}
-"""
+        Número de Seguimiento: {numero_seguimiento}
+        Título: {titulo}
+        Correo: {correo}
+        Fecha: {fecha}
+        Descripción: {descripcion}
+        """
         QMessageBox.information(self, "Incidencia Reportada", resumen)
         self.close()

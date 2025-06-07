@@ -8,6 +8,33 @@ class GenerarTicket(QWidget):
         self.id_reserva = id_reserva
         self.controlador = ControladorTickets()
 
+        self.setStyleSheet("""
+            QWidget {
+            background-color: #e6f2ff;
+            font-family: Arial;
+            font-size: 14px;
+        }
+        QLabel {
+            color: #005c99;
+            font-weight: bold;
+        }
+        QLineEdit {
+            border: 1px solid #80bfff;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: white;
+        }
+        QPushButton {
+            background-color: #00cc99;
+            color: white;
+            border-radius: 10px;
+            padding: 8px;
+        }
+        QPushButton:hover {
+            background-color: #009973;
+        }
+        """)
+
         self.setWindowTitle("Ticket de Reserva")
         self.setFixedSize(220, 120)
 

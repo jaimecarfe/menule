@@ -10,37 +10,41 @@ class ControladorProfesor:
         self.incidencia_ctrl = ControladorIncidencias()
         self._modelo = BussinessObject()
 
-    def hacer_reserva(self, id_menu, fecha):
-        usuario = Sesion().get_usuario()
-        # Si necesitas construir ReservaVo aquí, debes importar y hacerlo:
-        # from src.modelo.vo.ReservaVo import ReservaVo
-        # reserva = ReservaVo(...)
-        # return self.reserva_ctrl.crear_reserva(reserva)
-        pass  # completar si usas id_menu directamente
+    def obtener_menus_disponibles(self):
+        return self._modelo.menu_service.obtener_menus_disponibles()
 
-    def cancelar_reserva(self, id_reserva, motivo):
-        # Esto debería implementarse en LogicaReserva y ControladorReservas
-        pass
+    def hacer_reserva(self, id_usuario: int, fecha: str):
+        return self.reserva_ctrl.hacer_reserva(id_usuario, fecha)
 
-    def ver_historial(self):
-        usuario = Sesion().get_usuario()
-        historial = self.reserva_ctrl.obtener_reservas_estudiante(usuario.idUser)
-        QMessageBox.information(None, "Historial", f"Reservas encontradas: {len(historial)}")
+    def hacer_reserva_completa(self, id_usuario, fecha, primero, segundo, postre):
+        return self.reserva_ctrl.hacer_reserva_completa(id_usuario, fecha, primero, segundo, postre)
+
+    def crear_reserva(self, reserva_vo):
+        return self.reserva_ctrl.crear_reserva(reserva_vo)
+
+    def obtener_ultima_reserva_id(self, id_usuario):
+        return self.reserva_ctrl.obtener_ultima_reserva_id(id_usuario)
+
+    def obtener_reservas_estudiante(self, id_usuario):
+        return self.reserva_ctrl.obtener_reservas_estudiante(id_usuario)
+
+    def obtener_platos_por_fecha(self, fecha):
+        return self._modelo.menu_service.obtener_menu_por_fecha(fecha)
 
     def reportar_incidencia(self, incidencia_vo):
         self.incidencia_ctrl.reportar_incidencia(incidencia_vo)
         QMessageBox.information(None, "Incidencia", "¡Incidencia reportada!")
-
-    def dar_de_baja(self):
-        usuario = Sesion().get_usuario()
-        self._modelo.usuario_service.dar_de_baja_usuario(usuario.idUser)
-        Sesion().cerrar_sesion()
 
     def obtener_saldo(self, id_usuario):
         return self._modelo.usuario_service.obtener_saldo(id_usuario)
 
     def actualizar_saldo(self, id_usuario, nuevo_saldo):
         return self._modelo.usuario_service.actualizar_saldo(id_usuario, nuevo_saldo)
-    
-    def obtener_menu_por_fecha(self, fecha: str):
-        return self._modelo.menu_service.obtener_menu_por_fecha(fecha)
+
+    def dar_de_baja(self):
+        usuario = Sesion().get_usuario()
+        self._modelo.usuario_service.dar_de_baja_usuario(usuario.idUser)
+        Sesion().cerrar_sesion()
+
+    def reservar_menu(self, id_usuario, fecha, primero, segundo, postre):
+        return self._modelo.reserva_service.crear_reserva_completa(id_usuario, fecha, primero, segundo, postre)

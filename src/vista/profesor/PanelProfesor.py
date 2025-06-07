@@ -22,7 +22,6 @@ class PanelProfesor(VentanaBase, Form):
         self.setWindowTitle(f"MenULE - Panel de {usuario.nombre}")
         self.labelTitulo.setText(f"Bienvenido/a profesor/a, {usuario.nombre}")
 
-        # Refresca el saldo al iniciar
         saldo_real = self.controlador.obtener_saldo(self.usuario.idUser)
         self.usuario.saldo = saldo_real
         self.saldo_label.setText(f"Saldo: {saldo_real:.2f}€")
@@ -35,7 +34,7 @@ class PanelProfesor(VentanaBase, Form):
         self.btnVerMenu.clicked.connect(self.abrir_menu)
         self.btnConfiguracion.clicked.connect(self.abrir_configuracion)
         self.btnHistorialReservas.clicked.connect(self.abrir_historial)
-        self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
+        self.btnReportarIncidencia.clicked.connect(self.abrir_ventana_incidencia)
         self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
         self.btn_add_fondos.clicked.connect(self.agregar_fondos)
 
@@ -46,15 +45,16 @@ class PanelProfesor(VentanaBase, Form):
         
     def abrir_menu(self):
         self.menu_window = MenuProfesor(self.usuario, parent=self)
-        self.hide()  # Oculta el panel actual
+        self.hide()
         self.menu_window.show()
 
     def abrir_configuracion(self):
         self.config_window = ConfiguracionUsuario(self.usuario, self.confirmar_cerrar_sesion)
         self.config_window.show()
 
-    def reportar_incidencia(self):
-        QMessageBox.information(self, "Reportar Incidencia", "Aquí se podrá reportar una incidencia.")
+    def abrir_ventana_incidencia(self):
+        self.ventana_incidencia = ReportarIncidenciaGeneral()
+        self.ventana_incidencia.show()
 
     def confirmar_cerrar_sesion(self):
         respuesta = QMessageBox.question(
@@ -114,6 +114,5 @@ class PanelProfesor(VentanaBase, Form):
         self.ventana_incidencia.show()
 
     def abrir_historial(self):
-        print("Abriendo historial...")
         self.ventana_historial = HistorialReservas(self.usuario)
         self.ventana_historial.show()

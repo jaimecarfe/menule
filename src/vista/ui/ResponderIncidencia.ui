@@ -5,18 +5,78 @@
   <property name="windowTitle">
    <string>Responder Incidencia</string>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="styleSheet">
+   <string>
+QWidget {
+    background-color: #e6f2ff;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #1a1a1a;
+}
+QLabel#tituloFijoLabel, QLabel#descripcionFijoLabel {
+    color: #0080b2;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+QLabel#tituloLabel, QLabel#descripcionLabel {
+    color: #1a1a1a;
+    font-size: 15px;
+    background: #f7fbff;
+    border: 1px solid #d0e3f2;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 6px;
+}
+QTextEdit#respuestaBox {
+    border: 1.5px solid #80bfff;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f7fbff;
+    font-size: 15px;
+    color: #222;
+    min-height: 90px;
+}
+QPushButton#enviarBtn {
+    background-color: #00cc99;
+    color: white;
+    border-radius: 14px;
+    padding: 10px 0;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+QPushButton#enviarBtn:hover {
+    background-color: #009973;
+}
+   </string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-
-   <!-- Etiqueta fija "Título:" -->
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>16</number>
+   </property>
+   <property name="bottomMargin">
+    <number>16</number>
+   </property>
    <item>
     <widget class="QLabel" name="tituloFijoLabel">
      <property name="text">
-      <string><b>Título:</b></string>
+      <string>Título:</string>
      </property>
     </widget>
    </item>
-
-   <!-- Contenido dinámico del título -->
    <item>
     <widget class="QLabel" name="tituloLabel">
      <property name="text">
@@ -27,17 +87,13 @@
      </property>
     </widget>
    </item>
-
-   <!-- Etiqueta fija "Descripción:" -->
    <item>
     <widget class="QLabel" name="descripcionFijoLabel">
      <property name="text">
-      <string><b>Descripción:</b></string>
+      <string>Descripción:</string>
      </property>
     </widget>
    </item>
-
-   <!-- Contenido dinámico de la descripción -->
    <item>
     <widget class="QLabel" name="descripcionLabel">
      <property name="text">
@@ -48,8 +104,6 @@
      </property>
     </widget>
    </item>
-
-   <!-- Caja de texto para respuesta -->
    <item>
     <widget class="QTextEdit" name="respuestaBox">
      <property name="placeholderText">
@@ -57,8 +111,6 @@
      </property>
     </widget>
    </item>
-
-   <!-- Botón para enviar respuesta -->
    <item>
     <widget class="QPushButton" name="enviarBtn">
      <property name="text">
@@ -66,7 +118,6 @@
      </property>
     </widget>
    </item>
-
   </layout>
  </widget>
  <resources/>

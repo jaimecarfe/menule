@@ -109,6 +109,9 @@ class MenuVisitante(VentanaBase, Form):
         if confirmacion != QMessageBox.Yes:
             return
 
+        self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
+        QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
+
         id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
         if id_reserva:
             def callback_pago_exitoso():

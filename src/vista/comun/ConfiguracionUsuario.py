@@ -24,19 +24,29 @@ class ConfiguracionUsuario(QWidget):
 
         self.setStyleSheet("""
             QWidget {
-            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                              stop:0 #e0e0e0, stop:1 #f5f5f5);
-            }
-            QPushButton {
-            background-color: #bdbdbd;
-            color: black;
+            background-color: #e6f2ff;
+            font-family: Arial;
+            font-size: 14px;
+        }
+        QLabel {
+            color: #005c99;
             font-weight: bold;
-            border-radius: 8px;
+        }
+        QLineEdit {
+            border: 1px solid #80bfff;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: white;
+        }
+        QPushButton {
+            background-color: #00cc99;
+            color: white;
+            border-radius: 10px;
             padding: 8px;
-            }
-            QPushButton:hover {
-            background-color: #9e9e9e;
-            }
+        }
+        QPushButton:hover {
+            background-color: #009973;
+        }
         """)
 
     def cambiar_contrasena(self):

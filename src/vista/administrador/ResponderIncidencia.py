@@ -12,6 +12,8 @@ class ResponderIncidenciaWindow(QWidget, Form):
         self.id_incidencia = id_incidencia
         self.callback_guardado = callback_guardado
 
+        self.modelo = BussinessObject()
+
         self.tituloLabel.setText(titulo)
         self.descripcionLabel.setText(descripcion)
 
@@ -23,8 +25,8 @@ class ResponderIncidenciaWindow(QWidget, Form):
             QMessageBox.warning(self, "Error", "La respuesta no puede estar vacía.")
             return
 
-        bo = BussinessObject()
-        bo.responder_incidencia(self.id_incidencia, respuesta, date.today())
+        
+        self.modelo.incidencia_service.responder_incidencia(self.id_incidencia, respuesta, date.today())
 
         QMessageBox.information(self, "Éxito", "Respuesta guardada y enviada.")
         if self.callback_guardado:
