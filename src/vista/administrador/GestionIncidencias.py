@@ -1,7 +1,9 @@
 # src/vista/administrador/GestionIncidencias.py
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QComboBox, QMessageBox, QHeaderView
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit, QPushButton, QMessageBox, QTableWidget, QTableWidgetItem, QComboBox, QHeaderView
+from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from src.modelo.BussinessObject import BussinessObject
+from src.vista.administrador.ResponderIncidencia import ResponderIncidenciaWindow
 
 class PanelIncidenciasAdmin(QWidget):
     def __init__(self):
@@ -33,7 +35,7 @@ class PanelIncidenciasAdmin(QWidget):
             self.tabla.setItem(i, 1, QTableWidgetItem(str(inc.fecha)))
 
             btn = QPushButton("Ver")
-            btn.clicked.connect(lambda _, inc=inc: self.ver_detalles(inc))
+            btn.clicked.connect(lambda _, inc=inc: self.ver_detalles(inc.id, inc.titulo, inc.descripcion))
             self.tabla.setCellWidget(i, 2, btn)
 
             self.tabla.setItem(i, 3, QTableWidgetItem(inc.correo))
@@ -48,9 +50,15 @@ class PanelIncidenciasAdmin(QWidget):
             combo.currentTextChanged.connect(lambda visible, inc_id=inc.id: self.cambiar_estado(inc_id, estados_visibles[visible]))
             self.tabla.setCellWidget(i, 4, combo)
 
-    def ver_detalles(self, incidencia):
-        QMessageBox.information(self, "Detalles de la Incidencia",
-                                f"Título: {incidencia.titulo}\n\nDescripción:\n{incidencia.descripcion}")
+    def ver_detalles(self, id_incidencia, titulo, descripcion):
+        self.responder_window = ResponderIncidenciaWindow(
+            id_incidencia, titulo, descripcion,
+            callback_guardado=self.actualizar_tabla_incidencias 
+        )
+        self.responder_window.show()
+
+    def actualizar_tabla_incidencias(self):
+        self.cargar_datos()
 
     def cambiar_estado(self, id_incidencia, nuevo_estado):
         self.modelo.incidencia_dao.actualizar_estado(id_incidencia, nuevo_estado)

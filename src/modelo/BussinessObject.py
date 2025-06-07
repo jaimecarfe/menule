@@ -202,8 +202,9 @@ class BussinessObject:
     def listarIncidencias(self):
         return IncidenciaDao().listar_todas()
 
-    def resolverIncidencia(self, id_incidencia: int, solucion: str) -> bool:
-        return IncidenciaDao().resolver(id_incidencia, solucion)
+    def responder_incidencia(self, id_incidencia, texto_respuesta, fecha):
+        return IncidenciaDao().guardar_respuesta(id_incidencia, texto_respuesta, fecha)
+
     """
     # --- Ingredientes ---
     def consultarStockIngredientes(self):
