@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QTableWidge
 from PyQt5.QtGui import QIcon
 import os
 from src.controlador.ControladorEstadisticas import ControladorEstadisticas
+from PyQt5.QtCore import Qt
 
 class VentanaEstadisticas(QWidget):
     def __init__(self, parent=None):
@@ -22,8 +23,10 @@ class VentanaEstadisticas(QWidget):
 
         self.tabla = QTableWidget()
         layout.addWidget(self.tabla)
+        self.tabla.horizontalHeader().setMinimumSectionSize(150)
         self.tabla.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.tabla.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+
 
 
         self.controlador = ControladorEstadisticas(self)
@@ -53,7 +56,9 @@ class VentanaEstadisticas(QWidget):
         self.tabla.setRowCount(len(datos))
         for i, fila in enumerate(datos):
             for j, valor in enumerate(fila):
-                self.tabla.setItem(i, j, QTableWidgetItem(str(valor)))
+                item = QTableWidgetItem(str(valor))
+                item.setTextAlignment(Qt.AlignCenter)
+                self.tabla.setItem(i, j, item)
 
     def mostrar_mensaje(self, mensaje):
         self.label_estado.setText(mensaje)

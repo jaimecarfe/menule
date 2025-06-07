@@ -8,6 +8,7 @@ from src.vista.comun.CambiarContrasena import CambiarContrasena
 from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuConAlergenos
 from src.vista.administrador.GestionIncidencias import PanelIncidenciasAdmin
 from PyQt5.QtWidgets import QHeaderView 
+from src.vista.administrador.MenuAdmin import MenuAdmin
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
@@ -33,6 +34,7 @@ class AdminPanel(VentanaBase, Form):
         self.tabPanel.addTab(self.panel_incidencias, "Incidencias")
         self.cargar_pagos()
         self.cargar_reservas()
+        self.btnVerMenuAdmin.clicked.connect(self.abrir_menu_admin)
 
 
 
@@ -182,3 +184,7 @@ class AdminPanel(VentanaBase, Form):
             self.tablaReservas.setItem(fila_idx, 3, QTableWidgetItem(str(reserva.fecha_reserva)))
             self.tablaReservas.setItem(fila_idx, 4, QTableWidgetItem(str(reserva.fecha_cancelacion)))
             self.tablaReservas.setItem(fila_idx, 5, QTableWidgetItem(str(reserva.motivo_cancelacion)))
+
+    def abrir_menu_admin(self):
+        self.menu_admin_window = MenuAdmin(self.usuario, parent=self)
+        self.menu_admin_window.show()
