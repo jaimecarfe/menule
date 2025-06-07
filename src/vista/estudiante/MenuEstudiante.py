@@ -140,21 +140,19 @@ class MenuEstudiante(VentanaBase, Form):
                 precio = 7.5
                 metodo = "tarjeta"
 
-            # --- PRIMERO CREA LA RESERVA Y OBTÉN EL ID ---
-            id_reserva = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
-            if id_reserva:
-                QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+            # Callback tras pago exitoso
+            def callback_pago_exitoso():
+                exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
+                if exito:
+                    QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+                    self.abrir_ticket(exito)  # exito debe ser el id_reserva si es posible
+                else:
+                    QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
 
-                # Callback tras pago exitoso
-                def callback_pago_exitoso():
-                    self.abrir_ticket(id_reserva)
+            # Mostrar ventana de pago
+            self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva=None)
+            self.pago_window.show()
 
-                print("Abriendo ventana de pago")
-                self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva)
-                self.pago_window.show()
-            else:
-                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
-                
     def abrir_reserva_comida(self, primero, segundo, postre):
         reserva_comida = ReservaComida(self.usuario, self, primero, segundo, postre)
         reserva_comida.show()
@@ -184,4 +182,4 @@ class MenuEstudiante(VentanaBase, Form):
 
     def abrir_ticket(self, id_reserva):
         self.ticket_window = GenerarTicket(id_reserva)
-        self.ticket_window.show()
+        self.ticket_window.exec_()

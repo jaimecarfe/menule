@@ -149,10 +149,10 @@ class AdminPanel(VentanaBase, Form):
     def cargar_pagos(self):
         self.tablaPagos.setRowCount(0)
         pagos = self._controlador.obtener_pagos()
-        self.tablaPagos.setColumnCount(9)
+        self.tablaPagos.setColumnCount(8)
         self.tablaPagos.setHorizontalHeaderLabels([
             "ID Pago", "ID Usuario", "ID Reserva", "Monto", "Método",
-            "Fecha de Pago", "Descuento", "Estado", "Transacción ID"
+            "Fecha de Pago", "Descuento", "Estado"
         ])
         self.tablaPagos.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         for fila_idx, pago in enumerate(pagos):
@@ -165,7 +165,7 @@ class AdminPanel(VentanaBase, Form):
             self.tablaPagos.setItem(fila_idx, 5, QTableWidgetItem(str(pago.fecha_pago)))
             self.tablaPagos.setItem(fila_idx, 6, QTableWidgetItem(str(pago.descuento)))
             self.tablaPagos.setItem(fila_idx, 7, QTableWidgetItem(pago.estado))
-            self.tablaPagos.setItem(fila_idx, 8, QTableWidgetItem(str(pago.transaccion_id) if pago.transaccion_id else ""))
+            #self.tablaPagos.setItem(fila_idx, 8, QTableWidgetItem(str(pago.transaccion_id) if pago.transaccion_id else ""))
 
     def cargar_reservas(self):
         self.tablaReservas.setRowCount(0)

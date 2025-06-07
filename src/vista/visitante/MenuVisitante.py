@@ -174,18 +174,17 @@ class MenuVisitante(VentanaBase, Form):
         if confirmacion != QMessageBox.Yes:
             return
 
-        self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
-        mostrar_info(self, "Reserva", "Reserva realizada con éxito.")
-
-        id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
-        if id_reserva:
-            def callback_pago_exitoso():
+        def callback_pago_exitoso():
+            id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
+            if id_reserva:
                 self.abrir_ticket(id_reserva)
+                mostrar_info(self, "Reserva", "Reserva realizada con éxito.")
+            else:
+                mostrar_error(self, "Error", "No se pudo registrar la reserva.")
 
-            self.pago_window = PagoWindow(self.usuario_visitante, 7.5, "tarjeta", callback_pago_exitoso, id_reserva)
-            self.pago_window.show()
-        else:
-            mostrar_error(self, "Error", "No se pudo registrar la reserva.")
+        self.pago_window = PagoWindow(self.usuario_visitante, 7.5, "tarjeta", callback_pago_exitoso, None)
+        self.pago_window.setWindowModality(Qt.ApplicationModal)
+        self.pago_window.show()
 
     def volver_al_panel(self):
         if mostrar_pregunta(self, "Confirmación", "¿Volver al inicio?") == QMessageBox.Yes:

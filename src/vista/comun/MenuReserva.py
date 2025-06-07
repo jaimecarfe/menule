@@ -124,41 +124,52 @@ class MenuEstudiante(VentanaBase, Form):
         postre = postre_item.text().split("  (")[0].strip()
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
 
+        # Mostrar resumen de selección (informativo, no pregunta todavía)
+        QMessageBox.information(
+            self,
+            "Resumen de selección",
+            f"Has seleccionado:\n\n"
+            f"Primer plato: {primero}\n"
+            f"Segundo plato: {segundo}\n"
+            f"Postre: {postre}\n"
+            f"Fecha: {fecha}"
+        )
+
+        # Confirmación final
         respuesta = QMessageBox.question(
             self,
-            "Confirmar selección",
-            f"¿Quieres reservar este menú?\n\n"
-            f"Primero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
+            "¿Confirmar reserva?",
+            "¿Deseas continuar con el pago y completar la reserva?",
             QMessageBox.Yes | QMessageBox.No
         )
 
-        if respuesta == QMessageBox.Yes:
-            # Calcular precio y método según el rol
-            if self.usuario.rol == "estudiante":
-                precio = 5.5
-                metodo = "tui"
-            elif self.usuario.rol == "profesor":
-                precio = 6.5
-                metodo = "tui"
-            else:
-                precio = 7.5
-                metodo = "tarjeta"
+        if respuesta != QMessageBox.Yes:
+            return
 
-            # --- PRIMERO CREA LA RESERVA Y OBTÉN EL ID ---
-            id_reserva = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
-            if id_reserva:
+        # Calcular precio y método según el rol
+        if self.usuario.rol == "estudiante":
+            precio = 5.5
+            metodo = "tui"
+        elif self.usuario.rol == "profesor":
+            precio = 6.5
+            metodo = "tui"
+        else:
+            precio = 7.5
+            metodo = "tarjeta"
+
+        # Callback tras pago exitoso → hacer reserva y generar ticket
+        def callback_pago_exitoso():
+            exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
+            if exito:
                 QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
-
-                # Callback tras pago exitoso
-                def callback_pago_exitoso():
-                    self.abrir_ticket()
-
-                print("Abriendo ventana de pago")
-                self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva)
-                self.pago_window.show()
+                self.abrir_ticket()
             else:
                 QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
-                
+
+        # Abrir ventana de pago
+        self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva=None)
+        self.pago_window.show()
+
     def abrir_reserva_comida(self, primero, segundo, postre):
         reserva_comida = ReservaComida(self.usuario, self, primero, segundo, postre)
         reserva_comida.show()

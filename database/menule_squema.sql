@@ -136,6 +136,7 @@ CREATE TABLE Pagos (
     descuento DECIMAL(10,2) DEFAULT 0.00,
     estado ENUM('pendiente', 'completado', 'fallido', 'reembolsado') DEFAULT 'pendiente',
     transaccion_id VARCHAR(100),
+    correo VARCHAR(150),
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
     FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva)
 );
