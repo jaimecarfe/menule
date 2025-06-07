@@ -12,3 +12,6 @@ class ControladorIncidencias:
 
     def cambiar_estado(self, id_incidencia, nuevo_estado):
         return self._modelo.incidencia_service.actualizar_estado(id_incidencia, nuevo_estado)
+
+    def responder_incidencia(self, id_incidencia, respuesta, fecha):
+        return self._modelo.incidencia_service.responder_incidencia(id_incidencia, respuesta, fecha)

@@ -2,6 +2,7 @@ from src.controlador.ControladorUsuarios import ControladorUsuarios
 from src.controlador.ControladorPagos import ControladorPagos
 from src.controlador.ControladorReservas import ControladorReservas
 from src.controlador.ControladorConfiguracion import ControladorConfiguracion
+from src.controlador.ControladorIncidencias import ControladorIncidencias
 from PyQt5.QtWidgets import QTableWidgetItem
 
 class ControladorAdmin:
@@ -11,6 +12,7 @@ class ControladorAdmin:
         self.pago_ctrl = ControladorPagos()
         self.reserva_ctrl = ControladorReservas()
         self.config_ctrl = ControladorConfiguracion()
+        self.incidencia_ctrl = ControladorIncidencias()
 
     def obtener_usuarios(self):
         return self.usuario_ctrl.listar_usuarios()
@@ -51,3 +53,6 @@ class ControladorAdmin:
     
     def obtener_reservas(self):
         return self.reserva_ctrl.obtener_todas_las_reservas()
+    
+    def responder_incidencia(self, id_incidencia, respuesta, fecha):
+        return self.incidencia_ctrl.responder_incidencia(id_incidencia, respuesta, fecha)
