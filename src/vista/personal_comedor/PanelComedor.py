@@ -34,6 +34,8 @@ class PanelComedor(VentanaBase, Form):
         self.btnProcesarPedidos.clicked.connect(self.procesar_pedidos)
         self.btnConsultarStock.clicked.connect(self.consultar_stock)
 
+        self.btnDarseDeBaja.clicked.connect(self.dar_de_baja)
+        self.btnReportarIncidencia.clicked.connect(self.reportar_incidencia)
 
     def abrir_menu(self):
         self.menu_window = VisualizarMenu(self.usuario, parent=self)
@@ -76,3 +78,21 @@ class PanelComedor(VentanaBase, Form):
         self.ventana_stock = StockComedor()
         self.ventana_stock.show()
         print("Consultando stock interno...")
+    
+    def reportar_incidencia(self):
+        pass
+        print("Reportando incidencia... (Funcionalidad no implementada)")
+    
+    def dar_de_baja(self):
+        print("Dar de baja cuenta...")
+        respuesta = QMessageBox.question(
+            self,
+            "Dar de Baja",
+            "¿Estás seguro de que deseas dar de baja tu cuenta?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        if respuesta == QMessageBox.Yes:
+            self.controlador.dar_de_baja()
+            QMessageBox.information(self, "Cuenta", "Tu cuenta ha sido dada de baja.")
+            self.cerrar_sesion()
