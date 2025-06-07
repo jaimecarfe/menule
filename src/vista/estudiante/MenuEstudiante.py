@@ -140,18 +140,18 @@ class MenuEstudiante(VentanaBase, Form):
                 precio = 7.5
                 metodo = "tarjeta"
 
-            # Callback tras pago exitoso
-            def callback_pago_exitoso():
-                exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
-                if exito:
-                    QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
-                    self.abrir_ticket(exito)  # exito debe ser el id_reserva si es posible
-                else:
-                    QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+            id_reserva = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
 
-            # Mostrar ventana de pago
-            self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva=None)
-            self.pago_window.show()
+            if id_reserva:
+                def callback_pago_exitoso():
+                    QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+                    self.abrir_ticket(id_reserva)
+
+                # Mostrar ventana de pago con id_reserva real
+                self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva=id_reserva)
+                self.pago_window.show()
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
 
     def abrir_reserva_comida(self, primero, segundo, postre):
         reserva_comida = ReservaComida(self.usuario, self, primero, segundo, postre)
@@ -169,7 +169,7 @@ class MenuEstudiante(VentanaBase, Form):
         reserva.id_menu = id_menu
         reserva.estado = "confirmada"
         
-        self.controlador.crear_reserva(reserva)
+        self._controlador.crear_reserva(reserva)
         QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
 
     def finalizar_reserva(self, primero, segundo, postre, fecha):

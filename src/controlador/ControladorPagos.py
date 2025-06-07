@@ -33,7 +33,7 @@ class ControladorPagos:
         pago_id = self.registrar_pago(pago)
         return pago_id is not None, "Pago registrado correctamente" if pago_id else "Error al registrar el pago"
 
-    def pagar_con_tarjeta(self, monto, id_reserva, id_usuario=0):
+    def pagar_con_tarjeta(self, monto, id_reserva, id_usuario=0, correo=None):
         pago = PagoVo(
             id_pago=None,
             id_usuario=id_usuario,
@@ -41,6 +41,7 @@ class ControladorPagos:
             monto=monto,
             fecha_pago=datetime.now(),
             id_reserva=id_reserva,
+            correo=correo
         )
         pago_id = self.registrar_pago(pago)
         return pago_id is not None, "Pago registrado correctamente" if pago_id else "Error al registrar el pago"

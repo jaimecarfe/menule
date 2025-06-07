@@ -34,7 +34,7 @@ class LogicaTicket:
         }
 
         carpeta_descargas = str(Path.home() / "Downloads")
-        ruta = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[0]}.pdf")
+        ruta = os.path.join(carpeta_descargas, f"ticket_reserva_{datos[1]}.pdf")
         generar_ticket_pdf(ticket_data, ruta)
         return ruta
 
