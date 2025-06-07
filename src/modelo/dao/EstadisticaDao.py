@@ -35,3 +35,34 @@ class EstadisticaDao:
         cursor.execute("SELECT fecha_reserva, COUNT(*) FROM Reservas GROUP BY fecha_reserva")
         datos = cursor.fetchall()
         return datos
+    
+    def obtener_total_pagos_por_rol(self):
+        conn= Conexion()
+        query = """
+        SELECT tipo, SUM(monto) as total_gastado,
+                COUNT(pagos.id_pago) AS cantidad_pagos
+        FROM pagos 
+        JOIN usuarios ON pagos.id_usuario = usuarios.id_usuario
+        GROUP BY tipo
+        """
+        cursor = conn.getCursor()
+        cursor.execute(query)
+        resultados = cursor.fetchall()
+        cursor.close()
+        return resultados  # Lista de tuplas (tipo, total_gastado)
+    
+
+    def obtener_total_incidencias_por_rol(self):
+        conn = Conexion()
+        query = """
+        SELECT tipo, COUNT(incidencias.id_incidencia) AS cantidad_incidencias
+        FROM incidencias 
+        JOIN usuarios ON incidencias.id_usuario = usuarios.id_usuario
+        GROUP BY tipo
+        """
+        cursor = conn.getCursor()
+        cursor.execute(query)
+        resultados = cursor.fetchall()
+        cursor.close()
+        return resultados
+
