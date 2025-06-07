@@ -3,22 +3,12 @@ from src.modelo.conexion.Conexion import Conexion
 
 class IngredienteDao:
     def obtener_ingredientes(self):
-        cursor = self.getCursor()
-        cursor.execute("SELECT id, nombre, unidad_medida, stock_actual, stock_minimo, alergeno, tipo_alergeno FROM Ingredientes")
+        cursor = Conexion().getCursor()
+        cursor.execute("SELECT id_ingrediente, nombre, unidad_medida, stock_actual, stock_minimo, alergeno, tipo_alergeno FROM Ingredientes")
         rows = cursor.fetchall()
         cursor.close()
-        return [
-            {
-                "id": row[0],
-                "nombre": row[1],
-                "unidad": row[2],
-                "stock": row[3],
-                "minimo": row[4],
-                "alergeno": row[5],
-                "tipo": row[6]
-            }
-            for row in rows
-        ]
+        return rows if rows is not None else []
+
 
     def actualizar_ingrediente(self, id_ingrediente, nombre, unidad_medida, stock_actual, stock_minimo, alergeno, tipo_alergeno):
         conexion = Conexion()
