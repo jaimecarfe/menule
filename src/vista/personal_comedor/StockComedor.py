@@ -47,6 +47,14 @@ class StockComedor(QWidget):
             self.datos_originales[str(ingrediente[0])] = tuple(str(v) for v in ingrediente)
 
         self.tabla.setEditTriggers(QTableWidget.DoubleClicked | QTableWidget.SelectedClicked)
+        self.tabla.resizeColumnsToContents()
+        self.tabla.resizeRowsToContents()
+        self.tabla.horizontalHeader().setStretchLastSection(True)
+        self.tabla.setMinimumSize(
+                self.tabla.horizontalHeader().length() + 50,
+                self.tabla.verticalHeader().length() + 100   
+            )
+        self.adjustSize()
 
     def aniadir_fila(self):
         """Añade una nueva fila vacía a la tabla."""

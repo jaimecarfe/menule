@@ -23,6 +23,7 @@ class VentanaEstadisticas(QWidget):
         self.tabla = QTableWidget()
         layout.addWidget(self.tabla)
         self.tabla.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tabla.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
 
         self.controlador = ControladorEstadisticas(self)
