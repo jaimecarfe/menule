@@ -10,6 +10,72 @@ from src.vista.comun.GenerarTicket import GenerarTicket
 
 Form, Window = uic.loadUiType("./src/vista/ui/MenuVisitante.ui")
 
+def mostrar_warning(parent, titulo, mensaje):
+    msg = QMessageBox(parent)
+    msg.setIcon(QMessageBox.Warning)
+    msg.setWindowTitle(titulo)
+    msg.setText(mensaje)
+    # Opción 1: Fondo oscuro elegante
+    msg.setStyleSheet("""
+        QMessageBox { background-color: #222; color: #fff; font-size: 16px; }
+        QLabel { color: #fff; font-size: 16px; font-family: Arial, sans-serif; }
+        QPushButton { background-color: #26a69a; color: white; font-weight: bold;
+                      border-radius: 8px; min-width: 60px; padding: 8px 16px; }
+        QPushButton:hover { background-color: #009973; }
+    """)
+    # Opción 2: Fondo claro (descomenta si lo prefieres)
+    # msg.setStyleSheet("""
+    #     QMessageBox { background-color: #e6f2ff; color: #005c99; font-size: 16px; }
+    #     QLabel { color: #005c99; font-size: 16px; font-family: Arial, sans-serif; }
+    #     QPushButton { background-color: #26a69a; color: white; font-weight: bold;
+    #                   border-radius: 8px; min-width: 60px; padding: 8px 16px; }
+    #     QPushButton:hover { background-color: #009973; }
+    # """)
+    msg.exec_()
+
+def mostrar_info(parent, titulo, mensaje):
+    msg = QMessageBox(parent)
+    msg.setIcon(QMessageBox.Information)
+    msg.setWindowTitle(titulo)
+    msg.setText(mensaje)
+    msg.setStyleSheet("""
+        QMessageBox { background-color: #e6f2ff; color: #005c99; font-size: 16px; }
+        QLabel { color: #005c99; font-size: 16px; font-family: Arial, sans-serif; }
+        QPushButton { background-color: #26a69a; color: white; font-weight: bold;
+                      border-radius: 8px; min-width: 60px; padding: 8px 16px; }
+        QPushButton:hover { background-color: #009973; }
+    """)
+    msg.exec_()
+
+def mostrar_error(parent, titulo, mensaje):
+    msg = QMessageBox(parent)
+    msg.setIcon(QMessageBox.Critical)
+    msg.setWindowTitle(titulo)
+    msg.setText(mensaje)
+    msg.setStyleSheet("""
+        QMessageBox { background-color: #222; color: #fff; font-size: 16px; }
+        QLabel { color: #fff; font-size: 16px; font-family: Arial, sans-serif; }
+        QPushButton { background-color: #e53935; color: white; font-weight: bold;
+                      border-radius: 8px; min-width: 60px; padding: 8px 16px; }
+        QPushButton:hover { background-color: #b71c1c; }
+    """)
+    msg.exec_()
+
+def mostrar_pregunta(parent, titulo, mensaje):
+    msg = QMessageBox(parent)
+    msg.setIcon(QMessageBox.Question)
+    msg.setWindowTitle(titulo)
+    msg.setText(mensaje)
+    msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    msg.setStyleSheet("""
+        QMessageBox { background-color: #e6f2ff; color: #005c99; font-size: 16px; }
+        QLabel { color: #005c99; font-size: 16px; font-family: Arial, sans-serif; }
+        QPushButton { background-color: #26a69a; color: white; font-weight: bold;
+                      border-radius: 8px; min-width: 60px; padding: 8px 16px; }
+        QPushButton:hover { background-color: #009973; }
+    """)
+    return msg.exec_()
+
 class MenuVisitante(VentanaBase, Form):
     def __init__(self):
         super().__init__()
@@ -77,7 +143,7 @@ class MenuVisitante(VentanaBase, Form):
     def validar_fecha_seleccionada(self):
         fecha = self.calendarWidget.selectedDate()
         if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday) or fecha < QDate.currentDate():
-            QMessageBox.warning(self, "Fecha inválida", "Selecciona un día hábil y no pasado.")
+            mostrar_warning(self, "Fecha inválida", "Selecciona un día hábil y no pasado.")
             self.calendarWidget.setSelectedDate(QDate())
             self.btnVisualizarMenu.setEnabled(False)
             self.btnReservarComida.setVisible(False)
@@ -99,18 +165,17 @@ class MenuVisitante(VentanaBase, Form):
         postre = extraer_nombre(self.listaPostres.currentItem())
 
         if not (primero and segundo and postre):
-            QMessageBox.warning(self, "Selección incompleta", "Selecciona un primer plato, segundo y postre.")
+            mostrar_warning(self, "Selección incompleta", "Selecciona un primer plato, segundo y postre.")
             return
 
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
-        confirmacion = QMessageBox.question(self, "Confirmar reserva",
-            f"¿Confirmas esta selección?\n\nPrimero: {primero}\nSegundo: {segundo}\nPostre: {postre}",
-            QMessageBox.Yes | QMessageBox.No)
+        confirmacion = mostrar_pregunta(self, "Confirmar reserva",
+            f"¿Confirmas esta selección?\n\nPrimero: {primero}\nSegundo: {segundo}\nPostre: {postre}")
         if confirmacion != QMessageBox.Yes:
             return
 
         self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
-        QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
+        mostrar_info(self, "Reserva", "Reserva realizada con éxito.")
 
         id_reserva = self._controlador.hacer_reserva_anonima(fecha, primero, segundo, postre)
         if id_reserva:
@@ -120,10 +185,10 @@ class MenuVisitante(VentanaBase, Form):
             self.pago_window = PagoWindow(self.usuario_visitante, 7.5, "tarjeta", callback_pago_exitoso, id_reserva)
             self.pago_window.show()
         else:
-            QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
+            mostrar_error(self, "Error", "No se pudo registrar la reserva.")
 
     def volver_al_panel(self):
-        if QMessageBox.question(self, "Confirmación", "¿Volver al inicio?", QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
+        if mostrar_pregunta(self, "Confirmación", "¿Volver al inicio?") == QMessageBox.Yes:
             if self._callback_cerrar_sesion:
                 self._callback_cerrar_sesion()
             else:
