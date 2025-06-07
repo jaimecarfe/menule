@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QLineEdit, QMessageBox, QSizePolicy, QSpacerItem
+from PyQt5.QtCore import Qt
 from src.modelo.Sesion import Sesion
 from src.controlador.ControladorUsuarios import ControladorUsuarios
 
