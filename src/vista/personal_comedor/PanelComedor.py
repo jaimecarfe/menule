@@ -9,6 +9,7 @@ from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuCo
 from src.vista.personal_comedor.ProcesarPedidos import ProcesarPedidos
 from src.vista.personal_comedor.VisualizarMenu import VisualizarMenu
 from src.controlador.ControladorComedor import ControladorComedor
+from src.vista.personal_comedor.StockComedor import StockComedor
 
 Form, Window = uic.loadUiType("./src/vista/ui/PanelComedor.ui")
 
@@ -72,5 +73,6 @@ class PanelComedor(VentanaBase, Form):
         self.ventana_pedidos.show()
 
     def consultar_stock(self):
-        # Lógica para consultar stock interno
+        self.ventana_stock = StockComedor()
+        self.ventana_stock.show()
         print("Consultando stock interno...")
