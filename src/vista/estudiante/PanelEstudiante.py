@@ -47,7 +47,7 @@ class PanelEstudiante(VentanaBase, Form):
     
     def abrir_menu(self):
         self.menu_window = MenuEstudiante(self.usuario, parent=self)
-        self.hide()  # Oculta el panel actual
+        self.hide()
         self.menu_window.show()
 
     def abrir_configuracion(self):
@@ -55,7 +55,6 @@ class PanelEstudiante(VentanaBase, Form):
         self.config_window.show()
 
     def abrir_historial(self):
-        print("Abriendo historial...")
         self.ventana_historial = HistorialReservas(self.usuario)
         self.ventana_historial.show()
 

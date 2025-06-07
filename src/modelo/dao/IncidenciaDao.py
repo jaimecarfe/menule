@@ -42,7 +42,6 @@ class IncidenciaDao:
     def actualizar_estado(self, id_incidencia, nuevo_estado):
         cursor = self.conexion.getCursor()
         cursor.execute("UPDATE incidencias SET estado = ? WHERE id_incidencia = ?", (nuevo_estado, id_incidencia))
-        #self.conexion.conexion.commit()
         cursor.close()
 
     def guardar_respuesta(self, id_incidencia, respuesta, fecha):
@@ -55,3 +54,8 @@ class IncidenciaDao:
         WHERE id_incidencia = ?
         """
         cursor.execute(query, (respuesta, fecha_str, id_incidencia))
+
+    def responder_incidencia(self, id_incidencia, respuesta, fecha):
+        self.guardar_respuesta(id_incidencia, respuesta, fecha)
+        self.actualizar_estado(id_incidencia, 'resuelta')
+        self.conexion.getCursor().close()

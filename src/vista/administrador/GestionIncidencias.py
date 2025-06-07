@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem
 from PyQt5.QtCore import Qt
 from src.controlador.ControladorIncidencias import ControladorIncidencias
 from src.vista.administrador.ResponderIncidencia import ResponderIncidenciaWindow
+
 class PanelIncidenciasAdmin(QWidget):
     def __init__(self):
         super().__init__()

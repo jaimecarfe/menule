@@ -3,7 +3,7 @@ from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QTextCharFormat, QColor
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorEstudiante import ControladorEstudiante
-from src.vista.estudiante.ReservaComida import ReservaComida
+from src.vista.comun.ReservaComida import ReservaComida
 from src.modelo.vo.ReservaVo import ReservaVo
 from src.vista.comun.PagoWindow import PagoWindow
 from src.vista.comun.GenerarTicket import GenerarTicket
@@ -147,7 +147,7 @@ class MenuEstudiante(VentanaBase, Form):
 
                 # Callback tras pago exitoso
                 def callback_pago_exitoso():
-                    self.abrir_ticket()
+                    self.abrir_ticket(id_reserva)
 
                 print("Abriendo ventana de pago")
                 self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva)
@@ -169,7 +169,7 @@ class MenuEstudiante(VentanaBase, Form):
         reserva = ReservaVo()
         reserva.id_usuario = self.usuario_actual.id  # o self.usuario.id
         reserva.id_menu = id_menu
-        reserva.estado = "pendiente"
+        reserva.estado = "confirmada"
         
         self.controlador.crear_reserva(reserva)
         QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
@@ -182,9 +182,6 @@ class MenuEstudiante(VentanaBase, Form):
         else:
             QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
 
-    def abrir_ticket(self):
-        id_reserva = self._controlador.obtener_ultima_reserva_id(self.usuario.idUser)
-        if id_reserva:
-            self.ticket_window = GenerarTicket(id_reserva)
-            self.ticket_window.show()
-
+    def abrir_ticket(self, id_reserva):
+        self.ticket_window = GenerarTicket(id_reserva)
+        self.ticket_window.show()

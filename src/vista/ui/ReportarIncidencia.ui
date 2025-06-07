@@ -5,31 +5,105 @@
   <property name="windowTitle">
    <string>Reportar Incidencia</string>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>420</height>
+   </size>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget {
+    background-color: #e6f2ff;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #1a1a1a;
+}
+QLabel {
+    color: #0080b2;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 8px;
+    margin-bottom: 3px;
+}
+QLineEdit, QDateEdit {
+    border: 1.5px solid #80bfff;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f7fbff;
+    color: #111;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+QTextEdit {
+    border: 1.5px solid #80bfff;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f7fbff;
+    color: #111;
+    font-size: 15px;
+    min-height: 120px;
+    margin-bottom: 8px;
+}
+QPushButton {
+    background-color: #00cc99;
+    color: white;
+    border-radius: 14px;
+    padding: 10px 0;
+    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+}
+QPushButton:hover {
+    background-color: #009973;
+}
+   </string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>18</number>
+   </property>
+   <property name="bottomMargin">
+    <number>15</number>
+   </property>
    <item>
     <widget class="QLabel" name="labelTitulo">
      <property name="text">
-      <string>Título de la incidencia:</string>
+      <string>Título de la incidencia</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="titulo_input"/>
+    <widget class="QLineEdit" name="titulo_input">
+     <property name="placeholderText">
+      <string>Ej: Problema con el menú del día</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="labelDescripcion">
      <property name="text">
-      <string>Descripción:</string>
+      <string>Descripción</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTextEdit" name="descripcion_input"/>
+    <widget class="QTextEdit" name="descripcion_input">
+     <property name="placeholderText">
+      <string>Describe brevemente la incidencia...</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="labelFecha">
      <property name="text">
-      <string>Fecha:</string>
+      <string>Fecha</string>
      </property>
     </widget>
    </item>

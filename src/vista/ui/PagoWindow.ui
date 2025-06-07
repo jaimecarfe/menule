@@ -11,6 +11,7 @@
         background-color: #e6f2ff;
         font-family: Arial;
         font-size: 14px;
+        color: #000000;
     }
     QLabel {
         color: #005c99;
@@ -21,6 +22,7 @@
         border-radius: 5px;
         padding: 5px;
         background-color: white;
+        color: #000000;
     }
     QPushButton {
         background-color: #00cc99;
