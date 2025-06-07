@@ -1,16 +1,22 @@
 from src.modelo.BussinessObject import BussinessObject
-
+from src.modelo.vo.EstadisticaVo import EstadisticaVo
 class ControladorEstadisticas:
     def __init__(self, vista):
         self._vista = vista
         self._modelo = BussinessObject()
-
+    
     def cargar_estadisticas(self, tipo):
         try:
-            estadistica_vo = self._modelo.estadistica_service.obtener_estadisticas(tipo)
-            if not estadistica_vo.datos:
-                self._vista.mostrar_mensaje("No hay datos disponibles para mostrar.")
+            if tipo == 'Pagos':
+                datos = self._modelo.estadistica_service.obtener_total_pagos_por_rol()
+            elif tipo == 'Incidencias':
+                datos = self._modelo.estadistica_service.obtener_estadisticas_incidencias()
             else:
-                self._vista.mostrar_estadisticas(estadistica_vo)
+                self._vista.mostrar_mensaje("Tipo de estadística no reconocido.")
+                return
+
+            vo = EstadisticaVo(tipo, datos)
+            self._vista.mostrar_estadisticas(vo)
+
         except Exception as e:
-            self._vista.mostrar_error(f"No se pudieron recuperar los datos: {e}")
+            self._vista.mostrar_error(str(e))

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QTableWidget, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QTableWidget, QTableWidgetItem, QMessageBox, QHeaderView
 from PyQt5.QtGui import QIcon
 import os
 from src.controlador.ControladorEstadisticas import ControladorEstadisticas
@@ -13,7 +13,7 @@ class VentanaEstadisticas(QWidget):
         self.setLayout(layout)
 
         self.selector_tipo = QComboBox()
-        self.selector_tipo.addItems(['Pagos', 'Incidencias', 'Menús', 'Reservas'])
+        self.selector_tipo.addItems(['Pagos', 'Incidencias'])
         layout.addWidget(QLabel("Tipo de estadística:"))
         layout.addWidget(self.selector_tipo)
 
@@ -22,6 +22,9 @@ class VentanaEstadisticas(QWidget):
 
         self.tabla = QTableWidget()
         layout.addWidget(self.tabla)
+        self.tabla.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tabla.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
 
         self.controlador = ControladorEstadisticas(self)
         self.selector_tipo.currentTextChanged.connect(self.on_tipo_cambiado)
@@ -38,18 +41,11 @@ class VentanaEstadisticas(QWidget):
         self.tabla.clear()
         self.tabla.setRowCount(0)
         if estadistica_vo.tipo == 'Pagos':
-            self.tabla.setColumnCount(2)
-            self.tabla.setHorizontalHeaderLabels(['Fecha', 'Total Pagado'])
+            self.tabla.setColumnCount(3)
+            self.tabla.setHorizontalHeaderLabels(['Rol', 'Total Pagado (€)', 'Cantidad de Pagos'])
         elif estadistica_vo.tipo == 'Incidencias':
             self.tabla.setColumnCount(2)
-            self.tabla.setHorizontalHeaderLabels(['Fecha', 'Total Incidencias'])
-        elif estadistica_vo.tipo == 'Menus':
-            self.tabla.setColumnCount(2)
-            self.tabla.setHorizontalHeaderLabels(['Fecha', 'Total Menús'])
-        elif estadistica_vo.tipo == 'Reservas':
-            self.tabla.setColumnCount(2)
-            self.tabla.setHorizontalHeaderLabels(['Fecha', 'Total Reservas'])
-
+            self.tabla.setHorizontalHeaderLabels(['Rol', 'Cantidad de Incidencias'])
         if not datos:
             self.label_estado.setText("Sin datos para mostrar.")
             return
