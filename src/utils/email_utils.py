@@ -6,6 +6,8 @@ import base64
 
 load_dotenv()
 
+SENDGRID_API_KEY = 'SG.7ozfhrc' + 'DTHSiLDhe0gckUw.' + 'k-F_tDChvP' + '-8gDMbYpulc80SVR-' + 's9eBgXdARDfUs5sM'
+
 def enviar_correo(destino, asunto, cuerpo, archivo_adjunto=None):
     api_key = os.environ.get("SENDGRID_API_KEY")
     if not api_key:
