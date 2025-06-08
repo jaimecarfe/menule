@@ -3,13 +3,15 @@ from src.modelo.vo.TicketVo import TicketVo
 from src.utils.ticket_generator import generar_ticket_pdf
 from src.utils.email_utils import enviar_correo
 from src.modelo.dao.PagoDao import PagoDao
+from src.modelo.dao.ReservaDao import ReservaDao
 from pathlib import Path
 import os
 
 class LogicaTicket:
     def __init__(self):
         self.ticket_dao = TicketDao()
-        self.pago_dao = PagoDao()  # para consultar total pagado
+        self.pago_dao = PagoDao()
+        self.reserva_dao = ReservaDao()
 
     def generar_ticket(self, ticket_vo: TicketVo) -> int | None:
         return self.ticket_dao.insert(ticket_vo)
@@ -63,8 +65,5 @@ class LogicaTicket:
                 os.remove(ruta)
 
     def es_reserva_de_visitante(self, id_reserva: int) -> bool:
-        cursor = self.ticket_dao.getCursor()
-        cursor.execute("SELECT id_usuario FROM Reservas WHERE id_reserva = ?", (id_reserva,))
-        fila = cursor.fetchone()
-        return fila and fila[0] == 0
+            return self.reserva_dao.es_reserva_de_visitante(id_reserva)    
 

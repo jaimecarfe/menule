@@ -14,13 +14,7 @@ class LogicaMenu:
         return self.menu_dao.obtener_id_menu_por_fecha(fecha)
 
     def insertar_o_modificar_menu(self, fecha: str, lista_platos_con_tipo: list[tuple[str, str]]) -> bool:
-        """
-        lista_platos_con_tipo: [(nombre, tipo), ...]
-        """
         return self.menu_dao.insertar_o_modificar_menu_con_tipo(fecha, lista_platos_con_tipo)
 
     def guardar_menu_con_alergenos(self, fecha: str, lista_platos: list[tuple[str, str, str]]) -> bool:
-        """
-        lista_platos: [(nombre, tipo, alergenos), ...]
-        """
         return self.menu_dao.guardar_menu_con_alergenos(fecha, lista_platos)

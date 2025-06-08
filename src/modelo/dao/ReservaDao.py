@@ -206,3 +206,10 @@ class ReservaDao:
         cursor = self.getCursor()
         cursor.execute("UPDATE Reservas SET estado_bit = ? WHERE id_reserva = ?", (bit, id_reserva))
         cursor.close()
+
+    def es_reserva_de_visitante(self, id_reserva: int) -> bool:
+        cursor = self.getCursor()
+        cursor.execute("SELECT id_usuario FROM Reservas WHERE id_reserva = ?", (id_reserva,))
+        fila = cursor.fetchone()
+        cursor.close()
+        return fila and fila[0] == 0
