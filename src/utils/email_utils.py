@@ -3,11 +3,12 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
 from dotenv import load_dotenv
 import base64
+from src.utils.sendgrid_utils import obtener_api_key_sendgrid
 
 load_dotenv()
 
 def enviar_correo(destino, asunto, cuerpo, archivo_adjunto=None):
-    api_key = os.environ.get("SENDGRID_API_KEY")
+    api_key = obtener_api_key_sendgrid()
     if not api_key:
         raise ValueError("No se encontró la variable de entorno SENDGRID_API_KEY")
     
