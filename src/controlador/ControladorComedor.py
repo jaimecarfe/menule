@@ -13,7 +13,6 @@ class ControladorComedor:
         self.incidencia_ctrl = ControladorIncidencias()
         self.ticket_ctrl = ControladorTickets()
         self.usuario_ctrl = ControladorUsuarios()
-        # self.ingrediente_ctrl = ControladorIngredientes()
 
     def procesar_ticket(self, codigo_qr):
         return self.ticket_ctrl.validar_ticket(codigo_qr)

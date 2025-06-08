@@ -20,12 +20,7 @@ class ControladorPrincipal:
         return None
 
     def insertar_usuario(self, userVO: UserVo):
-        id_nuevo = self._modelo.usuario_service.registrar_usuario(userVO)
-        if id_nuevo:
-            print(f"Usuario registrado con ID: {id_nuevo}")
-            return True
-        else:
-            return False
+        return self._modelo.usuario_service.registrar_usuario(userVO)
 
     def get_usuario_actual(self):
         return Sesion().get_usuario()

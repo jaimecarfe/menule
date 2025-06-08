@@ -2,7 +2,6 @@ from src.modelo.Sesion import Sesion
 from src.controlador.ControladorReservas import ControladorReservas
 from src.controlador.ControladorIncidencias import ControladorIncidencias
 from src.modelo.BussinessObject import BussinessObject
-from PyQt5.QtWidgets import QMessageBox
 
 class ControladorEstudiante:
     def __init__(self):
@@ -33,7 +32,6 @@ class ControladorEstudiante:
 
     def reportar_incidencia(self, incidencia_vo):
         self.incidencia_ctrl.reportar_incidencia(incidencia_vo)
-        QMessageBox.information(None, "Incidencia", "¡Incidencia reportada!")
 
     def obtener_saldo(self, id_usuario):
         return self._modelo.usuario_service.obtener_saldo(id_usuario)

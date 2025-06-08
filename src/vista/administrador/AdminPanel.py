@@ -149,10 +149,10 @@ class AdminPanel(VentanaBase, Form):
     def cargar_pagos(self):
         self.tablaPagos.setRowCount(0)
         pagos = self._controlador.obtener_pagos()
-        self.tablaPagos.setColumnCount(8)
+        self.tablaPagos.setColumnCount(6)
         self.tablaPagos.setHorizontalHeaderLabels([
             "ID Pago", "ID Usuario", "ID Reserva", "Monto", "Método",
-            "Fecha de Pago", "Descuento", "Estado"
+            "Fecha de Pago"
         ])
         self.tablaPagos.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         for fila_idx, pago in enumerate(pagos):
@@ -163,16 +163,13 @@ class AdminPanel(VentanaBase, Form):
             self.tablaPagos.setItem(fila_idx, 3, QTableWidgetItem(str(pago.monto)))
             self.tablaPagos.setItem(fila_idx, 4, QTableWidgetItem(pago.metodo))
             self.tablaPagos.setItem(fila_idx, 5, QTableWidgetItem(str(pago.fecha_pago)))
-            self.tablaPagos.setItem(fila_idx, 6, QTableWidgetItem(str(pago.descuento)))
-            self.tablaPagos.setItem(fila_idx, 7, QTableWidgetItem(pago.estado))
-            #self.tablaPagos.setItem(fila_idx, 8, QTableWidgetItem(str(pago.transaccion_id) if pago.transaccion_id else ""))
 
     def cargar_reservas(self):
         self.tablaReservas.setRowCount(0)
         reservas = self._controlador.obtener_reservas()
-        self.tablaReservas.setColumnCount(6)
+        self.tablaReservas.setColumnCount(4)
         self.tablaReservas.setHorizontalHeaderLabels([
-            "ID Reserva", "ID Usuario", "ID Menú", "Fecha", "Fecha de Cancelación", "Motivo de Cancelación"
+            "ID Reserva", "ID Usuario", "ID Menú", "Fecha"
         ])
         self.tablaReservas.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         for fila_idx, reserva in enumerate(reservas):
@@ -181,8 +178,6 @@ class AdminPanel(VentanaBase, Form):
             self.tablaReservas.setItem(fila_idx, 1, QTableWidgetItem(str(reserva.id_usuario)))
             self.tablaReservas.setItem(fila_idx, 2, QTableWidgetItem(str(reserva.id_menu)))
             self.tablaReservas.setItem(fila_idx, 3, QTableWidgetItem(str(reserva.fecha_reserva)))
-            self.tablaReservas.setItem(fila_idx, 4, QTableWidgetItem(str(reserva.fecha_cancelacion)))
-            self.tablaReservas.setItem(fila_idx, 5, QTableWidgetItem(str(reserva.motivo_cancelacion)))
 
     def abrir_menu_admin(self):
         self.menu_admin_window = MenuAdmin(self.usuario, parent=self)

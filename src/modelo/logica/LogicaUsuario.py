@@ -67,7 +67,6 @@ class LogicaUsuario:
 
     def dar_de_baja_y_cerrar_sesion(self, id_usuario: int) -> bool | str:
         resultado = self.dar_de_baja_usuario(id_usuario)
-        from src.modelo.Sesion import Sesion
         Sesion().cerrar_sesion()
         return resultado
 

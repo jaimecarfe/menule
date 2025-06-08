@@ -1,5 +1,6 @@
 from src.modelo.BussinessObject import BussinessObject
 from src.modelo.vo.EstadisticaVo import EstadisticaVo
+
 class ControladorEstadisticas:
     def __init__(self, vista):
         self._vista = vista
