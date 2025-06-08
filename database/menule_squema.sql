@@ -1,12 +1,15 @@
--- Active: 1747325415285@@127.0.0.1@3306@menule
 -- -----------------------------------------------------
 -- MENULE: Estructura de base de datos
 -- Compatible con MySQL 8.0+
 -- -----------------------------------------------------
+-- Instrucciones:
+-- 1. Ejecuta este script en tu gestor MySQL para crear el esquema completo.
+-- 2. Por defecto, todo está preparado para comenzar a usar la base de datos.
+-- 3. Puedes modificar, ampliar o adaptar según las necesidades de tu aplicación.
 
--- DROP SCHEMA IF EXISTS menule;
--- CREATE SCHEMA menule;
--- USE menule;
+-- Crear la base de datos y seleccionarla
+CREATE DATABASE IF NOT EXISTS menule;
+USE menule;
 
 -- Tabla principal de usuarios
 CREATE TABLE Usuarios (
@@ -22,56 +25,42 @@ CREATE TABLE Usuarios (
     tipo ENUM('estudiante', 'profesor', 'administrador', 'personal_comedor', 'visitante') NOT NULL
 );
 
--- Estudiantes
-/*
-ALTER TABLE Estudiantes
-DROP FOREIGN KEY estudiantes_ibfk_1;
-
-ALTER TABLE Estudiantes
-ADD CONSTRAINT estudiantes_ibfk_1
-FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-ON DELETE CASCADE;
-*/
-
+-- Tabla de estudiantes (cada estudiante es también un usuario)
 CREATE TABLE Estudiantes (
     id_usuario INT PRIMARY KEY,
-    precio DECIMAL(10,2),
     grado_academico VARCHAR(50),
     tui_numero VARCHAR(20) UNIQUE,
     saldo DECIMAL(10,2) DEFAULT 0.00,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE
 );
 
--- Profesores
+-- Tabla de profesores (cada profesor es también un usuario)
 CREATE TABLE Profesores (
     id_usuario INT PRIMARY KEY,
-    precio DECIMAL(10,2),
     grado_academico VARCHAR(50),
+    tui_numero VARCHAR(20) UNIQUE,
     saldo DECIMAL(10,2) DEFAULT 0.00,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE
 );
 
--- Personal de comedor
+-- Tabla de personal de comedor (cada miembro es también un usuario)
 CREATE TABLE PersonalComedor (
     id_usuario INT PRIMARY KEY,
     fecha_contratacion DATE,
     especialidad VARCHAR(50),
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE
 );
 
--- Platos
+-- Tabla de platos disponibles en el menú
 CREATE TABLE Platos (
     id_plato INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT,
     tipo VARCHAR(50),
-    precio DECIMAL(10,2) NOT NULL,
     alergenos VARCHAR(255),
-    activo BOOLEAN DEFAULT TRUE,
-    imagen VARCHAR(255)
+    activo BOOLEAN DEFAULT TRUE
 );
 
--- Menús
+-- Menús ofrecidos cada día
 CREATE TABLE Menus (
     id_menu INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE NOT NULL,
@@ -80,16 +69,16 @@ CREATE TABLE Menus (
     disponible BOOLEAN DEFAULT TRUE
 );
 
--- Relación muchos a muchos: Menús - Platos
+-- Relación muchos a muchos entre Menús y Platos
 CREATE TABLE MenuPlatos (
     id_menu INT,
     id_plato INT,
     PRIMARY KEY (id_menu, id_plato),
-    FOREIGN KEY (id_menu) REFERENCES Menus(id_menu),
-    FOREIGN KEY (id_plato) REFERENCES Platos(id_plato)
+    FOREIGN KEY (id_menu) REFERENCES Menus(id_menu) ON DELETE CASCADE,
+    FOREIGN KEY (id_plato) REFERENCES Platos(id_plato) ON DELETE CASCADE
 );
 
--- Reservas
+-- Reservas realizadas por usuarios para un menú
 CREATE TABLE Reservas (
     id_reserva INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
@@ -97,35 +86,21 @@ CREATE TABLE Reservas (
     fecha_reserva DATETIME NOT NULL,
     estado ENUM('pendiente', 'confirmada', 'cancelada', 'recogida') DEFAULT 'pendiente',
     estado_bit TINYINT(1) DEFAULT NULL,
-    fecha_cancelacion DATETIME,
-    motivo_cancelacion TEXT,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_menu) REFERENCES Menus(id_menu)
 );
 
--- Platos dentro de una reserva
+-- Platos incluidos en una reserva
 CREATE TABLE ReservaPlatos (
     id_reserva INT,
     id_plato INT,
     cantidad INT DEFAULT 1,
-    observaciones TEXT,
     PRIMARY KEY (id_reserva, id_plato),
-    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva),
+    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE,
     FOREIGN KEY (id_plato) REFERENCES Platos(id_plato)
 );
 
--- Tickets
-CREATE TABLE Tickets (
-    id_ticket INT PRIMARY KEY AUTO_INCREMENT,
-    id_reserva INT NOT NULL,
-    codigo VARCHAR(50) UNIQUE NOT NULL,
-    fecha_generacion DATETIME NOT NULL,
-    estado ENUM('pendiente', 'usado', 'cancelado') DEFAULT 'pendiente',
-    fecha_uso DATETIME,
-    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva)
-);
-
--- Pagos
+-- Pagos realizados por reservas
 CREATE TABLE Pagos (
     id_pago INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
@@ -135,16 +110,16 @@ CREATE TABLE Pagos (
     fecha_pago DATETIME NOT NULL,
     descuento DECIMAL(10,2) DEFAULT 0.00,
     estado ENUM('pendiente', 'completado', 'fallido', 'reembolsado') DEFAULT 'pendiente',
-    transaccion_id VARCHAR(100),
     correo VARCHAR(150),
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
-    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva)
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE
 );
 
--- Incidencias
+-- Registro de incidencias (problemas, sugerencias, etc.)
 CREATE TABLE Incidencias (
     id_incidencia INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT,
+    id_responsable INT,
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
     numero_seguimiento VARCHAR(50), 
@@ -153,12 +128,11 @@ CREATE TABLE Incidencias (
     prioridad ENUM('baja', 'media', 'alta', 'critica') DEFAULT 'media',
     fecha_resolucion DATETIME,
     solucion TEXT,
-    id_responsable INT,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
-    FOREIGN KEY (id_responsable) REFERENCES Usuarios(id_usuario)
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE SET NULL,
+    FOREIGN KEY (id_responsable) REFERENCES Usuarios(id_usuario) ON DELETE SET NULL
 );
 
--- Ingredientes
+-- Ingredientes para la preparación de platos
 CREATE TABLE Ingredientes (
     id_ingrediente INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -169,61 +143,20 @@ CREATE TABLE Ingredientes (
     tipo_alergeno VARCHAR(50)
 );
 
--- Ingredientes por plato
-CREATE TABLE PlatoIngredientes (
-    id_plato INT,
-    id_ingrediente INT,
-    cantidad DECIMAL(10,2) NOT NULL,
-    PRIMARY KEY (id_plato, id_ingrediente),
-    FOREIGN KEY (id_plato) REFERENCES Platos(id_plato),
-    FOREIGN KEY (id_ingrediente) REFERENCES Ingredientes(id_ingrediente)
-);
-
--- Movimientos de stock
-CREATE TABLE MovimientosStock (
-    id_movimiento INT PRIMARY KEY AUTO_INCREMENT,
-    id_ingrediente INT NOT NULL,
-    cantidad DECIMAL(10,2) NOT NULL,
-    tipo ENUM('entrada', 'salida', 'ajuste') NOT NULL,
-    fecha DATETIME NOT NULL,
-    motivo VARCHAR(255),
-    id_usuario INT,
-    FOREIGN KEY (id_ingrediente) REFERENCES Ingredientes(id_ingrediente),
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-);
-
--- Estadísticas
-CREATE TABLE Estadisticas (
-    id_estadistica INT PRIMARY KEY AUTO_INCREMENT,
-    fecha DATE NOT NULL,
-    total_reservas INT DEFAULT 0,
-    total_pedidos INT DEFAULT 0,
-    ingresos DECIMAL(15,2) DEFAULT 0.00,
-    plato_mas_popular INT,
-    incidencias_reportadas INT DEFAULT 0,
-    FOREIGN KEY (plato_mas_popular) REFERENCES Platos(id_plato)
-);
-
--- Configuraciones
-CREATE TABLE configuraciones (
-    clave VARCHAR(100) PRIMARY KEY,
-    valor TEXT
-);
-
-
--- Índices recomendados
+-- Índices recomendados para mejorar el rendimiento de consultas frecuentes
 CREATE INDEX idx_usuario_email ON Usuarios(email);
 CREATE INDEX idx_usuario_tipo ON Usuarios(tipo);
 CREATE INDEX idx_menu_fecha ON Menus(fecha);
 CREATE INDEX idx_reserva_usuario ON Reservas(id_usuario);
 CREATE INDEX idx_reserva_menu ON Reservas(id_menu);
 CREATE INDEX idx_reserva_estado ON Reservas(estado);
-CREATE INDEX idx_ticket_codigo ON Tickets(codigo);
 CREATE INDEX idx_pago_reserva ON Pagos(id_reserva);
 CREATE INDEX idx_incidencia_estado ON Incidencias(estado);
 CREATE INDEX idx_ingrediente_stock ON Ingredientes(stock_actual, stock_minimo);
 
--- Vistas
+-- Vistas útiles para reportes y consultas rápidas
+
+-- Menús disponibles y número de reservas confirmadas
 CREATE VIEW VistaMenusDisponibles AS
 SELECT m.*, COUNT(r.id_reserva) AS reservas_actuales
 FROM Menus m
@@ -231,11 +164,13 @@ LEFT JOIN Reservas r ON m.id_menu = r.id_menu AND r.estado = 'confirmada'
 WHERE m.disponible = TRUE
 GROUP BY m.id_menu;
 
+-- Ingredientes con stock crítico (por debajo del mínimo)
 CREATE VIEW VistaStockCritico AS
 SELECT i.*, (i.stock_actual < i.stock_minimo) AS bajo_stock
 FROM Ingredientes i
 WHERE i.stock_actual < i.stock_minimo;
 
+-- Estadísticas diarias de reservas, ingresos y platos vendidos
 CREATE VIEW VistaEstadisticasDiarias AS
 SELECT 
     DATE(r.fecha_reserva) AS fecha,
@@ -246,50 +181,3 @@ FROM Reservas r
 JOIN Pagos p ON r.id_reserva = p.id_reserva AND p.estado = 'completado'
 LEFT JOIN ReservaPlatos rp ON r.id_reserva = rp.id_reserva
 GROUP BY DATE(r.fecha_reserva);
-
-
-
-'''
--- Eliminar reservas cuando se borra un usuario
-ALTER TABLE Reservas DROP FOREIGN KEY reservas_ibfk_1;
-ALTER TABLE Reservas ADD CONSTRAINT reservas_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
-
--- Eliminar reserva_platos cuando se borra una reserva
-ALTER TABLE ReservaPlatos DROP FOREIGN KEY reservaplatos_ibfk_1;
-ALTER TABLE ReservaPlatos ADD CONSTRAINT reservaplatos_ibfk_1 FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE;
-
--- Eliminar tickets cuando se borra una reserva
-ALTER TABLE Tickets DROP FOREIGN KEY tickets_ibfk_1;
-ALTER TABLE Tickets ADD CONSTRAINT tickets_ibfk_1 FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE;
-
--- Eliminar pagos cuando se borra una reserva
-ALTER TABLE Pagos DROP FOREIGN KEY pagos_ibfk_2;
-ALTER TABLE Pagos ADD CONSTRAINT pagos_ibfk_2 FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva) ON DELETE CASCADE;
-
--- Eliminar pagos cuando se borra un usuario
-ALTER TABLE Pagos DROP FOREIGN KEY pagos_ibfk_1;
-ALTER TABLE Pagos ADD CONSTRAINT pagos_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
-
--- Eliminar incidencias cuando se borra un usuario
-ALTER TABLE Incidencias DROP FOREIGN KEY incidencias_ibfk_1;
-ALTER TABLE Incidencias ADD CONSTRAINT incidencias_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE SET NULL;
-
--- Eliminar incidencias cuando se borra el responsable
-ALTER TABLE Incidencias DROP FOREIGN KEY incidencias_ibfk_2;
-ALTER TABLE Incidencias ADD CONSTRAINT incidencias_ibfk_2 FOREIGN KEY (id_responsable) REFERENCES Usuarios(id_usuario) ON DELETE SET NULL;
-
--- Eliminar estudiantes, profesores y personal de comedor si se borra el usuario
-ALTER TABLE Estudiantes DROP FOREIGN KEY estudiantes_ibfk_1;
-ALTER TABLE Estudiantes ADD CONSTRAINT estudiantes_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
-
-ALTER TABLE Profesores DROP FOREIGN KEY profesores_ibfk_1;
-ALTER TABLE Profesores ADD CONSTRAINT profesores_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
-
-ALTER TABLE PersonalComedor DROP FOREIGN KEY personalcomedor_ibfk_1;
-ALTER TABLE PersonalComedor ADD CONSTRAINT personalcomedor_ibfk_1 FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE;
-'''
-
-
-"
- ALTER TABLE Incidencias ADD COLUMN numero_seguimiento VARCHAR(50);
-"
