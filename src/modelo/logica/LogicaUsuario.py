@@ -7,6 +7,7 @@ from src.modelo.vo.UserVo import UserVo
 from src.modelo.vo.EstudianteVo import EstudianteVo
 from src.modelo.vo.ProfesorVo import ProfesorVo
 from src.modelo.vo.PersonalComedorVo import PersonalComedorVo
+from src.modelo.Sesion import Sesion
 from datetime import date
 import bcrypt
 
@@ -62,7 +63,13 @@ class LogicaUsuario:
         return self.user_dao.eliminar_usuario_fisico(id_usuario)
 
     def dar_de_baja_usuario(self, id_usuario: int) -> bool | str:
-        return self.user_dao.eliminar_usuario_logico(id_usuario)
+            return self.user_dao.eliminar_usuario_logico(id_usuario)
+
+    def dar_de_baja_y_cerrar_sesion(self, id_usuario: int) -> bool | str:
+        resultado = self.dar_de_baja_usuario(id_usuario)
+        from src.modelo.Sesion import Sesion
+        Sesion().cerrar_sesion()
+        return resultado
 
     def actualizar_usuario(self, id_usuario: int, campo: str, nuevo_valor) -> bool:
         return self.user_dao.actualizar_campo_usuario(id_usuario, campo, nuevo_valor)
@@ -72,3 +79,4 @@ class LogicaUsuario:
 
     def obtener_usuario_por_id(self, id_usuario: int) -> UserVo | None:
         return self.user_dao.get_by_id(id_usuario)
+

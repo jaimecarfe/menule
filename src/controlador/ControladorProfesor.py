@@ -43,8 +43,7 @@ class ControladorProfesor:
 
     def dar_de_baja(self):
         usuario = Sesion().get_usuario()
-        self._modelo.usuario_service.dar_de_baja_usuario(usuario.idUser)
-        Sesion().cerrar_sesion()
+        self._modelo.usuario_service.dar_de_baja_y_cerrar_sesion(usuario.idUser)
 
     def reservar_menu(self, id_usuario, fecha, primero, segundo, postre):
         return self._modelo.reserva_service.crear_reserva_completa(id_usuario, fecha, primero, segundo, postre)
