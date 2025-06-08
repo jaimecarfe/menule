@@ -3,7 +3,6 @@ from src.controlador.ControladorPagos import ControladorPagos
 from src.controlador.ControladorReservas import ControladorReservas
 from src.controlador.ControladorConfiguracion import ControladorConfiguracion
 from src.controlador.ControladorIncidencias import ControladorIncidencias
-from PyQt5.QtWidgets import QTableWidgetItem
 import subprocess
 
 class ControladorAdmin:
@@ -18,21 +17,19 @@ class ControladorAdmin:
     def obtener_usuarios(self):
         return self.usuario_ctrl.listar_usuarios()
 
-    def cargar_usuarios_en_tabla(self):
+    def obtener_usuarios_para_tabla(self):
         usuarios = self.usuario_ctrl.listar_usuarios()
-        tabla = self._vista.tablaUsuarios
-
-        tabla.setRowCount(len(usuarios))
-        tabla.setColumnCount(6)
-        tabla.setHorizontalHeaderLabels(["ID", "Nombre", "Apellido", "Correo", "Rol", "Activo"])
-
-        for fila, usuario in enumerate(usuarios):
-            tabla.setItem(fila, 0, QTableWidgetItem(str(usuario.idUser)))
-            tabla.setItem(fila, 1, QTableWidgetItem(usuario.nombre))
-            tabla.setItem(fila, 2, QTableWidgetItem(usuario.apellido))
-            tabla.setItem(fila, 3, QTableWidgetItem(usuario.correo))
-            tabla.setItem(fila, 4, QTableWidgetItem(usuario.rol))
-            tabla.setItem(fila, 5, QTableWidgetItem("Sí" if usuario.activo else "No"))
+        datos = []
+        for usuario in usuarios:
+            datos.append([
+                str(usuario.idUser),
+                usuario.nombre,
+                usuario.apellido,
+                usuario.correo,
+                usuario.rol,
+                "Sí" if usuario.activo else "No"
+            ])
+        return datos
 
     def eliminar_usuario(self, user_id):
         return self.usuario_ctrl.eliminar_usuario(user_id)
@@ -49,27 +46,31 @@ class ControladorAdmin:
     def guardar_configuracion(self, clave, valor):
         return self.config_ctrl.guardar_configuracion(clave, valor)
     
-    def obtener_pagos(self):
-        return self.pago_ctrl.obtener_todos_los_pagos()
+    def obtener_pagos_para_tabla(self):
+        pagos = self.pago_ctrl.obtener_todos_los_pagos()
+        datos = []
+        for pago in pagos:
+            datos.append([
+                str(pago.id_pago),
+                str(pago.id_usuario),
+                str(pago.id_reserva),
+                str(pago.monto),
+                pago.metodo,
+                str(pago.fecha_pago)
+            ])
+        return datos
     
-    def obtener_reservas(self):
-        return self.reserva_ctrl.obtener_todas_las_reservas()
+    def obtener_reservas_para_tabla(self):
+        reservas = self.reserva_ctrl.obtener_todas_las_reservas()
+        datos = []
+        for reserva in reservas:
+            datos.append([
+                str(reserva.id_reserva),
+                str(reserva.id_usuario),
+                str(reserva.id_menu),
+                str(reserva.fecha_reserva)
+            ])
+        return datos
     
     def responder_incidencia(self, id_incidencia, respuesta, fecha):
         return self.incidencia_ctrl.responder_incidencia(id_incidencia, respuesta, fecha)
-    
-    def descargar_base_datos(self, ruta_destino):
-        usuario = "root"
-        password = "Liverpool.840"
-        nombre_bd = "menule"
-        host = "localhost"
-        comando = [
-            "mysqldump",
-            f"-u{usuario}",
-            f"-p{password}",
-            "-h", host,
-            nombre_bd
-        ]
-        with open(ruta_destino, "w") as salida:
-            resultado = subprocess.run(comando, stdout=salida, stderr=subprocess.PIPE, text=True)
-        return resultado

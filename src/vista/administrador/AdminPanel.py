@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem, QPushButton, QFileDialog, QHeaderView
 from src.vista.VentanaBase import VentanaBase
 from src.controlador.ControladorAdmin import ControladorAdmin
 from PyQt5 import uic
@@ -7,8 +7,8 @@ from src.vista.administrador.VentanaRegistrarAdmin import VentanaRegistrarAdmin
 from src.vista.comun.CambiarContrasena import CambiarContrasena
 from src.vista.personal_comedor.ModificarMenuConAlergenos import ModificarMenuConAlergenos
 from src.vista.administrador.GestionIncidencias import PanelIncidenciasAdmin
-from PyQt5.QtWidgets import QHeaderView 
 from src.vista.administrador.MenuAdmin import MenuAdmin
+from src.utils.backup_utils import exportar_base_de_datos
 
 Form, Window = uic.loadUiType("./src/vista/ui/AdminPanel.ui")
 
@@ -18,7 +18,6 @@ class AdminPanel(VentanaBase, Form):
         self.setupUi(self)
         self.usuario = usuario
         self._controlador = ControladorAdmin(self)
-        self._controlador.cargar_usuarios_en_tabla()
         self._callback_cerrar_sesion = None
         self.btnCerrarSesion.clicked.connect(self.confirmar_cerrar_sesion)
         self.btnEliminarUsuario.clicked.connect(self.eliminar_usuario_seleccionado)
@@ -60,16 +59,14 @@ class AdminPanel(VentanaBase, Form):
     def cargar_usuarios(self):
         """Obtiene todos los usuarios y los muestra en la tabla."""
         self.tablaUsuarios.setRowCount(0)
+        self.tablaUsuarios.setColumnCount(6)
+        self.tablaUsuarios.setHorizontalHeaderLabels(["ID", "Nombre", "Apellido", "Correo", "Rol", "Activo"])
         self.tablaUsuarios.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        usuarios = self._controlador.obtener_usuarios()
-        for fila_idx, usuario in enumerate(usuarios):
+        datos = self._controlador.obtener_usuarios_para_tabla()
+        for fila_idx, usuario in enumerate(datos):
             self.tablaUsuarios.insertRow(fila_idx)
-            self.tablaUsuarios.setItem(fila_idx, 0, QTableWidgetItem(str(usuario.idUser)))
-            self.tablaUsuarios.setItem(fila_idx, 1, QTableWidgetItem(usuario.nombre))
-            self.tablaUsuarios.setItem(fila_idx, 2, QTableWidgetItem(usuario.apellido))
-            self.tablaUsuarios.setItem(fila_idx, 3, QTableWidgetItem(usuario.correo))
-            self.tablaUsuarios.setItem(fila_idx, 4, QTableWidgetItem(usuario.rol))
-            self.tablaUsuarios.setItem(fila_idx, 5, QTableWidgetItem("Sí" if usuario.activo else "No"))
+            for col_idx, valor in enumerate(usuario):
+                self.tablaUsuarios.setItem(fila_idx, col_idx, QTableWidgetItem(valor))
 
     def eliminar_usuario_seleccionado(self):
         fila = self.tablaUsuarios.currentRow()
@@ -96,7 +93,7 @@ class AdminPanel(VentanaBase, Form):
           
     def showEvent(self, event):
         super().showEvent(event)
-        self._controlador.cargar_usuarios_en_tabla()
+        self.cargar_usuarios()
 
     def abrir_cambio_contrasena(self):
         self.ventana_cambio = CambiarContrasena(self.usuario)
@@ -108,7 +105,7 @@ class AdminPanel(VentanaBase, Form):
         tabla = self.tablaUsuarios
         id_usuario = int(tabla.item(fila, 0).text())
         nuevo_valor = tabla.item(fila, columna).text()
-        campos = ["dni","nombre", "apellido", "email", "tipo", "credencial_activa"]
+        campos = ["idUser", "nombre", "apellido", "email", "tipo", "credencial_activa"]
         campo_bd = campos[columna]
         if campo_bd == "credencial_activa":
             nuevo_valor = nuevo_valor.strip().lower()
@@ -140,60 +137,47 @@ class AdminPanel(VentanaBase, Form):
         self.mod_window = ModificarMenuConAlergenos(usuario_actual=self.usuario)
         self.mod_window.show()
 
-    '''
-    def abrir_panel_incidencias(self):
-        self.ventana_incidencias = AdminPanel()
-        self.ventana_incidencias.show()
-    '''
-
     def cargar_pagos(self):
         self.tablaPagos.setRowCount(0)
-        pagos = self._controlador.obtener_pagos()
         self.tablaPagos.setColumnCount(6)
         self.tablaPagos.setHorizontalHeaderLabels([
-            "ID Pago", "ID Usuario", "ID Reserva", "Monto", "Método",
-            "Fecha de Pago"
+            "ID Pago", "ID Usuario", "ID Reserva", "Monto", "Método", "Fecha de Pago"
         ])
         self.tablaPagos.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        for fila_idx, pago in enumerate(pagos):
+        datos = self._controlador.obtener_pagos_para_tabla()
+        for fila_idx, pago in enumerate(datos):
             self.tablaPagos.insertRow(fila_idx)
-            self.tablaPagos.setItem(fila_idx, 0, QTableWidgetItem(str(pago.id_pago)))
-            self.tablaPagos.setItem(fila_idx, 1, QTableWidgetItem(str(pago.id_usuario)))
-            self.tablaPagos.setItem(fila_idx, 2, QTableWidgetItem(str(pago.id_reserva)))
-            self.tablaPagos.setItem(fila_idx, 3, QTableWidgetItem(str(pago.monto)))
-            self.tablaPagos.setItem(fila_idx, 4, QTableWidgetItem(pago.metodo))
-            self.tablaPagos.setItem(fila_idx, 5, QTableWidgetItem(str(pago.fecha_pago)))
+            for col_idx, valor in enumerate(pago):
+                self.tablaPagos.setItem(fila_idx, col_idx, QTableWidgetItem(valor))
 
     def cargar_reservas(self):
         self.tablaReservas.setRowCount(0)
-        reservas = self._controlador.obtener_reservas()
         self.tablaReservas.setColumnCount(4)
         self.tablaReservas.setHorizontalHeaderLabels([
             "ID Reserva", "ID Usuario", "ID Menú", "Fecha"
         ])
         self.tablaReservas.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        for fila_idx, reserva in enumerate(reservas):
+        datos = self._controlador.obtener_reservas_para_tabla()
+        for fila_idx, reserva in enumerate(datos):
             self.tablaReservas.insertRow(fila_idx)
-            self.tablaReservas.setItem(fila_idx, 0, QTableWidgetItem(str(reserva.id_reserva)))
-            self.tablaReservas.setItem(fila_idx, 1, QTableWidgetItem(str(reserva.id_usuario)))
-            self.tablaReservas.setItem(fila_idx, 2, QTableWidgetItem(str(reserva.id_menu)))
-            self.tablaReservas.setItem(fila_idx, 3, QTableWidgetItem(str(reserva.fecha_reserva)))
+            for col_idx, valor in enumerate(reserva):
+                self.tablaReservas.setItem(fila_idx, col_idx, QTableWidgetItem(valor))
 
     def abrir_menu_admin(self):
         self.menu_admin_window = MenuAdmin(self.usuario, parent=self)
         self.menu_admin_window.show()
         
     def descargar_base_datos(self):
-        try:
-            ruta_destino, _ = QFileDialog.getSaveFileName(
-                self, "Guardar copia de la base de datos...", "menule_backup.sql", "Archivos SQL (*.sql)"
-            )
-            if not ruta_destino:
-                return
-            resultado = self._controlador.descargar_base_datos(ruta_destino)
-            if resultado.returncode == 0:
-                QMessageBox.information(self, "Éxito", "Base de datos exportada correctamente.")
-            else:
-                raise Exception(resultado.stderr)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo exportar la base de datos:\n{str(e)}")
+            try:
+                ruta_destino, _ = QFileDialog.getSaveFileName(
+                    self, "Guardar copia de la base de datos...", "menule_backup.sql", "Archivos SQL (*.sql)"
+                )
+                if not ruta_destino:
+                    return
+                resultado = exportar_base_de_datos(ruta_destino)
+                if resultado is True:
+                    QMessageBox.information(self, "Éxito", "Base de datos exportada correctamente.")
+                else:
+                    raise Exception(str(resultado))
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"No se pudo exportar la base de datos:\n{str(e)}")

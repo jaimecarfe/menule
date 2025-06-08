@@ -10,4 +10,7 @@ def exportar_base_de_datos(ruta_destino, usuario="root", password="Liverpool.840
     ]
     with open(ruta_destino, "w") as salida:
         resultado = subprocess.run(comando, stdout=salida, stderr=subprocess.PIPE, text=True)
-    return resultado
+    if resultado.returncode == 0:
+        return True
+    else:
+        return resultado.stderr
