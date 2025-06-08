@@ -10,7 +10,7 @@ INSERT INTO Usuarios (
     'Admin',
     'Principal',
     'admin@menule.com',
-    '$2b$12$gO4RBjo1AK59kCGXgHeGJe27FvKuQA9XUQEehHoH2rmR5Bo24H.kK',
+    '$2b$12$eU7/AaNLbEWybmHMM5pI1OsEPg95Bm/V2e0KZZ3fTR7FGqZUo1SpK',
     '600000000',
     CURDATE(),
     TRUE,
