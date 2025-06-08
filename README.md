@@ -133,8 +133,10 @@ git clone https://github.com/jaimecarfe/menule
    ```bash
    mysql -u TU_USUARIO -p < database/menule_squema.sql
    ```
-    - Si tienes scripts de datos puedes ejecutarlos para comprobar que funciona todo de forma correcta a la hora de testear la aplicación.  
+> [!TIP]
+>    - Si tienes scripts de datos puedes ejecutarlos para comprobar que funciona todo de forma correcta a la hora de testear la aplicación.  
     En la carpeta [`database`](database/) tienes disponibles un par de scripts Python usados durante el desarrollo que puedes ejecutar para insertar datos de ejemplo en las tablas.
+>
 
 3. Configura la conexión a la base de datos:
    - Abre [`src/modelo/conexion/Conexion.py`](src/modelo/conexion/Conexion.py).
@@ -142,10 +144,14 @@ git clone https://github.com/jaimecarfe/menule
      ```python
      def __new__(cls, host='localhost', database='menule', user='TU_USUARIO', password='TU_CONTRASEÑA'):
      ```
-   - Si tu MySQL utiliza un **puerto diferente** al que viene por defecto (3306), modifícalo en la línea de la cadena de conexión (línea 22 del archivo):
-     ```python
-     f"jdbc:mysql://{self._host}:TUPUERTO/{self._database}",
-     ```
+> [!NOTE]
+> 
+>   - Si tu MySQL utiliza un **puerto diferente** al que viene por defecto (3306), modifícalo en la línea de la cadena de conexión (línea 22 del archivo):
+>     ```python
+>     f"jdbc:mysql://{self._host}:TUPUERTO/{self._database}",
+>     ```
+>
+
 
 4. Instala las dependencias necesarias:
 ```bash
