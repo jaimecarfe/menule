@@ -20,6 +20,7 @@
 - [Arquitectura del Proyecto](#arquitectura-del-proyecto)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Detalle de funcionamiento](#detalle-de-funcionamiento)
+- [Notificaciones y correos electrónicos](#notificaciones-y-correos-electrónicos)
 - [Tecnologías utilizadas](#tecnologías-utilizadas)
 - [Cómo ejecutar](#cómo-ejecutar)
 - [Créditos](#créditos)
@@ -115,6 +116,19 @@ menule/
     - [`BussinessObject.py`](src/modelo/BussinessObject.py) centraliza la lógica de negocio y coordina los servicios.
 
 ---
+
+## Notificaciones y correos electrónicos
+
+La aplicación MenULE envía correos electrónicos automáticos en distintas situaciones, como por ejemplo:
+
+- Confirmación de reservas de menú.
+- Notificación de incidencias reportadas.
+- Avisos administrativos o de gestión de usuarios.
+
+El envío de correos se realiza utilizando la api de [`sendgrid`](https://pypi.org/project/sendgrid/).  
+Los correos se envían a la dirección registrada por el usuario según su rol y acción realizada en la aplicación.
+
+> **Nota:** Para que el envío de correos funcione correctamente, es necesario configurar las credenciales del servicio de correo en el archivo `.env` del proyecto (clave api).
 
 
 ## Tecnologías utilizadas
