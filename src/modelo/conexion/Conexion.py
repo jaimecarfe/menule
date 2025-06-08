@@ -40,14 +40,3 @@ class Conexion:
                 self.conexion = None
         except Exception as e:
             print("Error cerrando conexión:", e)
-
-if __name__ == "__main__":
-    conexion = Conexion()
-    cursor = conexion.getCursor()
-    
-    if cursor:
-        cursor.execute("SELECT DATABASE();")
-        print("Base de datos seleccionada:", cursor.fetchone()[0])
-        conexion.closeConnection()
-    else:
-        print("No se pudo obtener el cursor.")
