@@ -8,7 +8,7 @@ class GenerarTicket(QDialog):
         super().__init__()
         self.id_reserva = id_reserva
         self.controlador = ControladorTickets()
-        self.accion_realizada = False  # <-- flag para permitir cierre solo después de acción
+        self.accion_realizada = False
         self.setModal(True)
 
 
