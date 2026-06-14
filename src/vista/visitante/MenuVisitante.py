@@ -79,9 +79,12 @@ def mostrar_pregunta(parent, titulo, mensaje):
 class MenuVisitante(VentanaBase, Form):
     def __init__(self):
         super().__init__()
-        self.configurar_interfaz()
+        # 1º Inicializamos el controlador para que esté disponible inmediatamente 🚀
         self._controlador = ControladorVisitante()
-        self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
+        
+        # 2º Ahora ya podemos configurar la interfaz y cargar el menú de hoy de forma segura
+        self.configurar_interfaz()
+        
         self._callback_cerrar_sesion = None
         self.usuario_visitante = UserVo(
             idUser=0,
@@ -91,7 +94,7 @@ class MenuVisitante(VentanaBase, Form):
             contrasena=None,
             rol="visitante",
         )
-
+        
     def cargar_menu_del_dia(self):
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
         platos = self._controlador.obtener_menu_por_fecha(fecha)
@@ -121,24 +124,32 @@ class MenuVisitante(VentanaBase, Form):
         self.btnReservarComida.clicked.connect(self.confirmar_reserva)
 
     def configurar_calendario(self):
-        fecha_inicio = QDate(2024, 9, 6)
-        fecha_fin = QDate(2025, 6, 23)
-        fecha_actual = QDate.currentDate()
+            # Actualizamos las fechas para que abarquen el año actual (2026)
+            fecha_inicio = QDate(2025, 9, 1)
+            fecha_fin = QDate(2026, 8, 31)  # Se amplía para cubrir todo el curso actual
+            fecha_actual = QDate.currentDate()
 
-        self.calendarWidget.setMinimumDate(max(fecha_inicio, fecha_actual))
-        self.calendarWidget.setMaximumDate(fecha_fin)
+            # Establecemos los límites de forma segura
+            self.calendarWidget.setMinimumDate(fecha_actual)
+            self.calendarWidget.setMaximumDate(fecha_fin)
+            self.calendarWidget.setSelectedDate(fecha_actual) # Forzamos a seleccionar el día de hoy
 
-        formato_inhabilitado = QTextCharFormat()
-        formato_inhabilitado.setForeground(QColor('gray'))
-        formato_inhabilitado.setBackground(QColor('#f0f0f0'))
+            formato_inhabilitado = QTextCharFormat()
+            formato_inhabilitado.setForeground(QColor('gray'))
+            formato_inhabilitado.setBackground(QColor('#f0f0f0'))
 
-        fecha = max(fecha_inicio, fecha_actual)
-        while fecha <= fecha_fin:
-            if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
-                self.calendarWidget.setDateTextFormat(fecha, formato_inhabilitado)
-            fecha = fecha.addDays(1)
+            # Inhabilitamos visualmente los fines de semana
+            fecha = fecha_actual
+            while fecha <= fecha_fin:
+                if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
+                    self.calendarWidget.setDateTextFormat(fecha, formato_inhabilitado)
+                fecha = fecha.addDays(1)
 
-        self.calendarWidget.selectionChanged.connect(self.validar_fecha_seleccionada)
+            # Conectamos el evento de cambio de fecha
+            self.calendarWidget.selectionChanged.connect(self.validar_fecha_seleccionada)
+            
+            # 🔥 MEJORA DE USABILIDAD: Carga el menú de hoy automáticamente al abrir la ventana
+            self.visualizar_menu()
 
     def validar_fecha_seleccionada(self):
         fecha = self.calendarWidget.selectedDate()

@@ -44,41 +44,56 @@ class MenuEstudiante(VentanaBase, Form):
         """)
 
 
-
     def configurar_calendario(self):
-        fecha_inicio = QDate(2024, 9, 6)
-        fecha_fin = QDate(2025, 6, 23)
+        # Capturamos el día de hoy de forma dinámica
         fecha_actual = QDate.currentDate()
+        anyo_actual = fecha_actual.year()
 
-        self.calendarWidget.setMinimumDate(max(fecha_inicio, fecha_actual))
+        # Permitimos navegar desde el 1 de enero de este año hasta finales del año que viene
+        fecha_inicio = QDate(anyo_actual, 1, 1)
+        fecha_fin = QDate(anyo_actual + 1, 12, 31)
+
+        # Establecemos los límites dinámicos de manera segura
+        self.calendarWidget.setMinimumDate(fecha_actual) # No tiene sentido reservar hacia el pasado
         self.calendarWidget.setMaximumDate(fecha_fin)
 
+        # Formato visual gris para los fines de semana inhabilitados
         formato_inhabilitado = QTextCharFormat()
         formato_inhabilitado.setForeground(QColor('gray'))
         formato_inhabilitado.setBackground(QColor('#f0f0f0'))
 
-        fecha = max(fecha_inicio, fecha_actual)
-        while fecha <= fecha_fin:
-            if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
-                self.calendarWidget.setDateTextFormat(fecha, formato_inhabilitado)
-            fecha = fecha.addDays(1)
+        # Pintamos los fines de semana desde hoy hasta el límite del calendario
+        fecha_pincel = fecha_actual
+        while fecha_pincel <= fecha_fin:
+            if fecha_pincel.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
+                self.calendarWidget.setDateTextFormat(fecha_pincel, formato_inhabilitado)
+            fecha_pincel = fecha_pincel.addDays(1)
 
         self.calendarWidget.selectionChanged.connect(self.validar_fecha_seleccionada)
 
     def validar_fecha_seleccionada(self):
         fecha = self.calendarWidget.selectedDate()
+        if not fecha.isValid():
+            return
+
+        # Validación de Fines de Semana
         if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
             QMessageBox.warning(self, "Fecha inválida", "Selecciona un día entre lunes y viernes.")
-            self.calendarWidget.setSelectedDate(QDate())
+            self.calendarWidget.setSelectedDate(QDate.currentDate()) # Devolvemos el foco al día de hoy
             self.btnVisualizarMenu.setEnabled(False)
             self.btnReservarComida.setVisible(False)
+        
+        # Validación de Fechas Pasadas
         elif fecha < QDate.currentDate():
-            QMessageBox.warning(self, "Fecha inválida", "El menú de ese día no está disponible.")
-            self.calendarWidget.setSelectedDate(QDate())
+            QMessageBox.warning(self, "Fecha inválida", "El menú de ese día ya no está disponible.")
+            self.calendarWidget.setSelectedDate(QDate.currentDate())
             self.btnVisualizarMenu.setEnabled(False)
             self.btnReservarComida.setVisible(False)
+        
         else:
             self.btnVisualizarMenu.setEnabled(True)
+
+
 
     def visualizar_menu(self):
         fecha = self.calendarWidget.selectedDate()

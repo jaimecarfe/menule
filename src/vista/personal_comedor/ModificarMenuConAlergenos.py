@@ -54,7 +54,7 @@ class ModificarMenuConAlergenos(QWidget):
 
         self.fecha_edit = QDateEdit()
         self.fecha_edit.setMinimumDate(QDate(2024, 9, 6))
-        self.fecha_edit.setMaximumDate(QDate(2025, 6, 23))
+        self.fecha_edit.setMaximumDate(QDate(2025, 8, 23))
         self.fecha_edit.setDate(QDate.currentDate())
         self.fecha_edit.setCalendarPopup(True)
         self.fecha_edit.setMinimumDate(QDate.currentDate())

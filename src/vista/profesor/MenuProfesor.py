@@ -9,16 +9,20 @@ from src.vista.comun.PagoWindow import PagoWindow
 from src.vista.comun.GenerarTicket import GenerarTicket
 from PyQt5 import uic
 
-
 Form, Window = uic.loadUiType("./src/vista/ui/MenuProfesor.ui")
 
 class MenuProfesor(VentanaBase, Form):
     def __init__(self, usuario, parent=None):
         super().__init__(parent)
+        # 1º Cargamos los componentes del archivo de interfaz .ui inmediatamente 🚀
+        self.setupUi(self)
+        
+        # 2º Guardamos los datos del usuario y el controlador de la capa lógica
         self.usuario = usuario
         self._controlador = ControladorProfesor()
         self._callback_cerrar_sesion = None
-        self.setupUi(self)
+        
+        # 3º Inicializamos los textos dinámicos y el estado del calendario
         self.configurar_interfaz()
 
     def configurar_interfaz(self):
@@ -26,7 +30,7 @@ class MenuProfesor(VentanaBase, Form):
         self.labelUsuario.setText(f"¿Qué habrá de comer hoy, {self.usuario.nombre}?")
         self.configurar_calendario()
 
-        self.btnVisualizarMenu.setEnabled(False)
+        self.btnVisualizarMenu.setEnabled(True)  # Se habilita directamente al auto-cargar el día de hoy
         self.btnVisualizarMenu.clicked.connect(self.visualizar_menu)
         self.btnVolver.clicked.connect(self.volver_al_panel)
         self.btnReservarComida.setVisible(False)
@@ -44,24 +48,32 @@ class MenuProfesor(VentanaBase, Form):
         """)
 
     def configurar_calendario(self):
-        fecha_inicio = QDate(2024, 9, 6)
-        fecha_fin = QDate(2025, 6, 23)
+        # Rango adaptado al curso académico actual (2026)
+        fecha_inicio = QDate(2025, 9, 1)
+        fecha_fin = QDate(2026, 8, 31)
         fecha_actual = QDate.currentDate()
 
-        self.calendarWidget.setMinimumDate(max(fecha_inicio, fecha_actual))
+        # Configuración de límites del Widget de Qt
+        self.calendarWidget.setMinimumDate(fecha_actual)
         self.calendarWidget.setMaximumDate(fecha_fin)
+        self.calendarWidget.setSelectedDate(fecha_actual)
 
         formato_inhabilitado = QTextCharFormat()
         formato_inhabilitado.setForeground(QColor('gray'))
         formato_inhabilitado.setBackground(QColor('#f0f0f0'))
 
-        fecha = max(fecha_inicio, fecha_actual)
+        # Desactivar visualmente fines de semana
+        fecha = fecha_actual
         while fecha <= fecha_fin:
             if fecha.dayOfWeek() in (Qt.Saturday, Qt.Sunday):
                 self.calendarWidget.setDateTextFormat(fecha, formato_inhabilitado)
             fecha = fecha.addDays(1)
 
+        # Enlazar evento de cambio de fecha
         self.calendarWidget.selectionChanged.connect(self.validar_fecha_seleccionada)
+        
+        # 🔥 AUTO-CARGA: Consultamos los platos de hoy directamente al abrir la pantalla
+        self.visualizar_menu()
 
     def validar_fecha_seleccionada(self):
         fecha = self.calendarWidget.selectedDate()
@@ -85,7 +97,7 @@ class MenuProfesor(VentanaBase, Form):
             self.btnReservarComida.setVisible(True)
         else:
             QMessageBox.information(self, "Sin fecha", "Por favor selecciona un día válido.")
-            self.btnReservarComida.setVisible(True)
+            self.btnReservarComida.setVisible(False)
 
     def cargar_menu_del_dia(self):
         fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
@@ -127,7 +139,6 @@ class MenuProfesor(VentanaBase, Form):
         )
 
         if respuesta == QMessageBox.Yes:
-            # Calcular precio y método según el rol
             if self.usuario.rol == "estudiante":
                 precio = 5.5
                 metodo = "tui"
@@ -138,15 +149,18 @@ class MenuProfesor(VentanaBase, Form):
                 precio = 7.5
                 metodo = "tarjeta"
 
-            # Crear la reserva ANTES del pago
+            # Registramos la reserva en la BD antes del pago para asegurar la ID
             id_reserva = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
 
             if id_reserva:
                 def callback_pago_exitoso():
+                    # Informamos al usuario
                     QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
+                    # Abrimos el tíquet de manera limpia usando la función corregida
                     self.abrir_ticket(id_reserva)
 
                 self.pago_window = PagoWindow(self.usuario, precio, metodo, callback_pago_exitoso, id_reserva=id_reserva)
+                self.pago_window.setWindowModality(Qt.ApplicationModal)
                 self.pago_window.show()
             else:
                 QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
@@ -159,24 +173,6 @@ class MenuProfesor(VentanaBase, Form):
         if self.parent():
             self.parent().show()
         self.close()
-
-    def reservar_menu(self):
-        id_menu = self.obtener_id_menu_seleccionado()  # obtén el ID del menú seleccionado en la UI
-        reserva = ReservaVo()
-        reserva.id_usuario = self.usuario_actual.id  # o self.usuario.id
-        reserva.id_menu = id_menu
-        reserva.estado = "pendiente"
-        
-        self._controlador.crear_reserva(reserva)
-        QMessageBox.information(self, "Reserva", "Reserva realizada con éxito.")
-
-    def finalizar_reserva(self, primero, segundo, postre, fecha):
-        exito = self._controlador.hacer_reserva_completa(self.usuario.idUser, fecha, primero, segundo, postre)
-        if exito:
-            QMessageBox.information(self, "Reserva hecha", "Reserva registrada con éxito.")
-            self.abrir_ticket()
-        else:
-            QMessageBox.critical(self, "Error", "No se pudo registrar la reserva.")
 
     def abrir_ticket(self, id_reserva):
         self.ticket_window = GenerarTicket(id_reserva)

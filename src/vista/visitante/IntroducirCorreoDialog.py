@@ -3,34 +3,36 @@ from PyQt5.QtWidgets import QDialog, QLineEdit, QLabel, QPushButton, QVBoxLayout
 class IntroducirCorreoDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-
+        
         self.setStyleSheet("""
             QWidget {
-            background-color: #e6f2ff;
-            font-family: Arial;
-            font-size: 14px;
-        }
-        QLabel {
-            color: #005c99;
-            font-weight: bold;
-        }
-        QLineEdit {
-            border: 1px solid #80bfff;
-            border-radius: 5px;
-            padding: 5px;
-            background-color: white;
-        }
-        QPushButton {
-            background-color: #00cc99;
-            color: white;
-            border-radius: 10px;
-            padding: 8px;
-        }
-        QPushButton:hover {
-            background-color: #009973;
-        }
+                background-color: #e6f2ff;
+                font-family: Arial;
+                font-size: 14px;
+                color: black; /* ← color de texto general */
+            }
+            QLabel {
+                color: #005c99;
+                font-weight: bold;
+            }
+            QLineEdit {
+                border: 1px solid #80bfff;
+                border-radius: 5px;
+                padding: 5px;
+                background-color: white;
+                color: black; /* ← texto del input */
+            }
+            QPushButton {
+                background-color: #00cc99;
+                color: white; /* ← texto del botón */
+                border-radius: 10px;
+                padding: 8px;
+            }
+            QPushButton:hover {
+                background-color: #009973;
+            }
         """)
-        
+
         self.setWindowTitle("Introduce tu correo")
         self.setModal(True)
 
@@ -50,6 +52,16 @@ class IntroducirCorreoDialog(QDialog):
         self.btn_enviar.clicked.connect(self.validar_y_aceptar)
         self.btn_cancelar.clicked.connect(self.reject)
         self.correo = None
+
+        self.resize(400, 150)
+        self.centrar_ventana()
+
+    def centrar_ventana(self):
+        pantalla = self.screen().availableGeometry()
+        tamaño = self.geometry()
+        x = (pantalla.width() - tamaño.width()) // 2
+        y = (pantalla.height() - tamaño.height()) // 2
+        self.move(x, y)
 
     def validar_y_aceptar(self):
         correo = self.input.text().strip()

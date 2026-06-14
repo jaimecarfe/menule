@@ -79,3 +79,9 @@ class LogicaUsuario:
     def obtener_usuario_por_id(self, id_usuario: int) -> UserVo | None:
         return self.user_dao.get_by_id(id_usuario)
 
+    def actualizar_contrasena_usuario(self, id_usuario: int, nueva_contrasena_hash: str) -> bool:
+        """
+        Actualiza la contraseña de un usuario de forma segura delegando en el DAO,
+        respetando el patrón MVC y esquivando los filtros de campos genéricos.
+        """
+        return self.user_dao.actualizar_contrasena(id_usuario, nueva_contrasena_hash)

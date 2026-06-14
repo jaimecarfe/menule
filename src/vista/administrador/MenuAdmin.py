@@ -27,7 +27,7 @@ class MenuAdmin(VentanaBase, Form):
 
     def configurar_calendario(self):
         fecha_inicio = QDate(2024, 9, 6)
-        fecha_fin = QDate(2025, 6, 23)
+        fecha_fin = QDate(2026, 8, 31)
         fecha_actual = QDate.currentDate()
 
         self.calendarWidget.setMinimumDate(max(fecha_inicio, fecha_actual))
@@ -44,6 +44,9 @@ class MenuAdmin(VentanaBase, Form):
             fecha = fecha.addDays(1)
 
         self.calendarWidget.selectionChanged.connect(self.validar_fecha_seleccionada)
+
+        self.visualizar_menu()
+
 
     def validar_fecha_seleccionada(self):
         fecha = self.calendarWidget.selectedDate()
